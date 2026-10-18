@@ -1,38 +1,31 @@
-import Header from "./header";
-import HeroDog from "./hero-dog";
-import { Icon } from "./icons";
+import Header from './header';
+import HeroDog from './hero-dog';
+import { Icon } from './icons';
 const pillars = [
   {
-    title: "Seleção Criteriosa",
-    image: "pilar-selecao.png",
+    title: 'Seleção Criteriosa',
+    image: 'pilar-selecao.png',
     concept:
-      "Qualidade, procedência, segurança e benefícios reais para os pets.",
-    categories: ["Alimentação Natural", "Petiscos Naturais e Recompensas"],
-    message: "Escolhas que fazem a diferença no dia a dia do seu pet.",
+      'Qualidade, procedência, segurança e benefícios reais para os pets.',
+    message: 'Escolhas que fazem a diferença no dia a dia do seu pet.',
   },
   {
-    title: "Bem-Estar e Desenvolvimento",
-    image: "pilar-bem-estar.png",
+    title: 'Bem-Estar e Desenvolvimento',
+    image: 'pilar-bem-estar.png',
     concept:
-      "Cuidado e estímulos para o equilíbrio físico, mental e comportamental.",
-    categories: [
-      "Adestramento e Comportamento",
-      "Brinquedos e Enriquecimento Ambiental",
-      "Higiene e Bem-Estar",
-    ],
-    message: "Mais estímulos, cuidado e equilíbrio para uma vida melhor.",
+      'Cuidado e estímulos para o equilíbrio físico, mental e comportamental.',
+    message: 'Mais estímulos, cuidado e equilíbrio para uma vida melhor.',
   },
   {
-    title: "Experiência Premium",
-    image: "pilar-premium.png",
+    title: 'Experiência Premium',
+    image: 'pilar-premium.png',
     concept:
-      "Funcionalidade, conforto, durabilidade e design em produtos diferenciados.",
-    categories: ["Comedouros e Acessórios Premium"],
-    message: "Funcionalidade, conforto e design em cada detalhe.",
+      'Funcionalidade, conforto, durabilidade e design em produtos diferenciados.',
+    message: 'Funcionalidade, conforto e design em cada detalhe.',
   },
 ];
 const map =
-  "https://www.google.com/maps/dir/?api=1&destination=Avenida+Riachuelo%2C+350%2C+Liberdade%2C+Resende%2C+RJ%2C+27521-171";
+  'https://www.google.com/maps/dir/?api=1&destination=Avenida+Riachuelo%2C+350%2C+Liberdade%2C+Resende%2C+RJ%2C+27521-171';
 export default function Home() {
   return (
     <>
@@ -49,8 +42,8 @@ export default function Home() {
           <div className="hero-content container">
             <div className="hero-copy">
               <h1 id="hero-title">
-                Mais bem-estar{" "}
-                <span className="hero-second-line">começa com</span>{" "}
+                Mais bem-estar{' '}
+                <span className="hero-second-line">começa com</span>{' '}
                 <strong>boas escolhas.</strong>
               </h1>
               <p>
@@ -123,7 +116,7 @@ export default function Home() {
                 <article className="pillar" key={p.title}>
                   <div className="pillar-art">
                     <img
-                      src={"/images/" + p.image}
+                      src={'/images/' + p.image}
                       width="1280"
                       height="1280"
                       alt=""
@@ -132,11 +125,6 @@ export default function Home() {
                   </div>
                   <h3>{p.title}</h3>
                   <p className="pillar-concept">{p.concept}</p>
-                  <ul>
-                    {p.categories.map((c) => (
-                      <li key={c}>{c}</li>
-                    ))}
-                  </ul>
                   <p className="pillar-message">{p.message}</p>
                 </article>
               ))}
@@ -214,7 +202,7 @@ export default function Home() {
                   >
                     Fale com a gente
                     <span className="sr-only">
-                      {" "}
+                      {' '}
                       pelo WhatsApp, em uma nova aba
                     </span>
                   </a>
@@ -236,7 +224,7 @@ export default function Home() {
                   >
                     Siga @nardiniselect
                     <span className="sr-only">
-                      {" "}
+                      {' '}
                       no Instagram, em uma nova aba
                     </span>
                   </a>
