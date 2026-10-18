@@ -1,0 +1,365 @@
+{
+  "narrative": {
+    "keyCharacteristics": [
+      "Warm brand colors with large, quiet light surfaces.",
+      "Weighty headings and readable, spacious supporting text.",
+      "Open groups, restrained outlines and pill-shaped actions.",
+      "Original identity assets and a silver-gray Weimaraner."
+    ],
+    "northStar": "Curadoria com assinatura",
+    "donts": [
+      "Don't turn the home pillars or contact options into decorative cards.",
+      "Don't display the phone number in the interface or public storefront image.",
+      "Don't replace the silver-gray Weimaraner with a golden or caramel Labrador.",
+      "Don't add a feed, prices, product catalog or checkout to the approved institutional home.\r"
+    ],
+    "rules": [
+      {
+        "body": "Preserve the supplied logo and brown, orange and beige identity; do not recolor the brand into an unrelated palette.",
+        "name": "The Brand Continuity Rule",
+        "section": "colors"
+      },
+      {
+        "body": "Preserve open content groups; do not wrap the home pillars or contact options in decorative cards.",
+        "name": "The Open Surface Rule",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do preserve the supplied logo, warm palette and strong sans-serif hierarchy.",
+      "Do keep text, links and illustrations independent in implementation.",
+      "Do keep the hero dog distinct from the continuous background and clear of text.",
+      "Do honor reduced motion and visible keyboard focus.",
+      "Do use real storefront photography to help visitors recognize the shop."
+    ],
+    "overview": "The existing brand line anchors a warm, confident world of chocolate ink, burnt orange and generous beige space. Strong, rounded sans-serif typography gives the curated offer clarity; original brand marks and expressive pet illustration carry personality.\n\nThe visual system favors open compositions and independent text, imagery and actions. Illustration supports the brand story; documentary photography helps visitors recognize the real shop. This scan records the implemented system and the approved direction in PRODUCT.md and the home surface brief."
+  },
+  "components": [
+    {
+      "css": ".ds-button-primary{display:inline-flex;align-items:center;justify-content:center;gap:14px;min-height:50px;padding:13px 25px;border-radius:999px;font:750 .875rem/1.4 var(--body,'Manrope Variable',sans-serif);text-decoration:none;transition:background .2s ease,transform .2s ease,color .2s ease; background:var(--orange,#c55523);color:#fff;border:1px solid var(--orange,#c55523)} .{background:#9b3b16;transform:translateY(-2px);} .ds-button-primary:focus-visible{outline:3px solid var(--orange,#c55523);outline-offset:6px} @media(prefers-reduced-motion:reduce){.ds-button-primary{transition:none}.ds-button-primary:hover{transform:none}}",
+      "refersTo": "button-primary",
+      "description": "Pill action with visible keyboard focus and restrained hover lift.",
+      "kind": "button",
+      "name": "Button primary",
+      "html": "<a class=\"ds-button-primary\" href=\"#selection\">Conheça nossa seleção</a>"
+    },
+    {
+      "css": ".ds-button-hero{display:inline-flex;align-items:center;justify-content:center;gap:14px;min-height:50px;padding:13px 25px;border-radius:999px;font:750 .875rem/1.4 var(--body,'Manrope Variable',sans-serif);text-decoration:none;transition:background .2s ease,transform .2s ease,color .2s ease; background:#c5501d;color:#fff;border:1px solid #c5501d} .{background:#9d3c16;transform:translateY(-2px);} .ds-button-hero:focus-visible{outline:3px solid var(--orange,#c55523);outline-offset:6px} @media(prefers-reduced-motion:reduce){.ds-button-hero{transition:none}.ds-button-hero:hover{transform:none}}",
+      "refersTo": "button-hero",
+      "description": "Pill action with visible keyboard focus and restrained hover lift.",
+      "kind": "button",
+      "name": "Button hero",
+      "html": "<a class=\"ds-button-hero\" href=\"#selection\">Conheça nossa seleção</a>"
+    },
+    {
+      "css": ".ds-button-outline{display:inline-flex;align-items:center;justify-content:center;gap:14px;min-height:50px;padding:13px 25px;border-radius:999px;font:750 .875rem/1.4 var(--body,'Manrope Variable',sans-serif);text-decoration:none;transition:background .2s ease,transform .2s ease,color .2s ease; background:transparent;color:#fff6e9;border:1px solid #f9e9d3} .{background:#fff3df;transform:translateY(-2px);color:var(--ink,#542e20);} .ds-button-outline:focus-visible{outline:3px solid var(--orange,#c55523);outline-offset:6px} @media(prefers-reduced-motion:reduce){.ds-button-outline{transition:none}.ds-button-outline:hover{transform:none}}",
+      "refersTo": "button-outline",
+      "description": "Pill action with visible keyboard focus and restrained hover lift.",
+      "kind": "button",
+      "name": "Button outline",
+      "html": "<a class=\"ds-button-outline\" href=\"#selection\">Conheça nossa seleção</a>"
+    },
+    {
+      "css": ".ds-navigation{display:flex;align-items:center;gap:36px;padding:24px;background:var(--ink,#542e20);color:#fff0da;font:600 .85rem var(--body,sans-serif)}.ds-navigation a{text-decoration:none;color:inherit;transition:color .2s}.ds-navigation a:hover{color:#ffd3b4}.ds-navigation a:focus-visible{outline:3px solid white;outline-offset:6px}.ds-nav-contact{border:1px solid #f5dfc5;border-radius:999px;padding:10px 21px}",
+      "refersTo": "navigation",
+      "description": "Simple light navigation over the hero.",
+      "kind": "nav",
+      "name": "Navigation",
+      "html": "<nav class=\"ds-navigation\" aria-label=\"Navegação principal\"><a href=\"#marca\">A marca</a><a href=\"#selecao\">Nossa seleção</a><a href=\"#loja\">Nossa loja</a><a class=\"ds-nav-contact\" href=\"#contato\">Fale com a gente</a></nav>"
+    },
+    {
+      "css": ".ds-pillar{max-width:330px;color:var(--ink,#542e20);font: .9rem/1.65 var(--body,sans-serif)}.ds-pillar h3{margin:0;font:750 2rem/1.1 var(--display,sans-serif);letter-spacing:-.035em}.ds-pillar p{margin:18px 0 0;color:#714b39}.ds-pillar ul{list-style:none;padding:0;margin:20px 0 0}.ds-pillar li{position:relative;padding-left:15px;margin-bottom:7px}.ds-pillar li:before{content:\"\";position:absolute;left:0;top:10px;width:5px;height:5px;border-radius:50%;background:var(--orange,#c55523)}.ds-pillar em{display:block;margin-top:30px}.ds-pillar em:before{content:\"\";display:block;width:38px;height:1px;background:var(--orange,#c55523);margin-bottom:18px}",
+      "refersTo": "pillar",
+      "description": "Text hierarchy of an illustrated commitment, intentionally unboxed.",
+      "kind": "custom",
+      "name": "Open Pillar",
+      "html": "<article class=\"ds-pillar\"><h3>Seleção Criteriosa</h3><p>Qualidade, procedência, segurança e benefícios reais para os pets.</p><ul><li>Alimentação Natural</li><li>Petiscos Naturais e Recompensas</li></ul><em>Escolhas que fazem a diferença no dia a dia do seu pet.</em></article>"
+    }
+  ],
+  "title": "Design System: Nardini Select",
+  "generatedAt": "2026-10-18T18:03:04.897444Z",
+  "schemaVersion": 2,
+  "extensions": {
+    "shadows": [
+      {
+        "name": "mobile-navigation",
+        "purpose": "Structural separation of the mobile menu.",
+        "value": "0 14px 30px #30170e33"
+      },
+      {
+        "name": "brand-logo",
+        "purpose": "Subtle logo separation over the hero.",
+        "value": "drop-shadow(0 1px 1px #f4e9db55)"
+      }
+    ],
+    "colorMeta": {
+      "ink": {
+        "role": "neutral",
+        "displayName": "Chocolate",
+        "tonalRamp": [
+          "oklch(15% 0.10 50)",
+          "oklch(27% 0.10 50)",
+          "oklch(39% 0.10 50)",
+          "oklch(51% 0.10 50)",
+          "oklch(63% 0.10 50)",
+          "oklch(75% 0.10 50)",
+          "oklch(87% 0.10 50)",
+          "oklch(95% 0.10 50)"
+        ]
+      },
+      "orange": {
+        "role": "primary",
+        "displayName": "Burnt Orange",
+        "tonalRamp": [
+          "oklch(15% 0.10 50)",
+          "oklch(27% 0.10 50)",
+          "oklch(39% 0.10 50)",
+          "oklch(51% 0.10 50)",
+          "oklch(63% 0.10 50)",
+          "oklch(75% 0.10 50)",
+          "oklch(87% 0.10 50)",
+          "oklch(95% 0.10 50)"
+        ]
+      },
+      "orange-light": {
+        "role": "primary",
+        "displayName": "Peach",
+        "tonalRamp": [
+          "oklch(15% 0.10 50)",
+          "oklch(27% 0.10 50)",
+          "oklch(39% 0.10 50)",
+          "oklch(51% 0.10 50)",
+          "oklch(63% 0.10 50)",
+          "oklch(75% 0.10 50)",
+          "oklch(87% 0.10 50)",
+          "oklch(95% 0.10 50)"
+        ]
+      },
+      "sand": {
+        "role": "neutral",
+        "displayName": "Warm Sand",
+        "tonalRamp": [
+          "oklch(15% 0.02 50)",
+          "oklch(27% 0.02 50)",
+          "oklch(39% 0.02 50)",
+          "oklch(51% 0.02 50)",
+          "oklch(63% 0.02 50)",
+          "oklch(75% 0.02 50)",
+          "oklch(87% 0.02 50)",
+          "oklch(95% 0.02 50)"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Cream Paper",
+        "tonalRamp": [
+          "oklch(15% 0.02 50)",
+          "oklch(27% 0.02 50)",
+          "oklch(39% 0.02 50)",
+          "oklch(51% 0.02 50)",
+          "oklch(63% 0.02 50)",
+          "oklch(75% 0.02 50)",
+          "oklch(87% 0.02 50)",
+          "oklch(95% 0.02 50)"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Soft Clay",
+        "tonalRamp": [
+          "oklch(15% 0.02 50)",
+          "oklch(27% 0.02 50)",
+          "oklch(39% 0.02 50)",
+          "oklch(51% 0.02 50)",
+          "oklch(63% 0.02 50)",
+          "oklch(75% 0.02 50)",
+          "oklch(87% 0.02 50)",
+          "oklch(95% 0.02 50)"
+        ]
+      },
+      "primary-hover": {
+        "role": "primary",
+        "displayName": "Deep Burnt Orange",
+        "tonalRamp": [
+          "oklch(15% 0.10 50)",
+          "oklch(27% 0.10 50)",
+          "oklch(39% 0.10 50)",
+          "oklch(51% 0.10 50)",
+          "oklch(63% 0.10 50)",
+          "oklch(75% 0.10 50)",
+          "oklch(87% 0.10 50)",
+          "oklch(95% 0.10 50)"
+        ]
+      },
+      "white": {
+        "role": "neutral",
+        "displayName": "White",
+        "tonalRamp": [
+          "oklch(15% 0.02 50)",
+          "oklch(27% 0.02 50)",
+          "oklch(39% 0.02 50)",
+          "oklch(51% 0.02 50)",
+          "oklch(63% 0.02 50)",
+          "oklch(75% 0.02 50)",
+          "oklch(87% 0.02 50)",
+          "oklch(95% 0.02 50)"
+        ]
+      },
+      "hero-cream": {
+        "role": "neutral",
+        "displayName": "Hero Cream",
+        "tonalRamp": [
+          "oklch(15% 0.02 50)",
+          "oklch(27% 0.02 50)",
+          "oklch(39% 0.02 50)",
+          "oklch(51% 0.02 50)",
+          "oklch(63% 0.02 50)",
+          "oklch(75% 0.02 50)",
+          "oklch(87% 0.02 50)",
+          "oklch(95% 0.02 50)"
+        ]
+      },
+      "hero-primary": {
+        "role": "primary",
+        "displayName": "Hero Orange",
+        "tonalRamp": [
+          "oklch(15% 0.10 50)",
+          "oklch(27% 0.10 50)",
+          "oklch(39% 0.10 50)",
+          "oklch(51% 0.10 50)",
+          "oklch(63% 0.10 50)",
+          "oklch(75% 0.10 50)",
+          "oklch(87% 0.10 50)",
+          "oklch(95% 0.10 50)"
+        ]
+      },
+      "hero-primary-hover": {
+        "role": "primary",
+        "displayName": "Deep Hero Orange",
+        "tonalRamp": [
+          "oklch(15% 0.10 50)",
+          "oklch(27% 0.10 50)",
+          "oklch(39% 0.10 50)",
+          "oklch(51% 0.10 50)",
+          "oklch(63% 0.10 50)",
+          "oklch(75% 0.10 50)",
+          "oklch(87% 0.10 50)",
+          "oklch(95% 0.10 50)"
+        ]
+      },
+      "outline-border": {
+        "role": "neutral",
+        "displayName": "Cream Outline",
+        "tonalRamp": [
+          "oklch(15% 0.02 50)",
+          "oklch(27% 0.02 50)",
+          "oklch(39% 0.02 50)",
+          "oklch(51% 0.02 50)",
+          "oklch(63% 0.02 50)",
+          "oklch(75% 0.02 50)",
+          "oklch(87% 0.02 50)",
+          "oklch(95% 0.02 50)"
+        ]
+      },
+      "outline-text": {
+        "role": "neutral",
+        "displayName": "Cream Action Text",
+        "tonalRamp": [
+          "oklch(15% 0.02 50)",
+          "oklch(27% 0.02 50)",
+          "oklch(39% 0.02 50)",
+          "oklch(51% 0.02 50)",
+          "oklch(63% 0.02 50)",
+          "oklch(75% 0.02 50)",
+          "oklch(87% 0.02 50)",
+          "oklch(95% 0.02 50)"
+        ]
+      },
+      "outline-hover": {
+        "role": "neutral",
+        "displayName": "Cream Action Surface",
+        "tonalRamp": [
+          "oklch(15% 0.02 50)",
+          "oklch(27% 0.02 50)",
+          "oklch(39% 0.02 50)",
+          "oklch(51% 0.02 50)",
+          "oklch(63% 0.02 50)",
+          "oklch(75% 0.02 50)",
+          "oklch(87% 0.02 50)",
+          "oklch(95% 0.02 50)"
+        ]
+      },
+      "muted-ink": {
+        "role": "neutral",
+        "displayName": "Muted Chocolate",
+        "tonalRamp": [
+          "oklch(15% 0.10 50)",
+          "oklch(27% 0.10 50)",
+          "oklch(39% 0.10 50)",
+          "oklch(51% 0.10 50)",
+          "oklch(63% 0.10 50)",
+          "oklch(75% 0.10 50)",
+          "oklch(87% 0.10 50)",
+          "oklch(95% 0.10 50)"
+        ]
+      }
+    },
+    "breakpoints": [
+      {
+        "name": "narrow",
+        "value": "380px"
+      },
+      {
+        "name": "mobile",
+        "value": "760px"
+      },
+      {
+        "name": "tablet",
+        "value": "1100px"
+      },
+      {
+        "name": "wide",
+        "value": "1600px"
+      }
+    ],
+    "motion": [
+      {
+        "name": "action-transition",
+        "purpose": "Button color and hover translation.",
+        "value": ".2s ease"
+      },
+      {
+        "name": "dog-arrives",
+        "purpose": "Dog entry from translateY(20px) and brightness(.9) to rest.",
+        "value": "1.1s cubic-bezier(.16,1,.3,1)"
+      },
+      {
+        "name": "reduced-motion",
+        "purpose": "Disable animations and transitions when reduced motion is requested.",
+        "value": "none"
+      }
+    ],
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Hero heading."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Supporting prose."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Action text."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Commitment headings."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section headings."
+      }
+    }
+  }
+}
