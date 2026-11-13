@@ -8,7 +8,7 @@ web
 
 ## Stack
 
-Next.js / React (user's choice). Greenfield: no code exists yet. Hosting/deploy target not yet decided.
+Next.js 16 (App Router), React 19, TypeScript. Hosting/deploy target not yet decided.
 
 ## Users
 
@@ -16,7 +16,7 @@ Dog owners in Resende, RJ, discovering the brand, learning what the store sells,
 
 ## Product Purpose
 
-Nardini Select is a pet shop in Resende, RJ, focused on dog owners. The current website presents the brand, the store's categories, and the physical location. Success means a visitor understands the store's offer and can visit or contact it.
+Nardini Select is a pet shop in Resende, RJ, focused on dog owners. The current website presents the brand, the store's categories, and the physical location. Success means a visitor understands the store's offer and can visit or contact it. The site will evolve into an e-commerce store; that scope is not defined yet.
 
 ## Positioning
 
@@ -30,7 +30,7 @@ A specialized pet shop offering carefully curated products for pets' well-being,
 
 ## Capabilities and Constraints
 
-- No cart, payment, or account system. WhatsApp is the contact channel.
+- In the current scope there is no cart, payment, or account system. WhatsApp is the contact channel.
 - No product catalog, individual product listings, or prices in the current site scope.
 - Categories: professional training materials; natural treats; natural food; toys; hygiene and care products; bowls and accessories.
 - Do not render the phone number in visible text, footer, or storefront imagery. Use WhatsApp buttons labeled "Fale com a gente". Conceal the small printed phone strip in the storefront image displayed by the website, preserving the original source. A direct WhatsApp link does not make the destination number secret or inaccessible; do not claim it does.
@@ -41,12 +41,12 @@ A specialized pet shop offering carefully curated products for pets' well-being,
 ## Brand Commitments
 
 - Name: "Nardini Select".
-- Brand references are in `marca/`: existing logo variations, dog symbol, and promotional artwork. Preserve their brown, burnt-orange and beige palette and strong typography.
+- Brand source files (logo variations, dog symbol, promotional artwork) are kept outside the repository; the site uses the exports in `public/images/`. Preserve their brown, burnt-orange and beige palette and strong typography.
 - Existing brand line: "Uma escolha com assinatura."
 - The approved beige/orange/chocolate palette is retained. On desktop keep a generous gap between hero text and the Weimaraner; on mobile stack and crop efficiently without text overlap.
 - Current home composition is specified in `design/home-content-v3.md`: five sections of at least one viewport height, lighter layout, no pillar cards, no reasons-to-choose section, no feed. Hero uses the separate panoramic background and dog foreground assets across desktop and mobile. Hero headline: "Mais bem-estar começa com boas escolhas." Support: "Produtos selecionados com critério para cuidar, estimular e enriquecer a vida do seu pet."
-- The dog depicted in `marca/CÃO MARCA.png` is a silver-gray Weimaraner. Any photographic interpretation must follow that reference's head proportions, dropped ears, long muzzle, elegant neck, and pose. Do not use a golden or caramel Labrador as the brand dog.
-- `marca/loja-frente.jpeg` is the real storefront photo; use it to help visitors recognize the shop. Generated imagery is illustrative and must not replace documentary storefront photography.
+- The brand dog symbol (kept with the brand sources) is a silver-gray Weimaraner. Any photographic interpretation must follow that reference's head proportions, dropped ears, long muzzle, elegant neck, and pose. Do not use a golden or caramel Labrador as the brand dog.
+- `public/images/loja-frente.jpg` is the real storefront photo, with the phone strip concealed (the original stays with the brand sources); use it to help visitors recognize the shop. Generated imagery is illustrative and must not replace documentary storefront photography.
 
 ## Evidence on Hand
 

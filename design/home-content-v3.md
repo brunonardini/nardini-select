@@ -24,7 +24,7 @@ Nenhum endereço, marcador de mapa ou rótulo de localização no hero.
 
 ## Posicionamento
 
-Título em três linhas à esquerda: Qualidade, / especialização / e curadoria. Texto aprovado na revisão anterior à direita; selo original `marca/NARDINE SELECT SELO.png` como assinatura em espaço próprio, menor que o título e sem competir com o texto. No mobile empilhar com respiro.
+Título em três linhas à esquerda: Qualidade, / especialização / e curadoria. Texto aprovado na revisão anterior à direita; selo original da marca (no site, `public/images/selo-transparente.png`) como assinatura em espaço próprio, menor que o título e sem competir com o texto. No mobile empilhar com respiro.
 
 ## Portfólio
 
