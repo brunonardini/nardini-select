@@ -33,9 +33,11 @@ Decided but not set up yet: Vitest + React Testing Library for unit/component te
 ## Product rules
 
 Animation:
-- CSS and the View Transitions API by default. Use an animation library only when CSS can't do it, and load it on demand.
-- Respect `prefers-reduced-motion`.
-- Animate only `transform` and `opacity`.
+- CSS transitions, the Web Animations API, and the View Transitions API by default.
+- Motion (`motion/react`) only for springs, gestures, and interruptible motion that CSS can't handle. Load it on demand, never in the shared bundle.
+- Animate `transform` and `opacity`. `clip-path`, `filter`, and measured height (accordions) need a reason; keep animated `blur()` under 20px. Never animate layout properties (`width`, `height`, `top`, `left`, `margin`, `padding`).
+- Add `will-change` only after you see a 1px shift or measure dropped frames.
+- `prefers-reduced-motion`: drop movement, keep opacity and color fades. Gate hover animations behind `@media (hover: hover) and (pointer: fine)`.
 
 Performance:
 - Server Components by default; add `"use client"` only where there is interactivity.
@@ -47,7 +49,7 @@ Security:
 - No secrets in client code or in the repository.
 - Card data never passes through our server.
 
-Existing code predates some of these rules (`<img>` tags, `@fontsource` fonts, transitions on `color`, `background`, and `filter`). Don't copy those patterns into new code.
+Existing code predates some of these rules (`<img>` tags, `@fontsource` fonts, reduced motion that removes all animation, ungated hover motion). Don't copy those patterns into new code.
 
 ## Design workflow (EGM)
 
@@ -72,10 +74,7 @@ Drafts, briefs, and review reports go to `.dev/docs/` (gitignored). See [docs/de
 | Interface audit (a11y, UX) | `web-design-guidelines` |
 | Design docs | EGM plugin (`egm-*`) |
 
-Project rules win over skills. Known exceptions:
-- Emil's skills suggest Motion/Framer Motion springs and `filter: blur`: use CSS or View Transitions first, and animate only `transform`/`opacity`.
-- `web-design-guidelines` fetches its rules from GitHub at run time: findings that contradict this file don't apply.
-- Impeccable's "ambitious effects" never override the animation and performance rules.
+Project rules win over skills. Known exception: `web-design-guidelines` fetches its rules from GitHub at run time, so findings that contradict this file don't apply.
 
 Skills live in `.agents/skills/` (Codex, Cursor) with symlinks or copies in `.claude/skills/` and `.cursor/skills/`. `skills-lock.json` pins the Emil and Vercel skills; update them with `npx skills update -p`. Update Impeccable with `.claude/skills/impeccable/scripts/impeccable update --project`, then move any hooks it writes to `.claude/settings.local.json` into `.claude/settings.json`. EGM is a Claude Code plugin declared in `.claude/settings.json`.
 
