@@ -1,6 +1,6 @@
 # Nardini Select
 
-Home institucional em Next.js, React e TypeScript. Usa fontes locais e os arquivos aprovados da marca.
+Site da Nardini Select, pet shop em Resende, RJ. Hoje é a home institucional da loja, em Next.js, React e TypeScript; vai evoluir para um e-commerce.
 
 ## Executar
 
@@ -38,3 +38,9 @@ Se a porta 3000 estiver ocupada: `npm run start -- --port 3100`.
 - `scripts/check-page.cjs`: verificação no navegador; requer Playwright disponível (`PLAYWRIGHT_MODULE` pode indicar a instalação) e Edge. Executar com o servidor na porta 3100. Verifica cinco viewports e salva os prints em `.impeccable/review/`.
 
 Não há catálogo, preços, carrinho, feed do Instagram ou publicação em hospedagem configurada. Os links de mapas, Instagram e WhatsApp estão ativos.
+
+## Desenvolvimento com IA
+
+O projeto é preparado para agentes de IA (Claude Code, Codex, Cursor). As regras, os comandos e as skills instaladas estão no [AGENTS.md](AGENTS.md), a fonte única para agentes; o `CLAUDE.md` só importa esse arquivo.
+
+Mudanças de design ou arquitetura seguem o Elephant-Goldfish Model (EGM): um documento de design revisado antes do código. Os documentos aprovados ficam em [docs/designs/](docs/designs/README.md). O contexto de produto e de design usado pela skill Impeccable está em [PRODUCT.md](PRODUCT.md) e [DESIGN.md](DESIGN.md).
