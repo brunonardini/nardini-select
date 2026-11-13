@@ -1,9 +1,10 @@
 {
   "version": 1,
   "hooks": {
-    "preToolUse": [
+    "postToolUse": [
       {
-        "command": "[ ! -f '/home/megatroom/.cursor/skills/impeccable/scripts/impeccable' ] || '/home/megatroom/.cursor/skills/impeccable/scripts/impeccable' hook-before-edit",
+        "command": "[ ! -f \".cursor/skills/impeccable/scripts/impeccable\" ] || \".cursor/skills/impeccable/scripts/impeccable\" hook-before-edit",
+        "matcher": "^Write$",
         "timeout": 5
       }
     ]

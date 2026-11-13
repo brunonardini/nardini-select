@@ -5,3 +5,19 @@ out/
 .env*
 !.env.example
 .impeccable/review/
+
+# EGM scratch drafts
+.dev/docs/
+
+# Local-only files (brand sources, etc.)
+tmp/
+
+# Impeccable: platform engine binaries (the launcher downloads and verifies them)
+**/skills/impeccable/scripts/bin/
+# Impeccable: per-user state and private config
+.impeccable/config.local.json
+.impeccable/hook.cache.json
+.impeccable/hook.pending.json
+
+# Claude Code: per-user settings
+.claude/settings.local.json
