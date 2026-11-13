@@ -41,6 +41,6 @@ Não há catálogo, preços, carrinho, feed do Instagram ou publicação em hosp
 
 ## Desenvolvimento com IA
 
-O projeto é preparado para agentes de IA (Claude Code, Codex, Cursor). As regras, os comandos e as skills instaladas estão no [AGENTS.md](AGENTS.md), a fonte única para agentes; o `CLAUDE.md` só importa esse arquivo.
+O projeto é preparado para agentes de IA (Claude Code, Codex, Cursor). As regras, os comandos e as skills instaladas estão no [AGENTS.md](AGENTS.md), a fonte única para agentes, lida diretamente pelas três ferramentas (no Claude Code, a partir da versão 2.1.277).
 
 Mudanças de design ou arquitetura seguem o Elephant-Goldfish Model (EGM): um documento de design revisado antes do código. Os documentos aprovados ficam em [docs/designs/](docs/designs/README.md). O contexto de produto e de design usado pela skill Impeccable está em [PRODUCT.md](PRODUCT.md) e [DESIGN.md](DESIGN.md).

@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Single source of rules for AI agents in this repository. Other instruction files point here.
+Single source of rules for AI agents in this repository. Claude Code (v2.1.277 or later), Codex, and Cursor read it directly. Don't add a `CLAUDE.md` or `CLAUDE.local.md`: Claude Code stops reading this file when either exists.
 
 ## Project
 
