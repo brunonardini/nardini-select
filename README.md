@@ -1,5 +1,9 @@
 # Nardini Select
 
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/brunonardini/nardini-select/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/brunonardini/nardini-select/tree/main)
+[![codecov](https://codecov.io/gh/brunonardini/nardini-select/branch/main/graph/badge.svg?token=RAnmvbM53n)](https://codecov.io/gh/brunonardini/nardini-select)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/56d8c00c-f7c0-4a7d-a042-c0a8474d5230/deploy-status)](https://app.netlify.com/projects/nardini-select/deploys)
+
 Site da Nardini Select, pet shop em Resende, RJ. Hoje é a home institucional da loja, em Next.js, React e TypeScript; vai evoluir para um e-commerce.
 
 ## Executar
