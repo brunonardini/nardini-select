@@ -62,6 +62,7 @@ footer in this description isn't part of the commit.
 - [ ] New Server Actions are wrapped with `Sentry.withServerActionInstrumentation()`
 - [ ] Card data never passes through our server
 - [ ] No secrets in the repository or in client code; the WhatsApp number stays out of page text, images, and client components
+- [ ] Security fixes use a neutral title and description, with no vulnerability details, alert links, or exploit steps (the PR and its release notes are public)
 
 **Configuration and docs**
 

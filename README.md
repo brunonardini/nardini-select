@@ -80,6 +80,10 @@ When a merge produces a version, CircleCI creates the tag and the GitHub release
 
 Rollback: in Netlify, open the Deploys tab, open the last good deploy, and click Publish deploy. This republishes that deploy without rebuilding. Then fix the problem in a PR titled `fix: ...`; the merge releases a new PATCH version and deploys it automatically.
 
+## Security
+
+CodeQL scans the code on `main` and weekly (`.github/workflows/codeql.yml`); its alerts are visible only to the maintainer. To report a vulnerability, see [SECURITY.md](SECURITY.md).
+
 ## Commits
 
 Commits follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) and are written in English, for example `docs(readme): add status badges`. PRs are squash-merged, so the PR title becomes the commit on `main` and follows the same format; a GitHub Action validates it. The description follows the [.github/pull_request_template.md](.github/pull_request_template.md) template, which tracks the project rules. Locally, commitlint checks each commit through the `commit-msg` hook, installed by `npm install`. Details in [AGENTS.md](AGENTS.md#commits-and-pull-requests).

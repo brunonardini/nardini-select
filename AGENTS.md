@@ -130,6 +130,13 @@ Security:
 - No secrets in client code or in the repository.
 - Card data never passes through our server.
 
+Security scanning (CodeQL) and disclosure — the repository is public, so vulnerabilities stay private until fixed:
+- `.github/workflows/codeql.yml` scans JavaScript/TypeScript and the GitHub workflows (`security-extended` queries) on pushes to `main`, weekly, and on demand. Alerts appear only in the Security tab, which only the owner can see.
+- Never add a `pull_request` trigger to it (PR alerts become annotations anyone can read), debug logging, or SARIF/database artifact uploads, and keep GitHub's CodeQL default setup disabled.
+- Don't describe a vulnerability in public places: issues, PR titles and descriptions, commit messages, code comments, or release notes. PR titles become public release notes, so a security fix gets a neutral title (for example `fix(contact): validate the redirect target`), with no alert links or exploit details.
+- Read alerts with `gh api repos/brunonardini/nardini-select/code-scanning/alerts` and report them only in this private session, never in a file that gets committed.
+- Outside reports come through private vulnerability reporting (see `SECURITY.md`).
+
 Existing code predates some of these rules (`<img>` tags, `@fontsource` fonts, reduced motion that removes all animation, ungated hover motion). Don't copy those patterns into new code.
 
 ## Design workflow (EGM)
