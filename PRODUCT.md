@@ -8,7 +8,7 @@ web
 
 ## Stack
 
-Next.js 16 (App Router), React 19, TypeScript. Hosting/deploy target not yet decided.
+Next.js 16 (App Router), React 19, TypeScript. Hosted on Netlify, with error monitoring in Sentry.
 
 ## Users
 
@@ -36,7 +36,6 @@ A specialized pet shop offering carefully curated products for pets' well-being,
 - Do not render the phone number in visible text, footer, or storefront imagery. Use WhatsApp buttons labeled "Fale com a gente". Conceal the small printed phone strip in the storefront image displayed by the website, preserving the original source. A direct WhatsApp link does not make the destination number secret or inaccessible; do not claim it does.
 - Place prominent WhatsApp and Instagram contact actions after the location/address section, in two open columns on desktop and stacked on mobile. No Instagram feed in the current scope.
 - Use an address-based directions link. Do not invent local landmarks, routes, store hours, delivery coverage, or a map pin that has not been verified.
-- Hosting/deploy target remains undecided.
 
 ## Brand Commitments
 

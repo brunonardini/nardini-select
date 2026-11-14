@@ -8,15 +8,23 @@ Site da Nardini Select, pet shop em Resende, RJ. Hoje é a home institucional da
 
 ## Executar
 
-Requer Node.js 20.9 ou superior.
+Requer Node.js 20.19.0 ou superior.
 
 Crie um arquivo `.env` na raiz do projeto. Ele fica fora do Git. A variável `WHATSAPP_NUMBER` é o telefone usado no redirecionamento para o WhatsApp: somente dígitos, com código do país, sem `+`, espaços ou pontuação. No ambiente de desenvolvimento, um número fictício basta para a rota funcionar:
 
 ```ini
 WHATSAPP_NUMBER=5511999999999
+# Opcional: envia erros, traces e logs ao projeto nardini-select na Sentry.
+NEXT_PUBLIC_SENTRY_DSN=
 ```
 
-Em produção, defina o número real da loja na mesma variável, no ambiente do servidor.
+Sem `NEXT_PUBLIC_SENTRY_DSN`, a Sentry fica desligada. O DSN está em Settings > Projects > nardini-select > Client Keys (DSN), na Sentry.
+
+O site é publicado no Netlify. Em produção, configure nas variáveis de ambiente do Netlify:
+
+- `WHATSAPP_NUMBER`: o número real da loja.
+- `NEXT_PUBLIC_SENTRY_DSN`: o DSN do projeto na Sentry.
+- `SENTRY_AUTH_TOKEN`: token de organização da Sentry, usado no build para enviar os source maps. Nunca entra no repositório.
 
 ```sh
 npm ci
@@ -55,7 +63,7 @@ O CircleCI ([.circleci/config.yml](.circleci/config.yml)) instala as dependênci
 - `public/images`: somente os arquivos usados pela página. A fachada exibida tem a faixa do telefone ocultada; os originais da marca ficam fora do Git (localmente em `tmp/marca/`, ignorado).
 - `scripts/check-page.cjs`: verificação no navegador; requer Playwright disponível (`PLAYWRIGHT_MODULE` pode indicar a instalação) e Edge. Executar com o servidor na porta 3100. Verifica cinco viewports e salva os prints em `.impeccable/review/`.
 
-Não há catálogo, preços, carrinho, feed do Instagram ou publicação em hospedagem configurada. Os links de mapas, Instagram e WhatsApp estão ativos.
+Não há catálogo, preços, carrinho ou feed do Instagram. Os links de mapas, Instagram e WhatsApp estão ativos.
 
 ## Commits
 

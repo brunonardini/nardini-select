@@ -8,7 +8,7 @@ Nardini Select: a dog-focused pet shop in Resende, RJ, Brazil. Today the reposit
 
 ## Stack and commands
 
-Next.js 16 (App Router), React 19, TypeScript 6, npm. Node.js 20.9 or later. TypeScript stays on 6.0.x because `typescript-eslint` doesn't support TypeScript 7 yet.
+Next.js 16 (App Router), React 19, TypeScript 6, npm. Node.js 20.19.0 or later. Hosted on Netlify. TypeScript stays on 6.0.x because `typescript-eslint` doesn't support TypeScript 7 yet.
 
 | Task | Command |
 | --- | --- |
@@ -36,6 +36,17 @@ Testing:
 - User-facing copy is Portuguese (pt-BR).
 - `WHATSAPP_NUMBER` comes from `.env` and is read only on the server (`app/contato/whatsapp/route.ts`). Never show the phone number in page text, images, or client components.
 - `public/images` holds only files the page uses. Brand source files stay out of Git.
+
+## Monitoring (Sentry)
+
+Errors, tracing, and logs go to the Sentry project `bruno-nardini/nardini-select` through `@sentry/nextjs`.
+
+- SDK init: `instrumentation-client.ts` (browser), `sentry.server.config.ts` and `sentry.edge.config.ts` (loaded by `instrumentation.ts`), and `app/global-error.tsx` for render errors. Keep the three `Sentry.init` calls in sync.
+- `NEXT_PUBLIC_SENTRY_DSN` enables the SDK; without it, Sentry stays off (tests and CI run without it).
+- Environment comes from Netlify's `CONTEXT` (`production`, `deploy-preview`, `branch-deploy`), falling back to `NODE_ENV`. The release comes from the commit Netlify builds.
+- Trace sample rate: 100% in development, 10% otherwise.
+- `SENTRY_AUTH_TOKEN` exists only in Netlify, for source map upload during the build. Never commit it or ask for it in chat.
+- Wrap new Server Actions with `Sentry.withServerActionInstrumentation()`.
 
 ## Commits and pull requests
 
