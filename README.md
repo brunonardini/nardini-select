@@ -28,6 +28,15 @@ npm run start
 
 Se a porta 3000 estiver ocupada: `npm run start -- --port 3100`.
 
+## Testes
+
+```sh
+npm test               # unidade e componentes (Vitest + React Testing Library)
+npm run test:e2e       # ponta a ponta (Playwright), faz o build e sobe o site na porta 3200
+```
+
+Antes do primeiro `test:e2e`, instale o navegador: `npx playwright install chromium`.
+
 ## Estrutura
 
 - `app/page.tsx`: conteúdo e cinco seções da home.

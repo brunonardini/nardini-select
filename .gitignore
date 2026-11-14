@@ -21,3 +21,10 @@ tmp/
 
 # Claude Code: per-user settings
 .claude/settings.local.json
+
+# Tests
+/coverage/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

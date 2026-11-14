@@ -18,13 +18,20 @@ Next.js 16 (App Router), React 19, TypeScript, npm. Node.js 20.9 or later.
 | Typecheck | `npm run typecheck` |
 | Format | `npm run format:check` / `npm run format` |
 | Lint | not configured yet |
-| Tests | not configured yet |
+| Unit tests | `npm test` (`npm run test:watch` while working) |
+| E2E tests | `npm run test:e2e` |
 
-Decided but not set up yet: Vitest + React Testing Library for unit/component tests, Playwright for E2E, coverage published to Codecov. `scripts/check-page.cjs` is a manual browser check (see README).
+Testing:
+- Unit and component tests: Vitest + React Testing Library, next to the code as `app/**/*.test.ts(x)`. Query by role and accessible name. Async Server Components can't be unit tested; cover them with E2E.
+- E2E: Playwright in `e2e/`, desktop (1440×900) and mobile (Pixel 7) projects. It builds and starts the app on port 3200 with a fake `WHATSAPP_NUMBER`. First run: `npx playwright install chromium`.
+- Add or update tests with every behavior change, and run `npm test` before finishing.
+- Decided but not set up yet: coverage published to Codecov.
+
+`scripts/check-page.cjs` is an older manual browser check (see README).
 
 ## Conventions
 
-- Run `npm run typecheck` and `npm run format:check` before finishing a change.
+- Run `npm run typecheck`, `npm run format:check`, and `npm test` before finishing a change.
 - Prettier with single quotes; code lives in `app/`.
 - User-facing copy is Portuguese (pt-BR).
 - `WHATSAPP_NUMBER` comes from `.env` and is read only on the server (`app/contato/whatsapp/route.ts`). Never show the phone number in page text, images, or client components.
