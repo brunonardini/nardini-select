@@ -1,4 +1,5 @@
 import type { SVGProps } from 'react';
+/** Line icon in `currentColor`, hidden from assistive technology. */
 export function Icon({
   name,
   ...props

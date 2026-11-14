@@ -18,7 +18,10 @@ export const viewport: Viewport = { themeColor: '#522e24' };
 export default function Layout({ children }: LayoutProps<'/'>) {
   return (
     <html lang="pt-BR" className={brandFont.variable}>
-      <body>{children}</body>
+      <body>
+        {/* Base UI portals render beside .root and stack above it. */}
+        <div className="root">{children}</div>
+      </body>
     </html>
   );
 }

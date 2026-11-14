@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { Icon } from './icons';
+import { Icon } from './icon';
 
 describe('Icon', () => {
   it.each(['down', 'pin', 'whatsapp', 'instagram'] as const)(
