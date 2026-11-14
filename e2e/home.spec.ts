@@ -21,9 +21,7 @@ test.afterEach(() => {
   expect(pageErrors, 'uncaught errors in the page').toEqual([]);
 });
 
-test('renders five sections, each at least one viewport tall', async ({
-  page,
-}) => {
+test('renders five sections below the header', async ({ page }) => {
   const viewportHeight = page.viewportSize()!.height;
 
   const ids = await page
@@ -31,7 +29,14 @@ test('renders five sections, each at least one viewport tall', async ({
     .evaluateAll((elements) => elements.map((element) => element.id));
   expect(ids).toEqual(sections);
 
-  for (const id of sections) {
+  const header = (await page.getByRole('banner').boundingBox())!;
+  const hero = (await page.locator('#inicio').boundingBox())!;
+  expect(hero.y).toBeGreaterThanOrEqual(header.y + header.height);
+  if (isMobile(page)) {
+    expect(hero.y + hero.height).toBeGreaterThanOrEqual(viewportHeight);
+  }
+
+  for (const id of sections.slice(1)) {
     const box = await page.locator(`#${id}`).boundingBox();
     expect(box!.height, `#${id} height`).toBeGreaterThanOrEqual(viewportHeight);
   }
@@ -106,25 +111,44 @@ test('mobile menu closes after navigating and on Escape', async ({ page }) => {
   await expect(toggle).toBeFocused();
 });
 
-test('header links fit the café panel or move into the menu', async ({
+test('header links stay inline until the mobile breakpoint', async ({
   page,
 }) => {
   test.skip(isMobile(page), 'Checks the desktop widths');
   const toggle = page.getByRole('button', { name: 'Abrir menu' });
-  const firstLink = page.getByRole('link', { name: 'A marca' });
+  const navigation = page.getByRole('navigation');
+  const firstLink = navigation.getByRole('link', { name: 'A marca' });
 
-  // At 1281px and above the links show inline, inside the café panel.
-  await page.setViewportSize({ width: 1281, height: 900 });
+  await page.setViewportSize({ width: 761, height: 900 });
   await expect(toggle).toBeHidden();
-  const link = await firstLink.boundingBox();
-  const panel = await page.locator('.hero-panel').boundingBox();
-  expect(link!.x).toBeGreaterThanOrEqual(panel!.x);
+  await expect(firstLink).toBeVisible();
+  const lastLink = (await navigation
+    .getByRole('link', { name: 'Fale com a gente' })
+    .boundingBox())!;
+  expect(lastLink.x + lastLink.width).toBeLessThan(761);
 
-  // Narrower, they would spill onto the off-white side: the toggle takes over.
-  await page.setViewportSize({ width: 1200, height: 900 });
+  await page.setViewportSize({ width: 760, height: 900 });
   await expect(firstLink).toBeHidden();
   await toggle.click();
   await expect(firstLink).toBeVisible();
+});
+
+test('the desktop dog and monogram scale together from the header edge', async ({
+  page,
+}) => {
+  test.skip(isMobile(page), 'The hero artwork only shows on wider screens');
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  for (const width of [761, 969, 1299, 1680, 1864]) {
+    await page.setViewportSize({ width, height: 949 });
+    const mark = (await page.locator('.hero-monogram').boundingBox())!;
+    const dog = (await page.locator('.hero-dog').boundingBox())!;
+    const header = (await page.getByRole('banner').boundingBox())!;
+    const hero = (await page.locator('#inicio').boundingBox())!;
+    expect(mark.y).toBeCloseTo(header.y + header.height);
+    expect(mark.y + mark.height).toBeCloseTo(hero.y + hero.height);
+    expect(dog.height / mark.height).toBeGreaterThan(0.8);
+    expect(dog.height / mark.height).toBeLessThan(0.9);
+  }
 });
 
 test('contact links open WhatsApp and Instagram in a new tab', async ({

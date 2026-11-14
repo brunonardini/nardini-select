@@ -12,7 +12,7 @@ const links = [
 const MENU = 'menu';
 
 /**
- * Main site navigation. Wide screens show the links inline; up to 1280px a
+ * Main site navigation. Wide screens show the links inline; up to 760px a
  * toggle opens them in a panel under the header. Base UI handles Escape,
  * outside clicks, focus leaving the panel, and focus return.
  */

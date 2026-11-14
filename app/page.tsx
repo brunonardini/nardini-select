@@ -34,13 +34,13 @@ export default function Home() {
       <a href="#conteudo" className="skip-link">
         Pular para o conteúdo
       </a>
+      <SiteHeader />
       <main id="conteudo">
         <section
           className="hero section"
           id="inicio"
           aria-labelledby="hero-title"
         >
-          <SiteHeader />
           <div className="hero-copy">
             <h1 id="hero-title">
               Mais bem-estar começa com <strong>boas escolhas.</strong>
@@ -61,7 +61,15 @@ export default function Home() {
             </div>
           </div>
           <div className="hero-panel">
-            <span className="hero-stem" aria-hidden="true" />
+            <svg
+              className="hero-monogram"
+              viewBox="0 0 222 182"
+              preserveAspectRatio="none"
+              aria-hidden="true"
+            >
+              <path d="M0 0H65L222 182H157L65 66V182H0Z" fill="var(--cafe)" />
+              <path d="M152 0H222V182L152 101Z" fill="var(--terracota)" />
+            </svg>
             <Image
               className="hero-dog"
               src="/images/hero-weimaraner-transparente.png"

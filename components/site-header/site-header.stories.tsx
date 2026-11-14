@@ -5,21 +5,12 @@ import { SiteHeader } from './site-header';
 const meta = {
   title: 'Components/SiteHeader',
   component: SiteHeader,
-  // The header sits on the hero: off-white on the left, café on the right.
-  decorators: [
-    (Story) => (
-      <div className="hero section">
-        <Story />
-        <div className="hero-panel" />
-      </div>
-    ),
-  ],
   parameters: {
     layout: 'fullscreen',
     docs: {
       description: {
         component:
-          'Logo and main navigation (Base UI `NavigationMenu`). Above 1280px the links show inline on the café panel; up to 1280px a toggle opens them in a panel under the header. Escape, a click outside, or choosing a link closes it.',
+          'Logo and main navigation (Base UI `NavigationMenu`). Above 760px the links show inline; up to 760px a toggle opens them in a panel under the header. Escape, a click outside, or choosing a link closes it.',
       },
     },
   },
@@ -62,11 +53,12 @@ export const DesktopFocused: Story = {
   },
 };
 
-/** Between 1101px and 1280px the links would overflow the café panel. */
-export const NarrowDesktopMenuOpen: Story = {
+export const NarrowDesktop: Story = {
   globals: { viewport: { value: 'narrowDesktop' } },
   play: async ({ canvasElement }) => {
-    await openMenu(canvasElement);
+    await expect(
+      within(canvasElement).getByRole('link', { name: 'A marca' }),
+    ).toBeVisible();
   },
 };
 
