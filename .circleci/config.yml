@@ -84,15 +84,46 @@ jobs:
       - store_test_results:
           path: reports/unit
 
+  build:
+    executor: node
+    environment:
+      NEXT_TELEMETRY_DISABLED: '1'
+    steps:
+      - attach_setup
+      # Next.js reuses compiled output from .next/cache across builds.
+      - restore_cache:
+          name: Restore Next.js build cache
+          keys:
+            - next-cache-v1-{{ arch }}-{{ checksum "package-lock.json" }}-{{ .Revision }}
+            - next-cache-v1-{{ arch }}-{{ checksum "package-lock.json" }}-
+      - run:
+          name: Next.js build
+          command: npm run build
+      - save_cache:
+          name: Save Next.js build cache
+          key: next-cache-v1-{{ arch }}-{{ checksum "package-lock.json" }}-{{ .Revision }}
+          paths:
+            - .next/cache
+      - persist_to_workspace:
+          root: ~/project
+          paths:
+            - .next
+
   e2e-tests:
+    parameters:
+      project:
+        type: enum
+        enum: [desktop, mobile]
+        description: Playwright project from playwright.config.ts.
     executor: playwright
     environment:
       NEXT_TELEMETRY_DISABLED: '1'
     steps:
       - attach_setup
       - run:
-          name: Playwright
-          command: npm run test:e2e
+          name: Playwright (<< parameters.project >>)
+          # The build job already produced .next; Playwright only starts it.
+          command: npx playwright test --project=<< parameters.project >>
       - store_test_results:
           path: reports/e2e
       - store_artifacts:
@@ -110,5 +141,13 @@ workflows:
           requires: [setup]
       - unit-tests:
           requires: [setup]
-      - e2e-tests:
+      - build:
           requires: [setup]
+      - e2e-tests:
+          name: e2e-desktop
+          project: desktop
+          requires: [build]
+      - e2e-tests:
+          name: e2e-mobile
+          project: mobile
+          requires: [build]

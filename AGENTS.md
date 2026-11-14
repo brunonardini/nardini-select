@@ -23,7 +23,7 @@ Next.js 16 (App Router), React 19, TypeScript 6, npm. Node.js 20.9 or later. Typ
 
 Testing:
 - Unit and component tests: Vitest + React Testing Library, next to the code as `app/**/*.test.ts(x)`. Query by role and accessible name. Async Server Components can't be unit tested; cover them with E2E.
-- E2E: Playwright in `e2e/`, desktop (1440×900) and mobile (Pixel 7) projects. It builds and starts the app on port 3200 with a fake `WHATSAPP_NUMBER`. First run: `npx playwright install chromium`.
+- E2E: Playwright in `e2e/`, desktop (1440×900) and mobile (Pixel 7) projects. `npm run test:e2e` builds the app, then Playwright starts that build on port 3200 with a fake `WHATSAPP_NUMBER` (`npx playwright test` alone needs an existing build). First run: `npx playwright install chromium`.
 - Add or update tests with every behavior change, and run `npm test` before finishing.
 - Decided but not set up yet: coverage published to Codecov.
 

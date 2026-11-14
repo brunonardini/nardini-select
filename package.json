@@ -12,7 +12,7 @@
     "format:check": "prettier --check ./app ./e2e",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:e2e": "playwright test"
+    "test:e2e": "npm run build && playwright test"
   },
   "dependencies": {
     "@fontsource-variable/bricolage-grotesque": "latest",

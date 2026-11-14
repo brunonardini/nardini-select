@@ -30,11 +30,13 @@ export default defineConfig({
     },
     { name: 'mobile', use: { ...devices['Pixel 7'] } },
   ],
+  // Serves an existing production build: `npm run test:e2e` builds first,
+  // and in CI the build job does.
   webServer: {
-    command: `npm run build && npm run start -- --port ${port}`,
+    command: `npm run start -- --port ${port}`,
     url: baseURL,
     reuseExistingServer: !process.env.CI,
-    timeout: 180_000,
+    timeout: 60_000,
     env: { WHATSAPP_NUMBER: '5511999999999' },
   },
 });

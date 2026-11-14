@@ -39,7 +39,7 @@ npm run test:e2e       # ponta a ponta (Playwright), faz o build e sobe o site n
 
 Antes do primeiro `test:e2e`, instale o navegador: `npx playwright install chromium`.
 
-O CircleCI ([.circleci/config.yml](.circleci/config.yml)) instala as dependências uma vez, com cache, e roda essas quatro validações em paralelo a cada push.
+O CircleCI ([.circleci/config.yml](.circleci/config.yml)) instala as dependências uma vez, com cache, e a cada push roda em paralelo o lint, o Prettier, os testes de unidade e o build. Depois do build, os testes E2E rodam em dois jobs paralelos, um para desktop e outro para celular, sobre o mesmo build.
 
 ## Estrutura
 
