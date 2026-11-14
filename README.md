@@ -53,13 +53,13 @@ npm run typecheck      # generates the Next.js route types, then runs tsc
 npm run format:check   # Prettier
 npm run knip           # Knip: unused files, dependencies, and exports
 npm test               # unit and component tests (Vitest + React Testing Library)
-npm run test:coverage  # same, with a coverage report in coverage/
+npm run test:coverage  # same, with a coverage report in coverage/; fails below 90%
 npm run test:e2e       # end-to-end tests (Playwright); builds and serves the site on port 3200
 ```
 
 Before the first `test:e2e`, install the browser: `npx playwright install chromium`.
 
-CircleCI ([.circleci/config.yml](.circleci/config.yml)) installs dependencies once, with a cache, and on every push runs lint, Prettier, Knip, TypeScript type checking, unit tests, and the build in parallel. After the build, the E2E tests run in two parallel jobs, one for desktop and one for mobile, against the same build. Unit test coverage goes to Codecov. On `main`, once everything passes, the `release` job cuts the version and deploys to production (see below).
+CircleCI ([.circleci/config.yml](.circleci/config.yml)) installs dependencies once, with a cache, and on every push runs lint, Prettier, Knip, TypeScript type checking, unit tests, and the build in parallel. After the build, the E2E tests run in two parallel jobs, one for desktop and one for mobile, against the same build. The unit test job fails if coverage drops below 90%, and the coverage goes to Codecov. On `main`, once everything passes, the `release` job cuts the version and deploys to production (see below).
 
 ## Structure
 

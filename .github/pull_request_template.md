@@ -40,7 +40,7 @@ footer in this description isn't part of the commit.
 
 - [ ] `npm run lint`, `npm run format:check`, `npm run knip`, `npm run typecheck`, and `npm test` pass
 - [ ] `npm run test:e2e` passes, or the change can't affect a page
-- [ ] New or changed behavior is covered by a unit or E2E test
+- [ ] New or changed behavior is covered by a unit or E2E test, and unit coverage stays at 90% or more
 
 <!-- Delete the groups below that don't apply to this PR. -->
 
