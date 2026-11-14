@@ -21,4 +21,12 @@ describe('GET /contato/whatsapp', () => {
       'Olá! Conheci a Nardini Select pelo site e gostaria de saber mais sobre a seleção de vocês.',
     );
   });
+
+  it('opens WhatsApp without a number when none is configured', () => {
+    vi.stubEnv('WHATSAPP_NUMBER', '');
+
+    const location = new URL(GET().headers.get('location') ?? '');
+
+    expect(location.origin + location.pathname).toBe('https://wa.me/');
+  });
 });
