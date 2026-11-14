@@ -57,6 +57,10 @@ O CircleCI ([.circleci/config.yml](.circleci/config.yml)) instala as dependênci
 
 Não há catálogo, preços, carrinho, feed do Instagram ou publicação em hospedagem configurada. Os links de mapas, Instagram e WhatsApp estão ativos.
 
+## Commits
+
+Os commits seguem o padrão [Conventional Commits](https://www.conventionalcommits.org/pt-br/v1.0.0/) e são escritos em inglês, por exemplo `docs(readme): add status badges`. Os PRs são integrados com squash, então o título do PR vira o commit na `main` e segue o mesmo padrão. Detalhes no [AGENTS.md](AGENTS.md#commits-and-pull-requests).
+
 ## Desenvolvimento com IA
 
 O projeto é preparado para agentes de IA (Claude Code, Codex, Cursor). As regras, os comandos e as skills instaladas estão no [AGENTS.md](AGENTS.md), a fonte única para agentes, lida diretamente pelas três ferramentas (no Claude Code, a partir da versão 2.1.277).

@@ -37,6 +37,34 @@ Testing:
 - `WHATSAPP_NUMBER` comes from `.env` and is read only on the server (`app/contato/whatsapp/route.ts`). Never show the phone number in page text, images, or client components.
 - `public/images` holds only files the page uses. Brand source files stay out of Git.
 
+## Commits and pull requests
+
+Commit messages follow [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/) and are written in English.
+
+```
+<type>[optional scope][!]: <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+- Types: `feat` (new feature) and `fix` (bug fix), plus `build`, `chore`, `ci`, `docs`, `perf`, `refactor`, `style`, and `test`.
+- Scope is optional and names the area changed, e.g. `feat(home): ...`, `ci(circleci): ...`.
+- Description: imperative mood, lowercase, no trailing period, about 72 characters at most.
+- Body: what changed and why, wrapped at 72 characters.
+- Breaking changes: `!` before the colon, a `BREAKING CHANGE: <description>` footer, or both.
+- PRs are squash-merged, and the PR title becomes the commit message on `main`. PR titles follow the same format, in English.
+
+Example:
+
+```
+fix(contact): keep the WhatsApp number out of client components
+
+The number now comes only from the server route, so it never ships
+in the page bundle.
+```
+
 ## Product rules
 
 Animation:
