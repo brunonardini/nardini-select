@@ -214,7 +214,6 @@ workflows:
             - lint
             - prettier
             - unit-tests
-            - build
             - e2e-desktop
             - e2e-mobile
           filters:
