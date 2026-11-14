@@ -1,0 +1,10 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "entry": ["scripts/*.cjs"],
+  "project": [
+    "**/*.{js,cjs,mjs,jsx,ts,tsx,mts,cts}",
+    "!.agents/**",
+    "!.claude/**",
+    "!.cursor/**"
+  ]
+}

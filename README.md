@@ -51,6 +51,7 @@ If port 3000 is taken: `npm run start -- --port 3100`.
 npm run lint           # ESLint (Next.js rules)
 npm run typecheck      # generates the Next.js route types, then runs tsc
 npm run format:check   # Prettier
+npm run knip           # Knip: unused files, dependencies, and exports
 npm test               # unit and component tests (Vitest + React Testing Library)
 npm run test:coverage  # same, with a coverage report in coverage/
 npm run test:e2e       # end-to-end tests (Playwright); builds and serves the site on port 3200
@@ -58,7 +59,7 @@ npm run test:e2e       # end-to-end tests (Playwright); builds and serves the si
 
 Before the first `test:e2e`, install the browser: `npx playwright install chromium`.
 
-CircleCI ([.circleci/config.yml](.circleci/config.yml)) installs dependencies once, with a cache, and on every push runs lint, Prettier, TypeScript type checking, unit tests, and the build in parallel. After the build, the E2E tests run in two parallel jobs, one for desktop and one for mobile, against the same build. Unit test coverage goes to Codecov. On `main`, once everything passes, the `release` job cuts the version and deploys to production (see below).
+CircleCI ([.circleci/config.yml](.circleci/config.yml)) installs dependencies once, with a cache, and on every push runs lint, Prettier, Knip, TypeScript type checking, unit tests, and the build in parallel. After the build, the E2E tests run in two parallel jobs, one for desktop and one for mobile, against the same build. Unit test coverage goes to Codecov. On `main`, once everything passes, the `release` job cuts the version and deploys to production (see below).
 
 ## Structure
 
@@ -89,6 +90,6 @@ Website and business content is in Portuguese (pt-BR): page copy, product and br
 
 ## AI-assisted development
 
-The project is set up for AI agents (Claude Code, Codex, Cursor). Rules, commands, and installed skills are in [AGENTS.md](AGENTS.md), the single source for agents, which all three tools read directly (Claude Code from version 2.1.277). Cursor's Source Control generate-commit button reads [`.cursorrules`](.cursorrules) at the repo root, which repeats the commit format from AGENTS.md, including the 72-character line wrap.
+The project is set up for AI agents (Claude Code, Codex, Cursor). Rules, commands, installed skills, and the Knip MCP server (declared in `.mcp.json`, `.cursor/mcp.json`, and `.codex/config.toml`) are in [AGENTS.md](AGENTS.md), the single source for agents, which all three tools read directly (Claude Code from version 2.1.277). Cursor's Source Control generate-commit button reads [`.cursorrules`](.cursorrules) at the repo root, which repeats the commit format from AGENTS.md, including the 72-character line wrap.
 
 Design and architecture changes follow the Elephant-Goldfish Model (EGM): a reviewed design document comes before code. Approved documents live in [docs/designs/](docs/designs/README.md). The product and design context used by the Impeccable skill is in [PRODUCT.md](PRODUCT.md) and [DESIGN.md](DESIGN.md).

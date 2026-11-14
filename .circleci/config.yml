@@ -78,6 +78,14 @@ jobs:
           name: Prettier
           command: npm run format:check
 
+  knip:
+    executor: node
+    steps:
+      - attach_setup
+      - run:
+          name: Knip (unused files, dependencies, and exports)
+          command: npm run knip
+
   typecheck:
     executor: node
     steps:
@@ -203,6 +211,8 @@ workflows:
           requires: [setup]
       - prettier:
           requires: [setup]
+      - knip:
+          requires: [setup]
       - typecheck:
           requires: [setup]
       - unit-tests:
@@ -224,6 +234,7 @@ workflows:
           requires:
             - lint
             - prettier
+            - knip
             - typecheck
             - unit-tests
             - e2e-desktop

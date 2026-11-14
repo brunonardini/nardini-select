@@ -20,6 +20,7 @@ Run `nvm use` at the start of every terminal session, before any `node`, `npm`, 
 | Typecheck | `npm run typecheck` (`next typegen`, then `tsc`; `next-env.d.ts` is generated and gitignored) |
 | Format | `npm run format:check` / `npm run format` |
 | Lint | `npm run lint` (ESLint with `eslint-config-next`) |
+| Unused code | `npm run knip` (Knip: unused files, dependencies, and exports) |
 | Unit tests | `npm test` (`npm run test:watch` while working, `npm run test:coverage` for coverage) |
 | E2E tests | `npm run test:e2e` |
 
@@ -31,9 +32,15 @@ Testing:
 
 `scripts/check-page.cjs` is an older manual browser check (see README).
 
+Knip:
+- `knip.json` keeps the defaults and the auto-detected plugins. It only declares `scripts/*.cjs` as entry files (manual scripts run with `node`) and leaves the installed skills (`.agents/`, `.claude/`, `.cursor/`) out of the project.
+- The Knip MCP server (`@knip/mcp`, a dev dependency) is declared in `.mcp.json` (Claude Code), `.cursor/mcp.json`, and `.codex/config.toml`. To configure Knip or resolve its findings, use its `knip-run` tool and read the doc topics it returns with `knip-docs`, instead of guessing.
+- Fix findings by removing dead code or listing the dependency; prefer targeted `entry`, `project`, or `ignoreDependencies` changes over the broad `ignore` option.
+- Keep `knip` on the same version as the one `@knip/mcp` depends on, so the MCP server and CI report the same results.
+
 ## Conventions
 
-- Run `npm run typecheck`, `npm run lint`, `npm run format:check`, and `npm test` before finishing a change. CI (CircleCI) runs lint, Prettier, TypeScript type checking, unit tests, and E2E tests on every push, and releases from `main` (see Releases and deploys).
+- Run `npm run typecheck`, `npm run lint`, `npm run format:check`, `npm run knip`, and `npm test` before finishing a change. CI (CircleCI) runs lint, Prettier, Knip, TypeScript type checking, unit tests, and E2E tests on every push, and releases from `main` (see Releases and deploys).
 - Prettier with single quotes; code lives in `app/`.
 - Language: website and business content is Portuguese (pt-BR): page copy, product and brand texts, and the approved content specs in `design/`. Everything else is English: documentation (including the README), AI agent instructions, code, code comments, commit messages, and PR titles and descriptions.
 - `WHATSAPP_NUMBER` comes from `.env` and is read only on the server (`app/contato/whatsapp/route.ts`). Never show the phone number in page text, images, or client components.
@@ -145,6 +152,7 @@ Drafts, briefs, and review reports go to `.dev/docs/` (gitignored). See [docs/de
 | React/Next.js performance | `vercel-react-best-practices` |
 | Next.js APIs | bundled docs in `node_modules/next/dist/docs/` (block below) |
 | Interface audit (a11y, UX) | `web-design-guidelines` |
+| Unused files, dependencies, exports | Knip MCP server (`knip-run`, `knip-docs`) |
 | Design docs | EGM plugin (`egm-*`) |
 
 Project rules win over skills. Known exception: `web-design-guidelines` fetches its rules from GitHub at run time, so findings that contradict this file don't apply.

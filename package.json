@@ -11,6 +11,7 @@
     "start": "next start --hostname 0.0.0.0",
     "typecheck": "next typegen && tsc --noEmit",
     "lint": "eslint .",
+    "knip": "knip",
     "format": "prettier --write ./app ./e2e",
     "format:check": "prettier --check ./app ./e2e",
     "test": "vitest run",
@@ -30,6 +31,8 @@
   "devDependencies": {
     "@commitlint/cli": "^21.2.4",
     "@commitlint/config-conventional": "^21.2.4",
+    "@commitlint/types": "^21.2.3",
+    "@knip/mcp": "^0.0.38",
     "@playwright/test": "^1.65.1",
     "@testing-library/dom": "^10.4.2",
     "@testing-library/jest-dom": "^7.0.1",
@@ -44,6 +47,7 @@
     "eslint-config-next": "^16.4.6",
     "husky": "^9.1.7",
     "jsdom": "^31.0.1",
+    "knip": "^6.45.1",
     "prettier": "3.10.1",
     "typescript": "~6.0.3",
     "vitest": "^5.1.0"
