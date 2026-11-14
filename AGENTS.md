@@ -31,7 +31,7 @@ Testing:
 
 ## Conventions
 
-- Run `npm run typecheck`, `npm run lint`, `npm run format:check`, and `npm test` before finishing a change. CI (CircleCI) runs lint, Prettier, unit, and E2E tests on every push, and releases from `main` (see Releases and deploys).
+- Run `npm run typecheck`, `npm run lint`, `npm run format:check`, and `npm test` before finishing a change. CI (CircleCI) runs lint, Prettier, TypeScript type checking, unit tests, and E2E tests on every push, and releases from `main` (see Releases and deploys).
 - Prettier with single quotes; code lives in `app/`.
 - Language: website and business content is Portuguese (pt-BR): page copy, product and brand texts, and the approved content specs in `design/`. Everything else is English: documentation (including the README), AI agent instructions, code, code comments, commit messages, and PR titles and descriptions.
 - `WHATSAPP_NUMBER` comes from `.env` and is read only on the server (`app/contato/whatsapp/route.ts`). Never show the phone number in page text, images, or client components.

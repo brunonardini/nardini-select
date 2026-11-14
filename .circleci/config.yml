@@ -77,6 +77,17 @@ jobs:
           name: Prettier
           command: npm run format:check
 
+  typecheck:
+    executor: node
+    steps:
+      - attach_setup
+      - run:
+          name: Generate Next.js route types
+          command: npm exec -- next typegen
+      - run:
+          name: TypeScript
+          command: npm run typecheck
+
   unit-tests:
     executor: node
     steps:
@@ -194,6 +205,8 @@ workflows:
           requires: [setup]
       - prettier:
           requires: [setup]
+      - typecheck:
+          requires: [setup]
       - unit-tests:
           requires: [setup]
       - build:
@@ -213,6 +226,7 @@ workflows:
           requires:
             - lint
             - prettier
+            - typecheck
             - unit-tests
             - e2e-desktop
             - e2e-mobile

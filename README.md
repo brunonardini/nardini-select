@@ -52,7 +52,7 @@ npm run test:e2e       # end-to-end tests (Playwright); builds and serves the si
 
 Before the first `test:e2e`, install the browser: `npx playwright install chromium`.
 
-CircleCI ([.circleci/config.yml](.circleci/config.yml)) installs dependencies once, with a cache, and on every push runs lint, Prettier, unit tests, and the build in parallel. After the build, the E2E tests run in two parallel jobs, one for desktop and one for mobile, against the same build. Unit test coverage goes to Codecov. On `main`, once everything passes, the `release` job cuts the version and deploys to production (see below).
+CircleCI ([.circleci/config.yml](.circleci/config.yml)) installs dependencies once, with a cache, and on every push runs lint, Prettier, TypeScript type checking, unit tests, and the build in parallel. The type check job generates Next.js route types before running `npm run typecheck`. After the build, the E2E tests run in two parallel jobs, one for desktop and one for mobile, against the same build. Unit test coverage goes to Codecov. On `main`, once everything passes, the `release` job cuts the version and deploys to production (see below).
 
 ## Structure
 
