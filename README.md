@@ -83,6 +83,6 @@ Website and business content is in Portuguese (pt-BR): page copy, product and br
 
 ## AI-assisted development
 
-The project is set up for AI agents (Claude Code, Codex, Cursor). Rules, commands, and installed skills are in [AGENTS.md](AGENTS.md), the single source for agents, which all three tools read directly (Claude Code from version 2.1.277).
+The project is set up for AI agents (Claude Code, Codex, Cursor). Rules, commands, and installed skills are in [AGENTS.md](AGENTS.md), the single source for agents, which all three tools read directly (Claude Code from version 2.1.277). Cursor's Source Control generate-commit button reads [`.cursorrules`](.cursorrules) at the repo root, which repeats the commit format from AGENTS.md, including the 72-character line wrap.
 
 Design and architecture changes follow the Elephant-Goldfish Model (EGM): a reviewed design document comes before code. Approved documents live in [docs/designs/](docs/designs/README.md). The product and design context used by the Impeccable skill is in [PRODUCT.md](PRODUCT.md) and [DESIGN.md](DESIGN.md).

@@ -1,0 +1,28 @@
+When generating a Git commit message for this repository, output only
+the message below. commitlint rejects the commit otherwise.
+
+<type>[optional scope]: <description>
+
+<body>
+
+Rules:
+- English. Conventional Commits.
+- Types: build, chore, ci, docs, feat, fix, perf, refactor, revert,
+  style, test.
+- Scope is optional and lowercase, such as ci(circleci) or feat(home).
+- Description: imperative mood, lowercase, no trailing period.
+- The whole header is at most 72 characters.
+- Blank line between the header and the body.
+- Body: what changed and why. Hard-wrap every line at 72 characters.
+  Count them. A body or footer line over 100 characters fails commitlint.
+  Never leave the body as one long line.
+- No markdown, no file list, and no bullet list of the diff.
+- Do not add ! or a BREAKING CHANGE footer. The project stays on 0.x
+  until the e-commerce launch.
+
+Example:
+
+fix(contact): keep the WhatsApp number out of client components
+
+The number now comes only from the server route, so it never ships
+in the page bundle.

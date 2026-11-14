@@ -90,6 +90,7 @@ Commit messages follow [Conventional Commits 1.0.0](https://www.conventionalcomm
 - When a change touches project rules or configuration (this file, the README, CI, release, lint, test, or commit settings, environment variables, or the rules the checklist covers), update the PR template in the same PR so its checklist stays accurate.
 - `.github/workflows/pr-title.yml` validates PR titles (types, lowercase description, no trailing period).
 - commitlint (`commitlint.config.mjs`, `@commitlint/config-conventional`) checks every local commit through the husky `commit-msg` hook, installed by `npm install`. Don't bypass it with `--no-verify`.
+- Cursor's Source Control generate-commit button reads `.cursorrules` at the repo root. That file repeats the format in this section, including the 72-character wrap. Keep the two in sync.
 
 Example:
 
