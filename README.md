@@ -28,14 +28,18 @@ npm run start
 
 Se a porta 3000 estiver ocupada: `npm run start -- --port 3100`.
 
-## Testes
+## Validações
 
 ```sh
+npm run lint           # ESLint (regras do Next.js)
+npm run format:check   # Prettier
 npm test               # unidade e componentes (Vitest + React Testing Library)
 npm run test:e2e       # ponta a ponta (Playwright), faz o build e sobe o site na porta 3200
 ```
 
 Antes do primeiro `test:e2e`, instale o navegador: `npx playwright install chromium`.
+
+O CircleCI ([.circleci/config.yml](.circleci/config.yml)) instala as dependências uma vez, com cache, e roda essas quatro validações em paralelo a cada push.
 
 ## Estrutura
 
