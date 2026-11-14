@@ -1,14 +1,13 @@
 import Image from 'next/image';
 import Header from './header';
-import HeroDog from './hero-dog';
 import { Icon } from './icons';
 const pillars = [
   {
     title: 'Seleção Criteriosa',
     image: 'pilar-selecao.png',
     concept:
-      'Qualidade, procedência, segurança e benefícios reais para os pets.',
-    message: 'Escolhas que fazem a diferença no dia a dia do seu pet.',
+      'Qualidade, procedência, segurança e benefícios reais para o seu cão.',
+    message: 'Escolhas melhores também são cuidado.',
   },
   {
     title: 'Bem-Estar e Desenvolvimento',
@@ -40,29 +39,37 @@ export default function Home() {
           aria-labelledby="hero-title"
         >
           <Header />
-          <div className="hero-content container">
-            <div className="hero-copy">
-              <h1 id="hero-title">
-                Mais bem-estar{' '}
-                <span className="hero-second-line">começa com</span>{' '}
-                <strong>boas escolhas.</strong>
-              </h1>
-              <p>
-                Produtos selecionados com critério para cuidar, estimular e
-                enriquecer a vida do seu pet.
-              </p>
-              <div className="hero-actions">
-                <a className="button button-primary" href="#selecao">
-                  Conheça nossa seleção
-                  <Icon name="down" />
-                </a>
-                <a className="button button-outline" href="#loja">
-                  Visite nossa loja
-                  <Icon name="down" />
-                </a>
-              </div>
+          <div className="hero-copy">
+            <h1 id="hero-title">
+              Mais bem-estar começa com <strong>boas escolhas.</strong>
+            </h1>
+            <p>
+              Produtos selecionados com critério para cuidar, estimular e
+              enriquecer a vida do seu cão.
+            </p>
+            <div className="hero-actions">
+              <a className="button button-primary" href="#selecao">
+                Conheça nossa seleção
+                <Icon name="down" />
+              </a>
+              <a className="button button-outline" href="#loja">
+                Visite nossa loja
+                <Icon name="down" />
+              </a>
             </div>
-            <HeroDog />
+          </div>
+          <div className="hero-panel">
+            <span className="hero-stem" aria-hidden="true" />
+            <Image
+              className="hero-dog"
+              src="/images/hero-weimaraner-transparente.png"
+              width={1507}
+              height={1044}
+              sizes="(max-width: 760px) 120vw, 50vw"
+              alt="Weimaraner cinza prateado, o cão que inspira a identidade da Nardini Select"
+              fetchPriority="high"
+              loading="eager"
+            />
           </div>
         </section>
         <section
@@ -80,7 +87,7 @@ export default function Home() {
               </h2>
               <Image
                 className="brand-seal"
-                src="/images/selo-transparente.png"
+                src="/images/selo.png"
                 width={750}
                 height={749}
                 sizes="(max-width: 1100px) 25vw, 260px"
@@ -89,16 +96,17 @@ export default function Home() {
             </div>
             <div className="about-copy">
               <p>
-                A Nardini Select Pet Shop é uma loja especializada em produtos
+                A Nardini Select é uma loja especializada em produtos
                 selecionados para promover o bem-estar, o desenvolvimento
-                comportamental e a qualidade de vida dos pets.
+                comportamental e a qualidade de vida dos cães.
               </p>
               <p>
                 Nossa proposta é oferecer uma curadoria criteriosa de produtos
                 que combinam qualidade, segurança, funcionalidade e design,
-                atendendo tanto tutores exigentes quanto profissionais do
-                universo pet.
+                atendendo tanto tutores exigentes quanto profissionais que
+                trabalham com cães.
               </p>
+              <p className="about-motto">Mais seleção. Menos convencional.</p>
             </div>
           </div>
         </section>
@@ -120,7 +128,7 @@ export default function Home() {
                       src={'/images/' + p.image}
                       width={1280}
                       height={1280}
-                      sizes="(max-width: 760px) 95px, (max-width: 1100px) 33vw, 380px"
+                      sizes="(max-width: 760px) 125px, (max-width: 1100px) 33vw, 380px"
                       alt=""
                     />
                   </div>
@@ -137,12 +145,12 @@ export default function Home() {
           id="loja"
           aria-labelledby="location-title"
         >
-          <div className="container location-grid">
+          <div className="location-grid">
             <div className="location-copy">
               <h2 id="location-title">
                 Estamos em
                 <br />
-                <span>Resende, RJ.</span>
+                Resende, RJ.
               </h2>
               <p className="location-intro">
                 Venha nos visitar e conhecer de perto nossa seleção de produtos.
@@ -164,13 +172,17 @@ export default function Home() {
                 rel="noopener noreferrer"
               >
                 Como chegar
+                <span className="sr-only">
+                  {' '}
+                  no Google Maps, em uma nova aba
+                </span>
               </a>
             </div>
             <figure className="storefront">
               <Image
                 src="/images/loja-frente.jpg"
-                width={900}
-                height={1600}
+                width={941}
+                height={1672}
                 sizes="(max-width: 760px) 100vw, 50vw"
                 alt="Fachada da Nardini Select, com a identificação 350 e a marca nas portas de vidro"
               />
@@ -192,8 +204,8 @@ export default function Home() {
                 <div>
                   <h3>Fale pelo WhatsApp</h3>
                   <p>
-                    Tire suas dúvidas, receba orientações e fale com a nossa
-                    equipe.
+                    Tire suas dúvidas, receba orientação na escolha e fale com a
+                    nossa equipe.
                   </p>
                   <a
                     className="button button-primary"
@@ -214,7 +226,7 @@ export default function Home() {
                 <div>
                   <h3>Acompanhe no Instagram</h3>
                   <p>
-                    Conteúdo, novidades e um pouco da nossa rotina. Venha fazer
+                    Novidades da seleção e um pouco da nossa rotina. Venha fazer
                     parte.
                   </p>
                   <a
@@ -239,11 +251,11 @@ export default function Home() {
                   alt="Nardini Select"
                   width={1938}
                   height={563}
-                  sizes="180px"
+                  sizes="200px"
                 />
               </a>
               <p>Uma escolha com assinatura.</p>
-              <span>Resende, RJ</span>
+              <span>Curadoria especializada para cães · Resende, RJ</span>
             </footer>
           </div>
         </section>

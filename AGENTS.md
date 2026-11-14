@@ -4,7 +4,7 @@ Single source of rules for AI agents in this repository. Claude Code (v2.1.277 o
 
 ## Project
 
-Nardini Select: a dog-focused pet shop in Resende, RJ, Brazil. Today the repository holds the institutional home page; it will grow into an e-commerce site. Product context: [PRODUCT.md](PRODUCT.md). Design system: [DESIGN.md](DESIGN.md).
+Nardini Select: a dog-focused pet shop in Resende, RJ, Brazil. Today the repository holds the institutional home page; it will grow into an e-commerce site. Product context: [PRODUCT.md](PRODUCT.md). Design system: [DESIGN.md](DESIGN.md), which translates the brand manual (kept with the brand sources, outside Git) into web rules; follow it for colors, type, logo use, and voice.
 
 ## Stack and commands
 
@@ -145,7 +145,7 @@ Security scanning (CodeQL) and disclosure — the repository is public, so vulne
 - Read alerts with `gh api repos/brunonardini/nardini-select/code-scanning/alerts` and report them only in this private session, never in a file that gets committed.
 - Outside reports come through private vulnerability reporting (see `SECURITY.md`).
 
-Existing code predates some of these rules (`<img>` tags, `@fontsource` fonts, reduced motion that removes all animation, ungated hover motion). Don't copy those patterns into new code.
+Fonts load through `next/font` as the `--font-brand` variable (Lexend stands in for the brand's Kanesty until it has a web license; see DESIGN.md).
 
 ## Design workflow (EGM)
 
