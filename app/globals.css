@@ -7,6 +7,7 @@
   --off-white: #f7efe6;
   --font: var(--font-brand), 'Lexend', sans-serif;
   --gutter: 56px;
+  --header-height: 116px;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
 * {
@@ -25,6 +26,12 @@ body {
   font-size: 16px;
   font-weight: 400;
   line-height: 1.65;
+  /* Base UI: iOS 26+ Safari places popup backdrops against the body. */
+  position: relative;
+}
+/* Base UI: portals render beside .root and always stack above the page. */
+.root {
+  isolation: isolate;
 }
 ::selection {
   background: var(--cafe);
@@ -165,25 +172,43 @@ h2 span {
     color: var(--off-white);
   }
 }
+button.button {
+  cursor: pointer;
+}
+/* Base UI's Button sets data-disabled, also when it stays focusable. */
+.button[data-disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .button-primary[data-disabled]:hover {
+    box-shadow: none;
+  }
+  .button-outline[data-disabled]:hover {
+    background: transparent;
+    color: var(--cafe);
+  }
+}
 
-/* Hero: off-white copy beside a café panel, like the manual's cover. */
+/* Hero: off-white copy beside the dog and the brand's N. */
 .section.hero {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 46%);
-  grid-template-rows: auto 1fr;
+  grid-template-columns: minmax(0, 1fr) min(46%, 800px);
   align-items: stretch;
+  min-height: 0;
+  scroll-margin-top: var(--header-height);
   padding: 0;
   overflow: hidden;
 }
 .site-header {
-  grid-column: 1 / -1;
-  grid-row: 1;
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 32px;
-  min-height: 116px;
+  min-height: var(--header-height);
   padding-inline: max(var(--gutter), calc((100vw - 1240px) / 2));
+  background: var(--off-white);
   position: relative;
   z-index: 5;
 }
@@ -198,14 +223,23 @@ h2 span {
   height: auto;
 }
 .navigation {
+  font-size: 0.875rem;
+  color: var(--cafe);
+}
+.navigation-list {
   display: flex;
   align-items: center;
   gap: 28px;
-  font-size: 0.875rem;
-  color: var(--off-white);
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
-.navigation a:focus-visible {
-  outline-color: var(--off-white);
+/* Block, as when the links were flex items: the contact pill keeps its height. */
+.navigation-item > a {
+  display: block;
+}
+.navigation-menu-item {
+  display: none;
 }
 .navigation a {
   text-decoration: underline 2px transparent;
@@ -219,7 +253,7 @@ h2 span {
   }
 }
 .navigation .header-contact {
-  border: 1.5px solid var(--off-white);
+  border: 1.5px solid var(--cafe);
   border-radius: 999px;
   padding: 9px 20px;
   font-weight: 800;
@@ -230,8 +264,8 @@ h2 span {
 }
 @media (hover: hover) and (pointer: fine) {
   .navigation .header-contact:hover {
-    background: var(--off-white);
-    color: var(--cafe);
+    background: var(--cafe);
+    color: var(--off-white);
   }
 }
 .menu-toggle {
@@ -239,9 +273,8 @@ h2 span {
 }
 .hero-copy {
   grid-column: 1;
-  grid-row: 2;
   align-self: center;
-  padding: 24px 56px 112px max(var(--gutter), calc((100vw - 1240px) / 2));
+  padding: 24px 56px 88px max(var(--gutter), calc((100vw - 1240px) / 2));
 }
 .hero h1 {
   font-size: clamp(2.8rem, 4.3vw, 4.6rem);
@@ -266,27 +299,23 @@ h2 span {
 }
 .hero-panel {
   grid-column: 2;
-  grid-row: 1 / span 2;
   position: relative;
-  background: var(--cafe);
-  overflow: hidden;
+  /* The official symbol measures 393 by 429 before the dog tips extend past it. */
+  aspect-ratio: 393 / 429;
 }
-/* The right stem of the N monogram, cut along its diagonal. */
-.hero-stem {
+/* Run both stems from the header edge to the bottom of the hero. */
+.hero-monogram {
   position: absolute;
-  /* Starts below the header so the navigation keeps its contrast. */
-  top: 116px;
-  right: 11%;
-  width: 30%;
-  height: 66%;
-  background: var(--terracota);
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 40%);
+  inset: 0;
+  width: 100%;
+  height: 100%;
 }
 .hero-dog {
   position: absolute;
   bottom: 0;
-  right: -2%;
-  width: 112%;
+  /* Offset the transparent margin so the silhouette spans the mark like the logo. */
+  right: -8%;
+  width: 138%;
   max-width: none;
   height: auto;
   pointer-events: none;
@@ -550,13 +579,13 @@ h2 span {
   right: 0;
 }
 
-/* Tablet */
-@media (max-width: 1100px) {
-  :root {
-    --gutter: 36px;
+/* The mobile toggle opens a panel under the header. */
+@media (max-width: 760px) {
+  .navigation-item {
+    display: none;
   }
-  .brand-link {
-    width: 180px;
+  .navigation-menu-item {
+    display: block;
   }
   .menu-toggle {
     width: 44px;
@@ -568,7 +597,7 @@ h2 span {
     justify-content: center;
     align-items: center;
     gap: 7px;
-    color: var(--off-white);
+    color: var(--cafe);
     cursor: pointer;
     z-index: 7;
   }
@@ -585,65 +614,59 @@ h2 span {
   .menu-toggle.is-open span:last-child {
     transform: translateY(-4.5px) rotate(-45deg);
   }
-  .menu-toggle:focus-visible {
-    outline-color: var(--off-white);
-  }
-  .navigation {
-    display: none;
-    position: absolute;
-    top: calc(100% - 12px);
-    right: var(--gutter);
-    width: min(340px, calc(100% - 2 * var(--gutter)));
+  /* Base UI positions the panel under the header (--anchor-width); the
+     margin keeps it one gutter from the right edge. */
+  .navigation-panel {
+    margin-right: var(--gutter);
+    width: calc(var(--anchor-width) - 2 * var(--gutter));
     background: var(--off-white);
     color: var(--cafe);
     padding: 20px;
     border-radius: 8px;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 4px;
     font-size: 1rem;
     box-shadow: 0 14px 30px #522e2433;
   }
-  .navigation.is-open {
+  .navigation-panel-links {
     display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
   }
-  .navigation a {
+  .navigation-panel a {
     padding: 10px;
   }
-  .navigation a:focus-visible {
+  .navigation-panel a:focus-visible {
     outline-color: var(--cafe);
     outline-offset: 0;
   }
-  .navigation .header-contact {
+  .navigation-panel .header-contact {
     margin-top: 8px;
     text-align: center;
-    border-color: var(--cafe);
   }
-  @media (hover: hover) and (pointer: fine) {
-    .navigation .header-contact:hover {
-      background: var(--cafe);
-      color: var(--off-white);
-    }
+}
+
+@media (max-width: 1100px) {
+  :root {
+    --gutter: 36px;
+  }
+  .brand-link {
+    width: 180px;
+  }
+  .navigation-list {
+    gap: 20px;
   }
   .section.hero {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 42%);
+    grid-template-columns: minmax(0, 1fr) 48%;
   }
   .hero-copy {
-    padding-right: 32px;
+    padding-block: 24px;
+    padding-right: 24px;
   }
   .hero h1 {
     font-size: clamp(2.5rem, 5.4vw, 3.6rem);
   }
   .hero-actions .button {
     padding-inline: 20px;
-  }
-  .hero-stem {
-    width: 34%;
-    right: 8%;
-  }
-  .hero-dog {
-    width: 150%;
-    right: -40%;
   }
   .about-grid {
     grid-template-columns: 1.35fr 1fr;
@@ -681,6 +704,7 @@ h2 span {
 @media (max-width: 760px) {
   :root {
     --gutter: 22px;
+    --header-height: 88px;
   }
   .section {
     padding-block: 72px;
@@ -693,25 +717,13 @@ h2 span {
   }
   .section.hero {
     grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: auto 1fr;
+    min-height: calc(max(100vh, 100svh) - var(--header-height));
   }
   .site-header {
-    min-height: 88px;
     padding-right: calc(var(--gutter) - 10px);
   }
   .brand-link {
     width: 160px;
-  }
-  .menu-toggle {
-    color: var(--cafe);
-  }
-  .menu-toggle:focus-visible {
-    outline-color: var(--cafe);
-  }
-  .navigation {
-    left: var(--gutter);
-    right: var(--gutter);
-    width: auto;
   }
   .hero-copy {
     padding: 16px var(--gutter) 88px;

@@ -40,6 +40,7 @@ footer in this description isn't part of the commit.
 
 - [ ] `npm run lint`, `npm run format:check`, `npm run knip`, `npm run typecheck`, and `npm test` pass
 - [ ] `npm run test:e2e` passes, or the change can't affect a page
+- [ ] `npm run test:storybook` and `npm run build-storybook` pass, or the change can't affect a component
 - [ ] New or changed behavior is covered by a unit or E2E test, and unit coverage stays at 90% or more
 
 <!-- Delete the groups below that don't apply to this PR. -->
@@ -48,6 +49,8 @@ footer in this description isn't part of the commit.
 
 - [ ] Checked on desktop and mobile; screenshots below
 - [ ] New pages or interface states (dialogs, menus, routes) are covered by the axe scans in `e2e/accessibility.spec.ts`
+- [ ] New or changed components in `components/` have stories for their variants and states, and complex interactive components use Base UI
+- [ ] The axe scans exclude nothing besides Base UI's focus guards
 - [ ] User-facing copy is in Portuguese (pt-BR)
 - [ ] Motion uses CSS transitions, the Web Animations API, or the View Transitions API; Motion (`motion/react`) only for springs, gestures, or interruptible motion, loaded on demand
 - [ ] Animates `transform` and `opacity` (`clip-path`, `filter`, or measured height only with a reason); no layout properties

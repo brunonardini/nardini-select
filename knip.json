@@ -2,7 +2,7 @@
   "$schema": "https://unpkg.com/knip@6/schema.json",
   "entry": ["scripts/*.cjs"],
   "project": [
-    "**/*.{js,cjs,mjs,jsx,ts,tsx,mts,cts}",
+    "**/*.{js,cjs,mjs,jsx,ts,tsx,mts,cts,mdx}",
     "!.agents/**",
     "!.claude/**",
     "!.cursor/**"

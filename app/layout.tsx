@@ -1,16 +1,6 @@
 import type { Metadata, Viewport } from 'next';
-import { Lexend } from 'next/font/google';
+import { brandFont } from './fonts';
 import './globals.css';
-
-// Stand-in for Kanesty, the brand typeface, until a web license is in place.
-// Swap this for next/font/local with the Kanesty files; the CSS only reads
-// the --font-brand variable.
-const brand = Lexend({
-  subsets: ['latin'],
-  weight: ['400', '800'],
-  variable: '--font-brand',
-  display: 'swap',
-});
 
 export const metadata: Metadata = {
   title: 'Nardini Select | Curadoria especializada para cães em Resende, RJ',
@@ -27,8 +17,11 @@ export const metadata: Metadata = {
 export const viewport: Viewport = { themeColor: '#522e24' };
 export default function Layout({ children }: LayoutProps<'/'>) {
   return (
-    <html lang="pt-BR" className={brand.variable}>
-      <body>{children}</body>
+    <html lang="pt-BR" className={brandFont.variable}>
+      <body>
+        {/* Base UI portals render beside .root and stack above it. */}
+        <div className="root">{children}</div>
+      </body>
     </html>
   );
 }

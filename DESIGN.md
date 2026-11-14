@@ -67,13 +67,12 @@ components:
     backgroundColor: "{colors.cafe}"
     textColor: "{colors.off-white}"
   navigation:
-    textColor: "{colors.off-white}"
+    backgroundColor: "{colors.off-white}"
+    textColor: "{colors.cafe}"
   navigation-menu:
     backgroundColor: "{colors.off-white}"
     textColor: "{colors.cafe}"
     rounded: "{rounded.menu}"
-  hero-panel:
-    backgroundColor: "{colors.cafe}"
   brand-section:
     backgroundColor: "{colors.cafe}"
     textColor: "{colors.off-white}"
@@ -142,11 +141,11 @@ This is why buttons are Café, not Terracota, and why focus rings are Café on l
 
 ## Layout
 
-The container is capped at 1240px with 56px gutters, 36px at ≤1100px, 22px at ≤760px and 18px at ≤380px. The home has five sections (hero, brand, selection, location, contact), each at least one viewport tall (`max(100vh,100svh)`); that composition is a home-surface contract, not a rule for future screens.
+The container is capped at 1240px with 56px gutters, 36px at ≤1100px, 22px at ≤760px and 18px at ≤380px. The home has five sections (hero, brand, selection, location, contact). The desktop hero follows the proportions of the artwork. On mobile, the header and hero together fill at least one viewport. Each following section fills at least one viewport on its own.
 
-Surface sequence on the home: hero (off-white copy + café panel) → brand (café) → selection (off-white) → location (areia + storefront photo) → contact and footer (off-white). Adjacent sections alternate surface so no two neighbours share one, except the hero panel bleeding into the brand section, which is intentional.
+Surface sequence on the home: hero (off-white with the monogram and dog) → brand (café) → selection (off-white) → location (areia + storefront photo) → contact and footer (off-white).
 
-- **Hero:** two columns like the manual's cover. The left column (off-white) holds the logo and the copy; the right column (46%, 42% at ≤1100px) is a full-height café panel with the N's terracota stem and the dog. The navigation sits on the panel in off-white. At ≤760px the panel and the dog are removed: the hero is the header plus the copy and actions, vertically centered on off-white.
+- **Hero:** an off-white header above two columns. Copy sits on the left. The dog and full N scale together on the right (46%, capped at 800px, and 48% at ≤1100px). At ≤760px the hero shows the copy and actions, vertically centered.
 - **Brand:** the official seal to the left of the three-line heading at every width (215–260px above 1100px, 25% of the heading group below), copy on the right; stacks at ≤760px.
 - **Selection:** three open columns; at ≤760px each pillar puts a 125px illustration (95px at ≤380px) beside its heading and concept, and the closing line runs full width below.
 - **Location:** copy on areia beside the storefront photo, which fills the right half full-bleed; on mobile the photo comes first at full width.
@@ -161,7 +160,7 @@ Flat. Depth comes from color blocks (café panels against off-white), photograph
 ## Shapes
 
 - **Pills** (`999px`) for actions; **8px** for the navigation menu; photographs keep square corners.
-- **Monogram graphics:** blocks, curves and diagonal cuts derived from the N. The hero's terracota stem is the N's right stem with its diagonal cut (`clip-path: polygon(0 0,100% 0,100% 100%,0 40%)`). The manual says _usar como apoio, nunca como excesso_: at most one monogram graphic per view.
+- **Monogram graphics:** blocks, curves and diagonal cuts derived from the N. The hero graphic follows the manual's construction sketch, with a Café left stem and diagonal and a Terracota right stem. The manual says _usar como apoio, nunca como excesso_: at most one monogram graphic per view.
 - **Short rules:** 40×2px Terracota lines introduce closing lines and the motto. Small round bullets, if used, are Terracota.
 
 ## Components
@@ -177,7 +176,7 @@ Pill, 50px minimum height (48px in the mobile hero), 800 weight label, 1.5px Caf
 
 ### Navigation
 
-The official horizontal logo on the left (210px, 180px at ≤1100px, 160px at ≤760px), links on the right in Off-white over the café panel, with a Terracota underline on hover, and an Off-white outlined contact pill that scrolls to `#contato`. At ≤1100px a 44px toggle (two strokes that become a cross) opens an Off-white menu with Café links. The menu announces expansion, closes on selection and on Escape, and returns focus to the toggle.
+The off-white header holds the official horizontal logo on the left (210px, 180px at ≤1100px, 160px at ≤760px) and Café links on the right, with a Terracota underline on hover and a Café outlined contact pill that scrolls to `#contato`. At ≤760px, a 44px toggle (two strokes that become a cross) opens an Off-white menu with Café links (Base UI `NavigationMenu`, `components/site-header/`). The menu opens on press, announces expansion, closes on selection, on Escape, and on a click outside, and returns focus to the toggle.
 
 ### Brand Marks
 
@@ -202,7 +201,7 @@ WhatsApp and Instagram each pair a 52px line icon (1.6 stroke) with a heading, a
 ### Imagery
 
 - **The brand dog** is the approved illustration in the logo, symbol and seal, drawn from Bacon, a real dog: sober, attentive and imposing. Never alter it.
-- **The hero dog** is a photographic silver-gray Weimaraner that follows that reference (proportions, dropped ears, long muzzle, elegant neck). Keep it as its own transparent asset over the café panel, never on the same panel as the seal. It is not shown at ≤760px.
+- **The hero dog** is a photographic silver-gray Weimaraner that follows that reference (proportions, dropped ears, long muzzle, elegant neck). Keep it as its own transparent asset over the full N. It is not shown at ≤760px.
 - **The storefront** (`loja-frente.jpg`) is the real shop with the printed phone strip concealed.
 
 ### Motion

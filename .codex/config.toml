@@ -1,3 +1,7 @@
 [mcp_servers.knip]
 command = "npx"
 args = ["--no", "knip-mcp"]
+
+# Served by the Storybook dev server: start it first with `npm run storybook`.
+[mcp_servers.storybook]
+url = "http://localhost:6006/mcp"

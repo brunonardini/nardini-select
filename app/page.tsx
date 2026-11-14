@@ -1,6 +1,8 @@
 import Image from 'next/image';
-import Header from './header';
-import { Icon } from './icons';
+import { BrandLogo } from '../components/brand-logo/brand-logo';
+import { Button } from '../components/button/button';
+import { Icon } from '../components/icon/icon';
+import { SiteHeader } from '../components/site-header/site-header';
 const pillars = [
   {
     title: 'Seleção Criteriosa',
@@ -32,13 +34,13 @@ export default function Home() {
       <a href="#conteudo" className="skip-link">
         Pular para o conteúdo
       </a>
+      <SiteHeader />
       <main id="conteudo">
         <section
           className="hero section"
           id="inicio"
           aria-labelledby="hero-title"
         >
-          <Header />
           <div className="hero-copy">
             <h1 id="hero-title">
               Mais bem-estar começa com <strong>boas escolhas.</strong>
@@ -48,18 +50,26 @@ export default function Home() {
               enriquecer a vida do seu cão.
             </p>
             <div className="hero-actions">
-              <a className="button button-primary" href="#selecao">
+              <Button href="#selecao">
                 Conheça nossa seleção
                 <Icon name="down" />
-              </a>
-              <a className="button button-outline" href="#loja">
+              </Button>
+              <Button variant="outline" href="#loja">
                 Visite nossa loja
                 <Icon name="down" />
-              </a>
+              </Button>
             </div>
           </div>
           <div className="hero-panel">
-            <span className="hero-stem" aria-hidden="true" />
+            <svg
+              className="hero-monogram"
+              viewBox="0 0 222 182"
+              preserveAspectRatio="none"
+              aria-hidden="true"
+            >
+              <path d="M0 0H65L222 182H157L65 66V182H0Z" fill="var(--cafe)" />
+              <path d="M152 0H222V182L152 101Z" fill="var(--terracota)" />
+            </svg>
             <Image
               className="hero-dog"
               src="/images/hero-weimaraner-transparente.png"
@@ -166,18 +176,13 @@ export default function Home() {
                   <span>CEP 27521-171</span>
                 </address>
               </div>
-              <a
-                className="button button-primary"
-                href={map}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <Button href={map} target="_blank" rel="noopener noreferrer">
                 Como chegar
                 <span className="sr-only">
                   {' '}
                   no Google Maps, em uma nova aba
                 </span>
-              </a>
+              </Button>
             </div>
             <figure className="storefront">
               <Image
@@ -208,8 +213,7 @@ export default function Home() {
                     Tire suas dúvidas, receba orientação na escolha e fale com a
                     nossa equipe.
                   </p>
-                  <a
-                    className="button button-primary"
+                  <Button
                     href="/contato/whatsapp"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -219,7 +223,7 @@ export default function Home() {
                       {' '}
                       pelo WhatsApp, em uma nova aba
                     </span>
-                  </a>
+                  </Button>
                 </div>
               </div>
               <div className="contact-option">
@@ -230,8 +234,7 @@ export default function Home() {
                     Novidades da seleção e um pouco da nossa rotina. Venha fazer
                     parte.
                   </p>
-                  <a
-                    className="button button-primary"
+                  <Button
                     href="https://www.instagram.com/nardiniselect/"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -241,20 +244,12 @@ export default function Home() {
                       {' '}
                       no Instagram, em uma nova aba
                     </span>
-                  </a>
+                  </Button>
                 </div>
               </div>
             </div>
             <footer className="footer">
-              <a href="#inicio" aria-label="Voltar ao início">
-                <Image
-                  src="/images/logo-horizontal.png"
-                  alt="Nardini Select"
-                  width={1938}
-                  height={563}
-                  sizes="200px"
-                />
-              </a>
+              <BrandLogo label="Voltar ao início" sizes="200px" />
               <p>Uma escolha com assinatura.</p>
               <span>Curadoria especializada para cães · Resende, RJ</span>
             </footer>

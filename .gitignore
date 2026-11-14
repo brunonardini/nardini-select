@@ -35,5 +35,8 @@ tmp/
 /playwright/.cache/
 /reports/
 
+# Storybook static build (npm run build-storybook)
+/storybook-static/
+
 # Graphify: knowledge graph for AI agents, rebuilt locally (graphify update .)
 graphify-out/

@@ -157,6 +157,23 @@ jobs:
       - store_artifacts:
           path: test-results
 
+  storybook:
+    # Story tests run in Chromium (Vitest browser mode), so this job uses the
+    # Playwright image, like the E2E tests.
+    executor: playwright
+    environment:
+      STORYBOOK_DISABLE_TELEMETRY: '1'
+    steps:
+      - attach_setup
+      - run:
+          name: Story tests (render, interactions, and axe checks)
+          command: npm run test:storybook -- --reporter=default --reporter=junit --outputFile.junit=reports/storybook/junit.xml
+      - store_test_results:
+          path: reports/storybook
+      - run:
+          name: Storybook static build
+          command: npm run build-storybook
+
   release:
     executor: node
     environment:
@@ -218,6 +235,8 @@ workflows:
       - unit-tests:
           requires: [setup]
       - build:
+          requires: [setup]
+      - storybook:
           requires: [setup]
       - e2e-tests:
           name: e2e-desktop
