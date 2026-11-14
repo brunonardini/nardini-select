@@ -59,7 +59,7 @@ spacing:
   pillar-gap: "55px"
 components:
   button-primary:
-    backgroundColor: "{colors.orange}"
+    backgroundColor: "{colors.hero-primary}"
     textColor: "{colors.white}"
     rounded: "{rounded.pill}"
     padding: "13px 25px"
@@ -109,7 +109,7 @@ The visual system favors open compositions and independent text, imagery and act
 
 ### Primary
 
-Burnt Orange (`orange`) identifies actions, highlighted heading words, bullets and small rules. Peach (`orange-light`) emphasizes the hero promise. The hero action uses its observed, slightly deeper `hero-primary` treatment; preserve that distinction when matching the existing hero.
+Burnt Orange (`orange`) identifies highlighted heading words, bullets and small rules. Action buttons use the slightly deeper `hero-primary`, which keeps white text above WCAG AA contrast. Peach (`orange-light`) emphasizes the hero promise.
 
 ### Neutral
 
@@ -157,7 +157,7 @@ Actions use full pill corners; the mobile menu has a gently rounded rectangle an
 
 ### Buttons
 
-Confident, compact pills with a 50px minimum height. Primary actions use orange with white text, an orange border and the darker hover token. Hero actions use the observed hero-specific shade. The outline variant is transparent at rest with a cream border, then becomes light cream with chocolate text on hover. Focus-visible uses a 3px orange outline offset by 6px; hero focus uses white. Mobile hero actions stack and have a 48px minimum height.
+Confident, compact pills with a 50px minimum height. Primary actions use the slightly deeper `hero-primary` orange with white text and a matching border, because white on `orange` falls just under WCAG AA contrast (4.47:1); they hover to the darker hover token. Hero actions share that shade with their own hover. The outline variant is transparent at rest with a cream border, then becomes light cream with chocolate text on hover. Focus-visible uses a 3px orange outline offset by 6px; hero focus uses white. Mobile hero actions stack and have a 48px minimum height.
 
 ### Navigation
 

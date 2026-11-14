@@ -8,30 +8,40 @@ Nardini Select: a dog-focused pet shop in Resende, RJ, Brazil. Today the reposit
 
 ## Stack and commands
 
-Next.js 16 (App Router), React 19, TypeScript 6, npm. Node.js 20.19.0 or later. Hosted on Netlify. TypeScript stays on 6.0.x because `typescript-eslint` doesn't support TypeScript 7 yet.
+Next.js 16 (App Router), React 19, TypeScript 6, npm. Node.js 26 (the latest LTS), pinned in `.nvmrc`. Hosted on Netlify. TypeScript stays on 6.0.x because `typescript-eslint` doesn't support TypeScript 7 yet, and ESLint stays on 9 because the React, import, and jsx-a11y plugins in `eslint-config-next` don't support ESLint 10 yet.
+
+Run `nvm use` at the start of every terminal session, before any `node`, `npm`, or `npx` command, so the shell uses the version in `.nvmrc` (`nvm install` if it's missing). If your shell doesn't keep state between commands, chain it: `nvm use && npm test`. Changing the Node version means updating `.nvmrc`, `engines` in `package.json`, and the `cimg/node` image in `.circleci/config.yml` together; Netlify reads `.nvmrc`.
 
 | Task | Command |
 | --- | --- |
 | Install | `npm ci` |
 | Dev server | `npm run dev` |
 | Build | `npm run build` |
-| Typecheck | `npm run typecheck` |
+| Typecheck | `npm run typecheck` (`next typegen`, then `tsc`; `next-env.d.ts` is generated and gitignored) |
 | Format | `npm run format:check` / `npm run format` |
 | Lint | `npm run lint` (ESLint with `eslint-config-next`) |
+| Unused code | `npm run knip` (Knip: unused files, dependencies, and exports) |
 | Unit tests | `npm test` (`npm run test:watch` while working, `npm run test:coverage` for coverage) |
 | E2E tests | `npm run test:e2e` |
 
 Testing:
 - Unit and component tests: Vitest + React Testing Library, next to the code as `app/**/*.test.ts(x)`. Query by role and accessible name. Async Server Components can't be unit tested; cover them with E2E.
 - E2E: Playwright in `e2e/`, desktop (1440×900) and mobile (Pixel 7) projects. `npm run test:e2e` builds the app, then Playwright starts that build on port 3200 with a fake `WHATSAPP_NUMBER` (`npx playwright test` alone needs an existing build). First run: `npx playwright install chromium`.
+- Accessibility: `e2e/accessibility.spec.ts` runs axe (`@axe-core/playwright`) against WCAG 2.2 A and AA plus axe best practices, on desktop, on mobile, and with the mobile menu open. Any violation fails the test. Fix the page instead of disabling rules; when a new state or page appears (a dialog, a new route), scan it too.
 - Add or update tests with every behavior change, and run `npm test` before finishing.
-- Coverage: unit tests only (V8, `coverage/lcov.info`). CI uploads it to Codecov with the `unit` flag, using the `CODECOV_TOKEN` variable set in CircleCI.
+- Coverage: unit tests only (V8, `coverage/lcov.info`). `npm run test:coverage` fails below 90% of statements, branches, functions, or lines (`thresholds` in `vitest.config.mts`); keep new code covered instead of lowering it. CI uploads it to Codecov with the `unit` flag, using the `CODECOV_TOKEN` variable set in CircleCI.
 
 `scripts/check-page.cjs` is an older manual browser check (see README).
 
+Knip:
+- `knip.json` keeps the defaults and the auto-detected plugins. It only declares `scripts/*.cjs` as entry files (manual scripts run with `node`) and leaves the installed skills (`.agents/`, `.claude/`, `.cursor/`) out of the project.
+- The Knip MCP server (`@knip/mcp`, a dev dependency) is declared in `.mcp.json` (Claude Code), `.cursor/mcp.json`, and `.codex/config.toml`. To configure Knip or resolve its findings, use its `knip-run` tool and read the doc topics it returns with `knip-docs`, instead of guessing.
+- Fix findings by removing dead code or listing the dependency; prefer targeted `entry`, `project`, or `ignoreDependencies` changes over the broad `ignore` option.
+- Keep `knip` on the same version as the one `@knip/mcp` depends on, so the MCP server and CI report the same results.
+
 ## Conventions
 
-- Run `npm run typecheck`, `npm run lint`, `npm run format:check`, and `npm test` before finishing a change. CI (CircleCI) runs lint, Prettier, unit, and E2E tests on every push, and releases from `main` (see Releases and deploys).
+- Run `npm run typecheck`, `npm run lint`, `npm run format:check`, `npm run knip`, and `npm test` before finishing a change. CI (CircleCI) runs lint, Prettier, Knip, TypeScript type checking, unit tests, and E2E tests on every push, and releases from `main` (see Releases and deploys).
 - Prettier with single quotes; code lives in `app/`.
 - Language: website and business content is Portuguese (pt-BR): page copy, product and brand texts, and the approved content specs in `design/`. Everything else is English: documentation (including the README), AI agent instructions, code, code comments, commit messages, and PR titles and descriptions.
 - `WHATSAPP_NUMBER` comes from `.env` and is read only on the server (`app/contato/whatsapp/route.ts`). Never show the phone number in page text, images, or client components.
@@ -66,7 +76,7 @@ The project stays on 0.x until the e-commerce launch. A breaking change (`!` or 
 
 - The version lives only in the `vX.Y.Z` tag and its GitHub release, whose notes are the changelog. Nothing is committed back, and `package.json` keeps `0.0.0-development`.
 - On each push to `main`, after every check passes, the CircleCI `release` job runs semantic-release. If it tags a new version, the job deploys to Netlify production with the CLI (`--context production`) and `SENTRY_RELEASE=nardini-select@X.Y.Z`.
-- Netlify only builds PR deploy previews: `netlify.toml` has an `ignore` command that skips its builds of `main`, which the CLI doesn't run. Production deploys come only from CircleCI.
+- Netlify only builds PR deploy previews: `netlify.toml` has an `ignore` command that skips its builds of `main`, which the CLI doesn't run. Production deploys come only from CircleCI. The skipped build shows as a canceled `main` deploy in Netlify; that's expected, not a failure. For the same reason the README uses a release version badge instead of Netlify's deploy status badge.
 
 ## Commits and pull requests
 
@@ -90,6 +100,7 @@ Commit messages follow [Conventional Commits 1.0.0](https://www.conventionalcomm
 - When a change touches project rules or configuration (this file, the README, CI, release, lint, test, or commit settings, environment variables, or the rules the checklist covers), update the PR template in the same PR so its checklist stays accurate.
 - `.github/workflows/pr-title.yml` validates PR titles (types, lowercase description, no trailing period).
 - commitlint (`commitlint.config.mjs`, `@commitlint/config-conventional`) checks every local commit through the husky `commit-msg` hook, installed by `npm install`. Don't bypass it with `--no-verify`.
+- Cursor's Source Control generate-commit button reads `.cursorrules` at the repo root. That file repeats the format in this section, including the 72-character wrap. Keep the two in sync.
 
 Example:
 
@@ -119,6 +130,13 @@ Security:
 - No secrets in client code or in the repository.
 - Card data never passes through our server.
 
+Security scanning (CodeQL) and disclosure — the repository is public, so vulnerabilities stay private until fixed:
+- `.github/workflows/codeql.yml` scans JavaScript/TypeScript and the GitHub workflows (`security-extended` queries) on pushes to `main`, weekly, and on demand. Alerts appear only in the Security tab, which only the owner can see.
+- Never add a `pull_request` trigger to it (PR alerts become annotations anyone can read), debug logging, or SARIF/database artifact uploads, and keep GitHub's CodeQL default setup disabled.
+- Don't describe a vulnerability in public places: issues, PR titles and descriptions, commit messages, code comments, or release notes. PR titles become public release notes, so a security fix gets a neutral title (for example `fix(contact): validate the redirect target`), with no alert links or exploit details.
+- Read alerts with `gh api repos/brunonardini/nardini-select/code-scanning/alerts` and report them only in this private session, never in a file that gets committed.
+- Outside reports come through private vulnerability reporting (see `SECURITY.md`).
+
 Existing code predates some of these rules (`<img>` tags, `@fontsource` fonts, reduced motion that removes all animation, ungated hover motion). Don't copy those patterns into new code.
 
 ## Design workflow (EGM)
@@ -133,6 +151,17 @@ EGM artifact directory: .dev/docs
 
 Drafts, briefs, and review reports go to `.dev/docs/` (gitignored). See [docs/designs/README.md](docs/designs/README.md).
 
+## Code graph (Graphify)
+
+[Graphify](https://github.com/Graphify-Labs/graphify) keeps a knowledge graph of the code for AI agents in `graphify-out/`. It's built only from code and config, by AST (no LLM, no API cost), and never with the HTML visualization.
+
+- `graphify-out/` is gitignored: each machine builds its own graph. `.graphifyignore` leaves out the installed skills, design sources, images, and `docs/`; everything in `.gitignore` is skipped too.
+- Build or refresh it with `GRAPHIFY_VIZ_NODE_LIMIT=0 graphify update .`. The variable turns off `graph.html`. If `graphify` is missing, install the CLI with `uv tool install graphifyy` (or `pipx install graphifyy`).
+- At the start of a session, if `graphify-out/graph.json` is missing or `git rev-parse HEAD` differs from the commit in `graphify-out/GRAPH_REPORT.md` (Graph Freshness), rebuild it before using it.
+- For codebase questions, first run `graphify query "<question>"`; use `graphify path "<A>" "<B>"` for relationships and `graphify explain "<concept>"` for one concept. Read `graphify-out/GRAPH_REPORT.md` only for a broad architecture overview. Confirm details in the source files before editing.
+- After changing code or config, run `GRAPHIFY_VIZ_NODE_LIMIT=0 graphify update .` so the graph stays current. Use `--force` after deleting or moving code, since `update` refuses to write a graph with fewer nodes.
+- Don't run the full `/graphify` pipeline (semantic extraction with subagents, HTML, Obsidian, or wiki exports), and don't install Graphify's Git hooks or its `claude install` (it writes a `CLAUDE.md`, which hides this file from Claude Code).
+
 ## Skills
 
 | Area | Skill |
@@ -142,6 +171,8 @@ Drafts, briefs, and review reports go to `.dev/docs/` (gitignored). See [docs/de
 | React/Next.js performance | `vercel-react-best-practices` |
 | Next.js APIs | bundled docs in `node_modules/next/dist/docs/` (block below) |
 | Interface audit (a11y, UX) | `web-design-guidelines` |
+| Unused files, dependencies, exports | Knip MCP server (`knip-run`, `knip-docs`) |
+| Code structure and relationships | Graphify CLI (`graphify query`, `path`, `explain`; see Code graph) |
 | Design docs | EGM plugin (`egm-*`) |
 
 Project rules win over skills. Known exception: `web-design-guidelines` fetches its rules from GitHub at run time, so findings that contradict this file don't apply.

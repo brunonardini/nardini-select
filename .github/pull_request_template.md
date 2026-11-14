@@ -38,15 +38,16 @@ footer in this description isn't part of the commit.
 
 ## Checks
 
-- [ ] `npm run lint`, `npm run format:check`, `npm run typecheck`, and `npm test` pass
+- [ ] `npm run lint`, `npm run format:check`, `npm run knip`, `npm run typecheck`, and `npm test` pass
 - [ ] `npm run test:e2e` passes, or the change can't affect a page
-- [ ] New or changed behavior is covered by a unit or E2E test
+- [ ] New or changed behavior is covered by a unit or E2E test, and unit coverage stays at 90% or more
 
 <!-- Delete the groups below that don't apply to this PR. -->
 
 **Interface**
 
 - [ ] Checked on desktop and mobile; screenshots below
+- [ ] New pages or interface states (dialogs, menus, routes) are covered by the axe scans in `e2e/accessibility.spec.ts`
 - [ ] User-facing copy is in Portuguese (pt-BR)
 - [ ] Motion uses CSS transitions, the Web Animations API, or the View Transitions API; Motion (`motion/react`) only for springs, gestures, or interruptible motion, loaded on demand
 - [ ] Animates `transform` and `opacity` (`clip-path`, `filter`, or measured height only with a reason); no layout properties
@@ -61,12 +62,15 @@ footer in this description isn't part of the commit.
 - [ ] New Server Actions are wrapped with `Sentry.withServerActionInstrumentation()`
 - [ ] Card data never passes through our server
 - [ ] No secrets in the repository or in client code; the WhatsApp number stays out of page text, images, and client components
+- [ ] Security fixes use a neutral title and description, with no vulnerability details, alert links, or exploit steps (the PR and its release notes are public)
 
 **Configuration and docs**
 
+- [ ] The CircleCI release job requires all validation jobs to pass
 - [ ] App variables are set in Netlify for Production and Deploy Previews, pipeline-only variables in CircleCI, and both are documented in the README (never set `SENTRY_RELEASE` in Netlify)
 - [ ] The three `Sentry.init` calls are still in sync
 - [ ] Upgrading `@playwright/test` also updates the Playwright image tag in `.circleci/config.yml`
+- [ ] Changing the Node.js version updates `.nvmrc`, `engines` in `package.json`, and the `cimg/node` image in `.circleci/config.yml` together
 - [ ] `AGENTS.md` and `README.md` reflect the change
 - [ ] Docs, code comments, and this PR are in English; only website and business content is in Portuguese
 - [ ] This template still matches the project rules and configuration

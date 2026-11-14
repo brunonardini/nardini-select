@@ -2,12 +2,16 @@
   "name": "nardini-select",
   "version": "0.0.0-development",
   "private": true,
+  "engines": {
+    "node": ">=26.13.1"
+  },
   "scripts": {
     "dev": "next dev --hostname 0.0.0.0",
     "build": "next build",
     "start": "next start --hostname 0.0.0.0",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "next typegen && tsc --noEmit",
     "lint": "eslint .",
+    "knip": "knip",
     "format": "prettier --write ./app ./e2e",
     "format:check": "prettier --check ./app ./e2e",
     "test": "vitest run",
@@ -17,31 +21,35 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "@fontsource-variable/bricolage-grotesque": "latest",
-    "@fontsource-variable/manrope": "latest",
+    "@fontsource-variable/bricolage-grotesque": "^5.3.0",
+    "@fontsource-variable/manrope": "^5.3.0",
     "@sentry/nextjs": "^11.12.0",
-    "next": "latest",
-    "react": "latest",
-    "react-dom": "latest"
+    "next": "^16.4.6",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
     "@commitlint/cli": "^21.2.4",
     "@commitlint/config-conventional": "^21.2.4",
+    "@commitlint/types": "^21.2.3",
+    "@knip/mcp": "^0.0.38",
     "@playwright/test": "^1.65.1",
     "@testing-library/dom": "^10.4.2",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
     "@testing-library/user-event": "^14.6.10",
-    "@types/node": "latest",
-    "@types/react": "latest",
-    "@types/react-dom": "latest",
+    "@types/node": "^26.6.6",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.3.0",
     "@vitest/coverage-v8": "^5.1.0",
     "eslint": "^9.39.5",
     "eslint-config-next": "^16.4.6",
     "husky": "^9.1.7",
     "jsdom": "^31.0.1",
-    "prettier": "3.9.10",
+    "knip": "^6.45.1",
+    "prettier": "3.10.1",
     "typescript": "~6.0.3",
     "vitest": "^5.1.0"
   }

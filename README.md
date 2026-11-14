@@ -2,13 +2,18 @@
 
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/brunonardini/nardini-select/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/brunonardini/nardini-select/tree/main)
 [![codecov](https://codecov.io/gh/brunonardini/nardini-select/branch/main/graph/badge.svg?token=RAnmvbM53n)](https://codecov.io/gh/brunonardini/nardini-select)
-[![Netlify Status](https://api.netlify.com/api/v1/badges/56d8c00c-f7c0-4a7d-a042-c0a8474d5230/deploy-status)](https://app.netlify.com/projects/nardini-select/deploys)
+[![Release](https://img.shields.io/github/v/release/brunonardini/nardini-select?sort=semver)](https://github.com/brunonardini/nardini-select/releases)
 
 Website for Nardini Select, a pet shop in Resende, RJ, Brazil. Today it's the store's institutional home page, built with Next.js, React, and TypeScript; it will grow into an e-commerce site.
 
 ## Running
 
-Requires Node.js 20.19.0 or later.
+The project uses the Node.js version in [.nvmrc](.nvmrc), the latest LTS (26.13.1). Install it with [nvm](https://github.com/nvm-sh/nvm) and run `nvm use` at the start of every terminal session in the project, before any `npm` command:
+
+```sh
+nvm install   # once, or when .nvmrc changes
+nvm use
+```
 
 Create a `.env` file at the project root. It stays out of Git. `WHATSAPP_NUMBER` is the phone number used by the WhatsApp redirect: digits only, with the country code, and no `+`, spaces, or punctuation. In development, a fake number is enough for the route to work:
 
@@ -44,15 +49,17 @@ If port 3000 is taken: `npm run start -- --port 3100`.
 
 ```sh
 npm run lint           # ESLint (Next.js rules)
+npm run typecheck      # generates the Next.js route types, then runs tsc
 npm run format:check   # Prettier
+npm run knip           # Knip: unused files, dependencies, and exports
 npm test               # unit and component tests (Vitest + React Testing Library)
-npm run test:coverage  # same, with a coverage report in coverage/
-npm run test:e2e       # end-to-end tests (Playwright); builds and serves the site on port 3200
+npm run test:coverage  # same, with a coverage report in coverage/; fails below 90%
+npm run test:e2e       # end-to-end and accessibility tests (Playwright + axe); builds and serves the site on port 3200
 ```
 
 Before the first `test:e2e`, install the browser: `npx playwright install chromium`.
 
-CircleCI ([.circleci/config.yml](.circleci/config.yml)) installs dependencies once, with a cache, and on every push runs lint, Prettier, unit tests, and the build in parallel. After the build, the E2E tests run in two parallel jobs, one for desktop and one for mobile, against the same build. Unit test coverage goes to Codecov. On `main`, once everything passes, the `release` job cuts the version and deploys to production (see below).
+CircleCI ([.circleci/config.yml](.circleci/config.yml)) installs dependencies once, with a cache, and on every push runs lint, Prettier, Knip, TypeScript type checking, unit tests, and the build in parallel. After the build, the E2E tests run in two parallel jobs, one for desktop and one for mobile, against the same build. The unit test job fails if coverage drops below 90%, and the coverage goes to Codecov. On `main`, once everything passes, the `release` job cuts the version and deploys to production (see below).
 
 ## Structure
 
@@ -69,9 +76,13 @@ There's no catalog, pricing, cart, or Instagram feed. The maps, Instagram, and W
 
 Versions follow SemVer and are cut by semantic-release from the commits on `main`. PRs are squash-merged, so the PR title decides the version: `fix:` releases a PATCH, `feat:` a MINOR, and `docs:`, `chore:`, and similar types release nothing and don't deploy. The project stays on 0.x until the e-commerce launch. The real version lives in the `vX.Y.Z` tag and its GitHub release, whose notes are the changelog. The `version` in `package.json` is fixed and never changes.
 
-When a merge produces a version, CircleCI creates the tag and the GitHub release, builds and deploys to Netlify production with the message `Release vX.Y.Z`, and registers the `nardini-select@X.Y.Z` release in Sentry. Netlify keeps building a preview for each PR on its own; `netlify.toml` makes it skip builds of `main`, which only CircleCI deploys.
+When a merge produces a version, CircleCI creates the tag and the GitHub release, builds and deploys to Netlify production with the message `Release vX.Y.Z`, and registers the `nardini-select@X.Y.Z` release in Sentry. Netlify keeps building a preview for each PR on its own; `netlify.toml` makes it skip builds of `main`, which only CircleCI deploys. Each merge therefore leaves a canceled `main` build in Netlify's deploy list, followed by the CircleCI deploy when there's a release; the canceled entry is expected. The Release badge shows the version in production, since a version is only cut together with its deploy; Netlify's own status badge isn't used because it tracks the canceled Git build, not the CLI deploy.
 
 Rollback: in Netlify, open the Deploys tab, open the last good deploy, and click Publish deploy. This republishes that deploy without rebuilding. Then fix the problem in a PR titled `fix: ...`; the merge releases a new PATCH version and deploys it automatically.
+
+## Security
+
+CodeQL scans the code on `main` and weekly (`.github/workflows/codeql.yml`); its alerts are visible only to the maintainer. To report a vulnerability, see [SECURITY.md](SECURITY.md).
 
 ## Commits
 
@@ -83,6 +94,8 @@ Website and business content is in Portuguese (pt-BR): page copy, product and br
 
 ## AI-assisted development
 
-The project is set up for AI agents (Claude Code, Codex, Cursor). Rules, commands, and installed skills are in [AGENTS.md](AGENTS.md), the single source for agents, which all three tools read directly (Claude Code from version 2.1.277).
+The project is set up for AI agents (Claude Code, Codex, Cursor). Rules, commands, installed skills, and the Knip MCP server (declared in `.mcp.json`, `.cursor/mcp.json`, and `.codex/config.toml`) are in [AGENTS.md](AGENTS.md), the single source for agents, which all three tools read directly (Claude Code from version 2.1.277). Cursor's Source Control generate-commit button reads [`.cursorrules`](.cursorrules) at the repo root, which repeats the commit format from AGENTS.md, including the 72-character line wrap.
+
+Agents also keep a local code graph with [Graphify](https://github.com/Graphify-Labs/graphify) in `graphify-out/` (gitignored, AST only, no visualization); see [AGENTS.md](AGENTS.md#code-graph-graphify).
 
 Design and architecture changes follow the Elephant-Goldfish Model (EGM): a reviewed design document comes before code. Approved documents live in [docs/designs/](docs/designs/README.md). The product and design context used by the Impeccable skill is in [PRODUCT.md](PRODUCT.md) and [DESIGN.md](DESIGN.md).

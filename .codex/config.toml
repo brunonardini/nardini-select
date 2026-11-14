@@ -1,0 +1,3 @@
+[mcp_servers.knip]
+command = "npx"
+args = ["--no", "knip-mcp"]

@@ -6,7 +6,8 @@ orbs:
 executors:
   node:
     docker:
-      - image: cimg/node:24.22.3
+      # Keep this tag in sync with .nvmrc.
+      - image: cimg/node:26.13.1
     working_directory: ~/project
   playwright:
     docker:
@@ -76,6 +77,22 @@ jobs:
       - run:
           name: Prettier
           command: npm run format:check
+
+  knip:
+    executor: node
+    steps:
+      - attach_setup
+      - run:
+          name: Knip (unused files, dependencies, and exports)
+          command: npm run knip
+
+  typecheck:
+    executor: node
+    steps:
+      - attach_setup
+      - run:
+          name: TypeScript
+          command: npm run typecheck
 
   unit-tests:
     executor: node
@@ -194,6 +211,10 @@ workflows:
           requires: [setup]
       - prettier:
           requires: [setup]
+      - knip:
+          requires: [setup]
+      - typecheck:
+          requires: [setup]
       - unit-tests:
           requires: [setup]
       - build:
@@ -213,8 +234,9 @@ workflows:
           requires:
             - lint
             - prettier
+            - knip
+            - typecheck
             - unit-tests
-            - build
             - e2e-desktop
             - e2e-mobile
           filters:

@@ -13,6 +13,13 @@ export default defineConfig({
       exclude: ['app/**/*.test.{ts,tsx}'],
       reporter: ['text', 'lcov'],
       reportsDirectory: 'coverage',
+      // CI fails when unit test coverage drops below 90%.
+      thresholds: {
+        statements: 90,
+        branches: 90,
+        functions: 90,
+        lines: 90,
+      },
     },
   },
 });

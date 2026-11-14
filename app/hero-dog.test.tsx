@@ -89,6 +89,13 @@ describe('HeroDog', () => {
     expect(style.bottom).toBe('auto');
   });
 
+  it('leaves positioning to CSS when the heading line is missing', () => {
+    vi.stubGlobal('innerWidth', 1440);
+    render(<HeroDog />);
+
+    expect(screen.getByRole('img')).not.toHaveAttribute('style');
+  });
+
   it('drops the computed position when the window shrinks', () => {
     vi.stubGlobal('innerWidth', 1440);
     const image = renderInHero();

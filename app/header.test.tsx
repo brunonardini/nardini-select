@@ -44,15 +44,32 @@ describe('Header', () => {
     expect(screen.getByRole('navigation')).not.toHaveClass('is-open');
   });
 
-  it('closes the menu when a navigation link is chosen', async () => {
+  it.each([
+    'Nardini Select — início',
+    'A marca',
+    'Nossa seleção',
+    'Nossa loja',
+    'Fale com a gente',
+  ])('closes the menu when the %s link is chosen', async (name) => {
     const user = userEvent.setup();
     render(<Header />);
     const toggle = screen.getByRole('button', { name: 'Abrir menu' });
 
     await user.click(toggle);
-    await user.click(screen.getByRole('link', { name: 'Nossa loja' }));
+    await user.click(screen.getByRole('link', { name }));
 
     expect(toggle).toHaveAttribute('aria-expanded', 'false');
+  });
+
+  it('ignores keys other than Escape', async () => {
+    const user = userEvent.setup();
+    render(<Header />);
+    const toggle = screen.getByRole('button', { name: 'Abrir menu' });
+
+    await user.click(toggle);
+    await user.keyboard('a');
+
+    expect(toggle).toHaveAttribute('aria-expanded', 'true');
   });
 
   it('closes the menu on Escape and returns focus to the toggle', async () => {

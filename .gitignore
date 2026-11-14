@@ -2,6 +2,11 @@ node_modules/
 .next/
 out/
 *.tsbuildinfo
+next-env.d.ts
+.netlify/
+.DS_Store
+*.pem
+npm-debug.log*
 .env*
 !.env.example
 .impeccable/review/
@@ -29,3 +34,6 @@ tmp/
 /blob-report/
 /playwright/.cache/
 /reports/
+
+# Graphify: knowledge graph for AI agents, rebuilt locally (graphify update .)
+graphify-out/
