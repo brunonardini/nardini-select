@@ -1,20 +1,22 @@
 # Home v3 — composição leve
 
+> Atualizado conforme o manual da marca (v2): paleta oficial, hero no formato da capa do manual, selo oficial e tom de voz focado em cães. As regras visuais estão em `DESIGN.md`.
+
 Esta revisão substitui a organização visual da versão anterior (v2). Os três pilares e suas categorias permanecem; as seções de diferenciais e feed foram removidas a pedido do usuário.
 
 ## Regras comuns
 
 - Cinco seções principais: hero, posicionamento, portfólio, localização e contato. Cada uma com `min-height: 100vh`; usar também `min-height: 100svh` para acompanhar o viewport móvel. Não usar altura fixa: o conteúdo pode ultrapassar a tela. Rodapé é parte do encerramento de contato.
-- Manter a paleta aprovada, mas usar grandes áreas claras e respiro. Sem caixas de fundo por pilar, cards aninhados, sombras, bordas decorativas, listas numeradas ou fotos individuais de categorias.
+- Usar apenas a paleta oficial do manual (Café Profundo, Terracota, Argila, Areia, Off-white), com grandes áreas claras e respiro. Sem caixas de fundo por pilar, cards aninhados, sombras, bordas decorativas, listas numeradas ou fotos individuais de categorias.
 - Texto, botões e imagens independentes na implementação. Não rasterizar texto ou interações.
 
 ## Hero
 
-Fundo: `public/images/hero-fundo-panoramico.png`, cobrindo toda a seção em ambos os dispositivos. Cão: `public/images/hero-weimaraner-transparente.png`, elemento independente à direita no desktop, separado do texto; no mobile abaixo do texto/alinhado à direita sobre o MESMO fundo contínuo. Não criar uma faixa de fundo diferente para o cão.
+Composição da capa do manual: logo horizontal e texto sobre off-white à esquerda; à direita, um painel Café Profundo de altura total com a haste terracota do N (corte diagonal) e o cão `public/images/hero-weimaraner-transparente.png`. A navegação fica sobre o painel, em off-white. No mobile (até 760px): só cabeçalho, texto e botões, sem o painel e sem o cão. Sem selo no hero.
 
 Título: Mais bem-estar começa com **boas escolhas**.
 
-Texto: Produtos selecionados com critério para cuidar, estimular e enriquecer a vida do seu pet.
+Texto: Produtos selecionados com critério para cuidar, estimular e enriquecer a vida do seu cão.
 
 Botão primário: Conheça nossa seleção ↓, âncora para o portfólio.
 
@@ -24,11 +26,11 @@ Nenhum endereço, marcador de mapa ou rótulo de localização no hero.
 
 ## Posicionamento
 
-Título em três linhas à esquerda: Qualidade, / especialização / e curadoria. Texto aprovado na revisão anterior à direita; selo original da marca (no site, `public/images/selo-transparente.png`) como assinatura em espaço próprio, menor que o título e sem competir com o texto. No mobile empilhar com respiro.
+Título em três linhas à esquerda: Qualidade, / especialização / e curadoria. Texto aprovado na revisão anterior à direita; selo oficial da marca (`public/images/selo.png`, sem recorte nem redesenho) à esquerda do título, sobre fundo Café Profundo. Fechamento: "Mais seleção. Menos convencional." No mobile empilhar com respiro.
 
 ## Portfólio
 
-Título: Uma curadoria. **Três compromissos.** A segunda frase usa o laranja de destaque.
+Título: Uma curadoria. **Três compromissos.** A segunda frase usa o terracota de destaque.
 
 Três grupos sem numeração, caixas ou cards. Uma ilustração por pilar, desenho artístico em marrom/bege/laranja com formas geométricas discretas inspiradas na marca. Cada grupo mantém título, conceito curto, categorias em texto simples e mensagem de destaque aprovada em v2.
 

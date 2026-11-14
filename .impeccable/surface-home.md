@@ -6,11 +6,11 @@ Visitor mode: Persuade. Audience: dog owners in Resende, RJ. Goal: understand th
 
 THESIS: An open, light institutional presentation in five sections of at least 100vh, with no boxes per pillar and no e-commerce elements.
 
-OWN-WORLD: Light beige, deep brown, and orange. Heavy sans-serif typography, brown/beige/orange illustrations, and original brand imagery. Curation as the language, not a catalog.
+OWN-WORLD: The brand manual's world: Café Profundo, Terracota, Argila, Areia and Off-white only; one robust sans-serif (Kanesty, Lexend stand-in) in ExtraBold and Regular; N monogram blocks and diagonal cuts as support; official brand marks. Curation as the language, not a catalog.
 
 STORY: Meet the brand; understand quality, specialization, and curation; explore three commitments; recognize the storefront and open directions; chat on WhatsApp or follow on Instagram.
 
-FIRST VIEWPORT: Continuous panoramic background, text on the left, a separate cut-out Weimaraner on the right, two buttons with down arrows. Mobile keeps the background behind everything and places the dog below the text. No address in the hero.
+FIRST VIEWPORT: The manual's cover: logo and copy on off-white on the left, a full-height café panel on the right with the N's terracota stem and the cut-out Weimaraner, two buttons with down arrows. Mobile (≤760px) shows only the header, copy and actions; no panel or dog. No address or seal in the hero. (Revised 2026-11-14 to follow the brand manual v2; the earlier panoramic orange background was outside the palette.)
 
 FORM: Composition explicitly chosen and approved by the user in `design/previews/home-v3-desktop.png` and `home-v3-mobile.png`, with the later revision of the leash in `pilar-premium.png` following the Toh reference. The 100vh height and the content of `design/home-content-v3.md` take precedence over the compressed proportions of the rasters. No random draw was used: the direction came from explicit approval.
 

@@ -1,22 +1,8 @@
 import { render, screen, within } from '@testing-library/react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import Home from './page';
 
 describe('Home', () => {
-  beforeEach(() => {
-    vi.stubGlobal(
-      'ResizeObserver',
-      class {
-        observe() {}
-        disconnect() {}
-      },
-    );
-    Object.defineProperty(document, 'fonts', {
-      configurable: true,
-      value: { ready: Promise.resolve() },
-    });
-  });
-
   it('has a single main heading with the hero promise', () => {
     render(<Home />);
 
@@ -60,7 +46,9 @@ describe('Home', () => {
   it('links directions to the store address on Google Maps', () => {
     render(<Home />);
 
-    const directions = screen.getByRole('link', { name: 'Como chegar' });
+    const directions = screen.getByRole('link', {
+      name: /^Como chegar.*Google Maps/,
+    });
     const url = new URL(directions.getAttribute('href') ?? '');
     expect(url.hostname).toBe('www.google.com');
     expect(url.searchParams.get('destination')).toBe(
@@ -80,6 +68,23 @@ describe('Home', () => {
     expect(
       contact.getByRole('link', { name: /^Siga @nardiniselect.*Instagram/ }),
     ).toHaveAttribute('href', 'https://www.instagram.com/nardiniselect/');
+  });
+
+  it('uses the official brand seal, not a redrawn copy', () => {
+    render(<Home />);
+
+    expect(
+      screen.getByRole('img', { name: 'Selo Nardini Select' }),
+    ).toHaveAttribute('src', expect.stringContaining('selo.png'));
+  });
+
+  it('speaks about dogs, not pets, as the brand voice asks', () => {
+    const { container } = render(<Home />);
+
+    expect(container.textContent).not.toMatch(/\bpets?\b|pet shop/i);
+    expect(container.textContent).toContain(
+      'Curadoria especializada para cães',
+    );
   });
 
   it('never shows a phone number', () => {

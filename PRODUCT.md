@@ -16,11 +16,13 @@ Dog owners in Resende, RJ, discovering the brand, learning what the store sells,
 
 ## Product Purpose
 
-Nardini Select is a pet shop in Resende, RJ, focused on dog owners. The current website presents the brand, the store's categories, and the physical location. Success means a visitor understands the store's offer and can visit or contact it. The site will evolve into an e-commerce store; that scope is not defined yet.
+Nardini Select is a specialized store for dogs in Resende, RJ ("Curadoria especializada para cães"). The current website presents the brand, the store's categories, and the physical location. Success means a visitor understands the store's offer and can visit or contact it. The site will evolve into an e-commerce store; that scope is not defined yet.
 
 ## Positioning
 
-A specialized pet shop offering carefully curated products for pets' well-being, behavioral development, and quality of life. Selection combines quality, safety, functionality, and design for discerning owners and pet professionals. Brand essence: quality, specialization, and curation. Main message: "Uma seleção especial para uma vida mais saudável, equilibrada e feliz ao lado do seu pet."
+Not a traditional pet shop: "Não é pet shop. É seleção com critério." More curation, more knowledge, less excess ("Mais seleção. Menos convencional."). The store offers carefully curated products for dogs' well-being, behavioral development, and quality of life, combining quality, safety, functionality, and design for discerning owners and professionals who work with dogs. The brand manual names four offer areas: professional products chosen by use and function, natural food, exclusive pieces (ceramics, tags, personalized items), and guidance at the counter. Brand essence: authorship and selection; the name is a founder's surname that signs every choice.
+
+Voice: specialist but close. Secure without sounding technical, affectionate without infantilizing. Say "cão" and "cães", not "pet"; prefer "Curadoria especializada para cães" and "Escolhas melhores também são cuidado." over "Tudo para o seu pet em um só lugar" or "Mimos fofinhos para seu doguinho."
 
 ## Operating Context
 
@@ -40,11 +42,11 @@ A specialized pet shop offering carefully curated products for pets' well-being,
 ## Brand Commitments
 
 - Name: "Nardini Select".
-- Brand source files (logo variations, dog symbol, promotional artwork) are kept outside the repository; the site uses the exports in `public/images/`. Preserve their brown, burnt-orange and beige palette and strong typography.
+- The brand manual (_Nardini Select — Manual da Marca_, v2) and the brand source files (logo variations, dog symbol, promotional artwork) are kept outside the repository; the site uses the official exports in `public/images/` and `app/icon.png`. DESIGN.md translates the manual into web rules: five-color palette, Kanesty typography, logo versions, protection area, monogram graphics and voice.
 - Existing brand line: "Uma escolha com assinatura."
-- The approved beige/orange/chocolate palette is retained. On desktop keep a generous gap between hero text and the Weimaraner; on mobile stack and crop efficiently without text overlap.
-- Current home composition is specified in `design/home-content-v3.md`: five sections of at least one viewport height, lighter layout, no pillar cards, no reasons-to-choose section, no feed. Hero uses the separate panoramic background and dog foreground assets across desktop and mobile. Hero headline: "Mais bem-estar começa com boas escolhas." Support: "Produtos selecionados com critério para cuidar, estimular e enriquecer a vida do seu pet."
-- The brand dog symbol (kept with the brand sources) is a silver-gray Weimaraner. Any photographic interpretation must follow that reference's head proportions, dropped ears, long muzzle, elegant neck, and pose. Do not use a golden or caramel Labrador as the brand dog.
+- Only the official palette: Café Profundo, Terracota, Argila, Areia and Off-white. No saturated colors. Never redraw, recolor, crop, distort or regenerate a brand mark.
+- Current home composition is specified in `design/home-content-v3.md`: five sections of at least one viewport height, lighter layout, no pillar cards, no reasons-to-choose section, no feed. Hero follows the manual's cover: copy on off-white beside a café panel with the dog. Hero headline: "Mais bem-estar começa com boas escolhas." Support: "Produtos selecionados com critério para cuidar, estimular e enriquecer a vida do seu cão."
+- The brand dog symbol (kept with the brand sources) is a silver-gray Weimaraner, drawn from Bacon, a real dog, with a sober, attentive and imposing posture. Any photographic interpretation must follow that reference's head proportions, dropped ears, long muzzle, elegant neck, and pose. Do not use a golden or caramel Labrador as the brand dog.
 - `public/images/loja-frente.jpg` is the real storefront photo, with the phone strip concealed (the original stays with the brand sources); use it to help visitors recognize the shop. Generated imagery is illustrative and must not replace documentary storefront photography.
 
 ## Evidence on Hand
@@ -55,5 +57,5 @@ Brand artwork and a real storefront photo are supplied. The owner confirmed the 
 
 1. **Curation over volume.** Fewer, chosen products, each presented with a reason to trust the pick.
 2. **Visit or contact the shop.** The current institutional home helps visitors locate the physical store and talk to it on WhatsApp.
-3. **Built for Brazilian pet owners.** Natural pt-BR copy, BRL, and local expectations, not a translated template.
+3. **Built for Brazilian dog owners.** Natural pt-BR copy, BRL, and local expectations, not a translated template.
 4. **Mobile-first reality.** The phone in hand is the primary context for discovering the store, opening directions, and contacting it.

@@ -106,28 +106,6 @@ test('mobile menu closes after navigating and on Escape', async ({ page }) => {
   await expect(toggle).toBeFocused();
 });
 
-test('hero dog nose lines up with the second heading line', async ({
-  page,
-}) => {
-  test.skip(
-    page.viewportSize()!.width <= 1100,
-    'The dog is positioned by CSS on smaller screens',
-  );
-  await page.evaluate(() => document.fonts.ready);
-  await page
-    .locator('.hero-dog')
-    .evaluate((image: HTMLImageElement) => image.decode());
-
-  const delta = await page.evaluate(() => {
-    const line = document
-      .querySelector('.hero-second-line')!
-      .getBoundingClientRect();
-    const dog = document.querySelector('.hero-dog')!.getBoundingClientRect();
-    return dog.top + dog.height * 0.31 - (line.top + line.height / 2);
-  });
-  expect(Math.abs(delta)).toBeLessThanOrEqual(4);
-});
-
 test('contact links open WhatsApp and Instagram in a new tab', async ({
   page,
 }) => {

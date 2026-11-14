@@ -66,12 +66,12 @@ footer in this description isn't part of the commit.
 
 **Configuration and docs**
 
-- [ ] The CircleCI release job requires all validation jobs to pass
-- [ ] App variables are set in Netlify for Production and Deploy Previews, pipeline-only variables in CircleCI, and both are documented in the README (never set `SENTRY_RELEASE` in Netlify)
+- [ ] The CircleCI release job requires lint, type checking, and unit tests to pass, and PRs run the full validation suite
+- [ ] App variables are set in Netlify for Production and Deploy Previews, pipeline-only variables in CircleCI, and both are documented in `docs/deployment.md` (never set `SENTRY_RELEASE` in Netlify)
 - [ ] The three `Sentry.init` calls are still in sync
 - [ ] Upgrading `@playwright/test` also updates the Playwright image tag in `.circleci/config.yml`
 - [ ] Changing the Node.js version updates `.nvmrc`, `engines` in `package.json`, and the `cimg/node` image in `.circleci/config.yml` together
-- [ ] `AGENTS.md` and `README.md` reflect the change
+- [ ] The affected docs reflect the change, and the README stays focused on the project overview, local setup, checks, and links
 - [ ] Docs, code comments, and this PR are in English; only website and business content is in Portuguese
 - [ ] This template still matches the project rules and configuration
 
