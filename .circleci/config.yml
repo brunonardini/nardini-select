@@ -83,9 +83,6 @@ jobs:
     steps:
       - attach_setup
       - run:
-          name: Generate Next.js route types
-          command: npm exec -- next typegen
-      - run:
           name: TypeScript
           command: npm run typecheck
 

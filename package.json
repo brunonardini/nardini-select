@@ -9,7 +9,7 @@
     "dev": "next dev --hostname 0.0.0.0",
     "build": "next build",
     "start": "next start --hostname 0.0.0.0",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "next typegen && tsc --noEmit",
     "lint": "eslint .",
     "format": "prettier --write ./app ./e2e",
     "format:check": "prettier --check ./app ./e2e",
@@ -23,7 +23,7 @@
     "@fontsource-variable/bricolage-grotesque": "^5.3.0",
     "@fontsource-variable/manrope": "^5.3.0",
     "@sentry/nextjs": "^11.12.0",
-    "next": "^16.4.2",
+    "next": "^16.4.6",
     "react": "^19.3.1",
     "react-dom": "^19.3.1"
   },

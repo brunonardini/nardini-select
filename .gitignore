@@ -2,6 +2,11 @@ node_modules/
 .next/
 out/
 *.tsbuildinfo
+next-env.d.ts
+.netlify/
+.DS_Store
+*.pem
+npm-debug.log*
 .env*
 !.env.example
 .impeccable/review/

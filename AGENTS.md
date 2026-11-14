@@ -17,7 +17,7 @@ Run `nvm use` at the start of every terminal session, before any `node`, `npm`, 
 | Install | `npm ci` |
 | Dev server | `npm run dev` |
 | Build | `npm run build` |
-| Typecheck | `npm run typecheck` |
+| Typecheck | `npm run typecheck` (`next typegen`, then `tsc`; `next-env.d.ts` is generated and gitignored) |
 | Format | `npm run format:check` / `npm run format` |
 | Lint | `npm run lint` (ESLint with `eslint-config-next`) |
 | Unit tests | `npm test` (`npm run test:watch` while working, `npm run test:coverage` for coverage) |
