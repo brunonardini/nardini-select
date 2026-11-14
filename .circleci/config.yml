@@ -140,6 +140,52 @@ jobs:
       - store_artifacts:
           path: test-results
 
+  release:
+    executor: node
+    environment:
+      NEXT_TELEMETRY_DISABLED: '1'
+    steps:
+      - attach_setup
+      # The workspace holds the setup job's checkout. Running checkout again
+      # fetches origin into it and sets up the SSH keys for git.
+      - checkout
+      - run:
+          name: Fetch tags
+          # semantic-release finds the last version from the vX.Y.Z tags.
+          command: git fetch --force --tags origin
+      - run:
+          name: semantic-release
+          # Tags HEAD and creates the GitHub release when the commits since
+          # the last tag call for a new version. Uses GH_TOKEN.
+          command: >-
+            npx --yes
+            --package semantic-release@25.0.9
+            --package conventional-changelog-conventionalcommits@9.3.1
+            semantic-release
+      - run:
+          name: Detect the new version
+          command: |
+            tag=$(git tag --points-at HEAD --list 'v*' | sort -V | tail -n 1)
+            if [ -z "$tag" ]; then
+              echo "No new version for this commit; skipping the production deploy."
+              circleci-agent step halt
+              exit 0
+            fi
+            version="${tag#v}"
+            echo "Releasing $tag"
+            echo "export RELEASE_VERSION=$version" >> "$BASH_ENV"
+            echo "export SENTRY_RELEASE=nardini-select@$version" >> "$BASH_ENV"
+      - run:
+          name: Build and deploy to Netlify production
+          # Builds with the production context, so the build gets the site's
+          # production variables and CONTEXT=production, plus SENTRY_RELEASE
+          # from this shell. Reads NETLIFY_AUTH_TOKEN and NETLIFY_SITE_ID.
+          command: >-
+            npx --yes netlify-cli@27.19.0 deploy
+            --prod
+            --context production
+            --message "Release v$RELEASE_VERSION ($SENTRY_RELEASE)"
+
 workflows:
   validate:
     jobs:
@@ -160,3 +206,17 @@ workflows:
           name: e2e-mobile
           project: mobile
           requires: [build]
+      - release:
+          # GH_TOKEN, NETLIFY_AUTH_TOKEN, and NETLIFY_SITE_ID live in this
+          # context, which only main can use.
+          context: nardini-select-release
+          requires:
+            - lint
+            - prettier
+            - unit-tests
+            - build
+            - e2e-desktop
+            - e2e-mobile
+          filters:
+            branches:
+              only: main

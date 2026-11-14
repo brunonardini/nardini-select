@@ -8,7 +8,7 @@ Nardini Select: a dog-focused pet shop in Resende, RJ, Brazil. Today the reposit
 
 ## Stack and commands
 
-Next.js 16 (App Router), React 19, TypeScript 6, npm. Node.js 20.9 or later. TypeScript stays on 6.0.x because `typescript-eslint` doesn't support TypeScript 7 yet.
+Next.js 16 (App Router), React 19, TypeScript 6, npm. Node.js 20.19.0 or later. Hosted on Netlify. TypeScript stays on 6.0.x because `typescript-eslint` doesn't support TypeScript 7 yet.
 
 | Task | Command |
 | --- | --- |
@@ -31,11 +31,74 @@ Testing:
 
 ## Conventions
 
-- Run `npm run typecheck`, `npm run lint`, `npm run format:check`, and `npm test` before finishing a change. CI (CircleCI) runs lint, Prettier, unit, and E2E tests on every push.
+- Run `npm run typecheck`, `npm run lint`, `npm run format:check`, and `npm test` before finishing a change. CI (CircleCI) runs lint, Prettier, unit, and E2E tests on every push, and releases from `main` (see Releases and deploys).
 - Prettier with single quotes; code lives in `app/`.
-- User-facing copy is Portuguese (pt-BR).
+- Language: website and business content is Portuguese (pt-BR): page copy, product and brand texts, and the approved content specs in `design/`. Everything else is English: documentation (including the README), AI agent instructions, code, code comments, commit messages, and PR titles and descriptions.
 - `WHATSAPP_NUMBER` comes from `.env` and is read only on the server (`app/contato/whatsapp/route.ts`). Never show the phone number in page text, images, or client components.
 - `public/images` holds only files the page uses. Brand source files stay out of Git.
+
+## Monitoring (Sentry)
+
+Errors, tracing, and logs go to the Sentry project `bruno-nardini/nardini-select` through `@sentry/nextjs`.
+
+- SDK init: `instrumentation-client.ts` (browser), `sentry.server.config.ts` and `sentry.edge.config.ts` (loaded by `instrumentation.ts`), and `app/global-error.tsx` for render errors. Keep the three `Sentry.init` calls in sync.
+- `NEXT_PUBLIC_SENTRY_DSN` enables the SDK; without it, Sentry stays off (tests and CI run without it).
+- Environment comes from Netlify's `CONTEXT` (`production`, `deploy-preview`, `branch-deploy`), falling back to `NODE_ENV`.
+- Release: production builds use `nardini-select@X.Y.Z` from `SENTRY_RELEASE`, set only by the CircleCI release job, for the source map upload (`withSentryConfig`) and the three `Sentry.init` calls (as `NEXT_PUBLIC_SENTRY_RELEASE`). The build also associates commits and records a production deploy. Deploy previews have no `SENTRY_RELEASE`, so their release is the commit SHA. Never set `SENTRY_RELEASE` in Netlify.
+- Client source maps are uploaded and then deleted from the build, so the site never serves them.
+- Trace sample rate: 100% in development, 10% otherwise.
+- `SENTRY_AUTH_TOKEN` exists only in Netlify, for source map upload during the build; the CircleCI release build reads it from Netlify through the CLI. Never commit it, copy it to CircleCI, or ask for it in chat.
+- Wrap new Server Actions with `Sentry.withServerActionInstrumentation()`.
+
+## Releases and deploys
+
+Versions follow SemVer and are cut by semantic-release (`.releaserc.json`) from the Conventional Commits on `main`. With squash merges, the PR title decides the release.
+
+| Bump | Meaning here | Commit |
+| --- | --- | --- |
+| MAJOR | Breaks something for customers or for stored data | `!` after the type/scope, or a `BREAKING CHANGE:` footer |
+| MINOR | New feature or visible, compatible change | `feat` |
+| PATCH | Fix | `fix` or `perf` |
+
+Other types (`docs`, `chore`, `ci`, `build`, `refactor`, `style`, `test`, `revert`) don't release: no tag and no production deploy.
+
+The project stays on 0.x until the e-commerce launch. A breaking change (`!` or `BREAKING CHANGE:`) jumps straight to 1.0.0, so don't use it before that launch.
+
+- The version lives only in the `vX.Y.Z` tag and its GitHub release, whose notes are the changelog. Nothing is committed back, and `package.json` keeps `0.0.0-development`.
+- On each push to `main`, after every check passes, the CircleCI `release` job runs semantic-release. If it tags a new version, the job deploys to Netlify production with the CLI (`--context production`) and `SENTRY_RELEASE=nardini-select@X.Y.Z`.
+- Netlify only builds PR deploy previews: `netlify.toml` has an `ignore` command that skips its builds of `main`, which the CLI doesn't run. Production deploys come only from CircleCI.
+
+## Commits and pull requests
+
+Commit messages follow [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/) and are written in English.
+
+```
+<type>[optional scope][!]: <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+- Types: `feat` (new feature) and `fix` (bug fix), plus `build`, `chore`, `ci`, `docs`, `perf`, `refactor`, `revert`, `style`, and `test`.
+- Scope is optional and names the area changed, e.g. `feat(home): ...`, `ci(circleci): ...`.
+- Description: imperative mood, lowercase, no trailing period. The whole header (type, scope, and description) fits in 72 characters.
+- Body: what changed and why, wrapped at 72 characters (commitlint rejects lines over 100).
+- Breaking changes: `!` before the colon, a `BREAKING CHANGE: <description>` footer, or both.
+- PRs are squash-merged with a blank message, so the PR title alone becomes the commit on `main` and drives the release and its notes. PR titles follow the same format, in English. A breaking change needs the `!` in the title; a `BREAKING CHANGE:` footer in the PR description is lost.
+- Every PR uses `.github/pull_request_template.md`: fill each section, check what applies, and delete the groups that don't. `gh pr create --body` skips the template, so build the body from it (for example with `--body-file`).
+- When a change touches project rules or configuration (this file, the README, CI, release, lint, test, or commit settings, environment variables, or the rules the checklist covers), update the PR template in the same PR so its checklist stays accurate.
+- `.github/workflows/pr-title.yml` validates PR titles (types, lowercase description, no trailing period).
+- commitlint (`commitlint.config.mjs`, `@commitlint/config-conventional`) checks every local commit through the husky `commit-msg` hook, installed by `npm install`. Don't bypass it with `--no-verify`.
+
+Example:
+
+```
+fix(contact): keep the WhatsApp number out of client components
+
+The number now comes only from the server route, so it never ships
+in the page bundle.
+```
 
 ## Product rules
 
