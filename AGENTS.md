@@ -27,6 +27,7 @@ Run `nvm use` at the start of every terminal session, before any `node`, `npm`, 
 Testing:
 - Unit and component tests: Vitest + React Testing Library, next to the code as `app/**/*.test.ts(x)`. Query by role and accessible name. Async Server Components can't be unit tested; cover them with E2E.
 - E2E: Playwright in `e2e/`, desktop (1440×900) and mobile (Pixel 7) projects. `npm run test:e2e` builds the app, then Playwright starts that build on port 3200 with a fake `WHATSAPP_NUMBER` (`npx playwright test` alone needs an existing build). First run: `npx playwright install chromium`.
+- Accessibility: `e2e/accessibility.spec.ts` runs axe (`@axe-core/playwright`) against WCAG 2.2 A and AA plus axe best practices, on desktop, on mobile, and with the mobile menu open. Any violation fails the test. Fix the page instead of disabling rules; when a new state or page appears (a dialog, a new route), scan it too.
 - Add or update tests with every behavior change, and run `npm test` before finishing.
 - Coverage: unit tests only (V8, `coverage/lcov.info`). `npm run test:coverage` fails below 90% of statements, branches, functions, or lines (`thresholds` in `vitest.config.mts`); keep new code covered instead of lowering it. CI uploads it to Codecov with the `unit` flag, using the `CODECOV_TOKEN` variable set in CircleCI.
 

@@ -36,7 +36,7 @@
   },
   "components": [
     {
-      "css": ".ds-button-primary{display:inline-flex;align-items:center;justify-content:center;gap:14px;min-height:50px;padding:13px 25px;border-radius:999px;font:750 .875rem/1.4 var(--body,'Manrope Variable',sans-serif);text-decoration:none;transition:background .2s ease,transform .2s ease,color .2s ease; background:var(--orange,#c55523);color:#fff;border:1px solid var(--orange,#c55523)} .{background:#9b3b16;transform:translateY(-2px);} .ds-button-primary:focus-visible{outline:3px solid var(--orange,#c55523);outline-offset:6px} @media(prefers-reduced-motion:reduce){.ds-button-primary{transition:none}.ds-button-primary:hover{transform:none}}",
+      "css": ".ds-button-primary{display:inline-flex;align-items:center;justify-content:center;gap:14px;min-height:50px;padding:13px 25px;border-radius:999px;font:750 .875rem/1.4 var(--body,'Manrope Variable',sans-serif);text-decoration:none;transition:background .2s ease,transform .2s ease,color .2s ease; background:#c5501d;color:#fff;border:1px solid #c5501d} .{background:#9b3b16;transform:translateY(-2px);} .ds-button-primary:focus-visible{outline:3px solid var(--orange,#c55523);outline-offset:6px} @media(prefers-reduced-motion:reduce){.ds-button-primary{transition:none}.ds-button-primary:hover{transform:none}}",
       "refersTo": "button-primary",
       "description": "Pill action with visible keyboard focus and restrained hover lift.",
       "kind": "button",

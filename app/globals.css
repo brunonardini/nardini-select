@@ -112,9 +112,10 @@ h2 span {
   transform: translateY(-2px);
 }
 .button-primary {
-  background: var(--orange);
+  /* The hero shade: white text on --orange is 4.47:1, under WCAG AA. */
+  background: #c5501d;
   color: #fff;
-  border: 1px solid var(--orange);
+  border: 1px solid #c5501d;
 }
 .button-primary:hover {
   background: #9b3b16;
@@ -236,10 +237,6 @@ h2 span {
   gap: 15px;
   flex-wrap: wrap;
   margin-top: 35px;
-}
-.hero .button-primary {
-  background: #c5501d;
-  border-color: #c5501d;
 }
 .hero .button-primary:hover {
   background: #9d3c16;

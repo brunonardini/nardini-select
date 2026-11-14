@@ -47,6 +47,7 @@ footer in this description isn't part of the commit.
 **Interface**
 
 - [ ] Checked on desktop and mobile; screenshots below
+- [ ] New pages or interface states (dialogs, menus, routes) are covered by the axe scans in `e2e/accessibility.spec.ts`
 - [ ] User-facing copy is in Portuguese (pt-BR)
 - [ ] Motion uses CSS transitions, the Web Animations API, or the View Transitions API; Motion (`motion/react`) only for springs, gestures, or interruptible motion, loaded on demand
 - [ ] Animates `transform` and `opacity` (`clip-path`, `filter`, or measured height only with a reason); no layout properties

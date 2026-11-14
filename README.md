@@ -54,7 +54,7 @@ npm run format:check   # Prettier
 npm run knip           # Knip: unused files, dependencies, and exports
 npm test               # unit and component tests (Vitest + React Testing Library)
 npm run test:coverage  # same, with a coverage report in coverage/; fails below 90%
-npm run test:e2e       # end-to-end tests (Playwright); builds and serves the site on port 3200
+npm run test:e2e       # end-to-end and accessibility tests (Playwright + axe); builds and serves the site on port 3200
 ```
 
 Before the first `test:e2e`, install the browser: `npx playwright install chromium`.
