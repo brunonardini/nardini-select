@@ -31,7 +31,7 @@ Testing:
 
 ## Conventions
 
-- Run `npm run typecheck`, `npm run lint`, `npm run format:check`, and `npm test` before finishing a change. CI (CircleCI) runs lint, Prettier, unit, and E2E tests on every push.
+- Run `npm run typecheck`, `npm run lint`, `npm run format:check`, and `npm test` before finishing a change. CI (CircleCI) runs lint, Prettier, unit, and E2E tests on every push, and releases from `main` (see Releases and deploys).
 - Prettier with single quotes; code lives in `app/`.
 - User-facing copy is Portuguese (pt-BR).
 - `WHATSAPP_NUMBER` comes from `.env` and is read only on the server (`app/contato/whatsapp/route.ts`). Never show the phone number in page text, images, or client components.
@@ -43,10 +43,30 @@ Errors, tracing, and logs go to the Sentry project `bruno-nardini/nardini-select
 
 - SDK init: `instrumentation-client.ts` (browser), `sentry.server.config.ts` and `sentry.edge.config.ts` (loaded by `instrumentation.ts`), and `app/global-error.tsx` for render errors. Keep the three `Sentry.init` calls in sync.
 - `NEXT_PUBLIC_SENTRY_DSN` enables the SDK; without it, Sentry stays off (tests and CI run without it).
-- Environment comes from Netlify's `CONTEXT` (`production`, `deploy-preview`, `branch-deploy`), falling back to `NODE_ENV`. The release comes from the commit Netlify builds.
+- Environment comes from Netlify's `CONTEXT` (`production`, `deploy-preview`, `branch-deploy`), falling back to `NODE_ENV`.
+- Release: production builds use `nardini-select@X.Y.Z` from `SENTRY_RELEASE`, set only by the CircleCI release job, for the source map upload (`withSentryConfig`) and the three `Sentry.init` calls (as `NEXT_PUBLIC_SENTRY_RELEASE`). The build also associates commits and records a production deploy. Deploy previews have no `SENTRY_RELEASE`, so their release is the commit SHA. Never set `SENTRY_RELEASE` in Netlify.
+- Client source maps are uploaded and then deleted from the build, so the site never serves them.
 - Trace sample rate: 100% in development, 10% otherwise.
-- `SENTRY_AUTH_TOKEN` exists only in Netlify, for source map upload during the build. Never commit it or ask for it in chat.
+- `SENTRY_AUTH_TOKEN` exists only in Netlify, for source map upload during the build; the CircleCI release build reads it from Netlify through the CLI. Never commit it, copy it to CircleCI, or ask for it in chat.
 - Wrap new Server Actions with `Sentry.withServerActionInstrumentation()`.
+
+## Releases and deploys
+
+Versions follow SemVer and are cut by semantic-release (`.releaserc.json`) from the Conventional Commits on `main`. With squash merges, the PR title decides the release.
+
+| Bump | Meaning here | Commit |
+| --- | --- | --- |
+| MAJOR | Breaks something for customers or for stored data | `!` after the type/scope, or a `BREAKING CHANGE:` footer |
+| MINOR | New feature or visible, compatible change | `feat` |
+| PATCH | Fix | `fix` or `perf` |
+
+Other types (`docs`, `chore`, `ci`, `build`, `refactor`, `style`, `test`, `revert`) don't release: no tag and no production deploy.
+
+The project stays on 0.x until the e-commerce launch. A breaking change (`!` or `BREAKING CHANGE:`) jumps straight to 1.0.0, so don't use it before that launch.
+
+- The version lives only in the `vX.Y.Z` tag and its GitHub release, whose notes are the changelog. Nothing is committed back, and `package.json` keeps `0.0.0-development`.
+- On each push to `main`, after every check passes, the CircleCI `release` job runs semantic-release. If it tags a new version, the job deploys to Netlify production with the CLI (`--context production`) and `SENTRY_RELEASE=nardini-select@X.Y.Z`.
+- Netlify only builds PR deploy previews: `netlify.toml` has an `ignore` command that skips its builds of `main`, which the CLI doesn't run. Production deploys come only from CircleCI.
 
 ## Commits and pull requests
 
@@ -66,6 +86,7 @@ Commit messages follow [Conventional Commits 1.0.0](https://www.conventionalcomm
 - Body: what changed and why, wrapped at 72 characters (commitlint rejects lines over 100).
 - Breaking changes: `!` before the colon, a `BREAKING CHANGE: <description>` footer, or both.
 - PRs are squash-merged, and the PR title becomes the commit message on `main`. PR titles follow the same format, in English.
+- `.github/workflows/pr-title.yml` validates PR titles (types, lowercase description, no trailing period).
 - commitlint (`commitlint.config.mjs`, `@commitlint/config-conventional`) checks every local commit through the husky `commit-msg` hook, installed by `npm install`. Don't bypass it with `--no-verify`.
 
 Example:

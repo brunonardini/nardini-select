@@ -20,7 +20,7 @@ NEXT_PUBLIC_SENTRY_DSN=
 
 Sem `NEXT_PUBLIC_SENTRY_DSN`, a Sentry fica desligada. O DSN está em Settings > Projects > nardini-select > Client Keys (DSN), na Sentry.
 
-O site é publicado no Netlify. Em produção, configure nas variáveis de ambiente do Netlify:
+O site é publicado no Netlify. As variáveis da aplicação ficam nas variáveis de ambiente do Netlify:
 
 - `WHATSAPP_NUMBER`: o número real da loja.
 - `NEXT_PUBLIC_SENTRY_DSN`: o DSN do projeto na Sentry.
@@ -52,7 +52,7 @@ npm run test:e2e       # ponta a ponta (Playwright), faz o build e sobe o site n
 
 Antes do primeiro `test:e2e`, instale o navegador: `npx playwright install chromium`.
 
-O CircleCI ([.circleci/config.yml](.circleci/config.yml)) instala as dependências uma vez, com cache, e a cada push roda em paralelo o lint, o Prettier, os testes de unidade e o build. Depois do build, os testes E2E rodam em dois jobs paralelos, um para desktop e outro para celular, sobre o mesmo build. A cobertura dos testes de unidade é enviada ao Codecov.
+O CircleCI ([.circleci/config.yml](.circleci/config.yml)) instala as dependências uma vez, com cache, e a cada push roda em paralelo o lint, o Prettier, os testes de unidade e o build. Depois do build, os testes E2E rodam em dois jobs paralelos, um para desktop e outro para celular, sobre o mesmo build. A cobertura dos testes de unidade é enviada ao Codecov. Na `main`, depois que tudo passa, o job `release` gera a versão e publica em produção (veja abaixo).
 
 ## Estrutura
 
@@ -65,9 +65,17 @@ O CircleCI ([.circleci/config.yml](.circleci/config.yml)) instala as dependênci
 
 Não há catálogo, preços, carrinho ou feed do Instagram. Os links de mapas, Instagram e WhatsApp estão ativos.
 
+## Versionamento, deploy e rollback
+
+A versão segue SemVer e é gerada pelo semantic-release a partir dos commits na `main`. Como os PRs entram com squash, o título do PR decide a versão: `fix:` gera PATCH, `feat:` gera MINOR, e `docs:`, `chore:` e similares não geram versão nem deploy. O projeto fica em 0.x até o lançamento do e-commerce. A versão real está na tag `vX.Y.Z` e na release do GitHub, cujas notas são o changelog. O `version` do `package.json` é fixo e não muda.
+
+Quando um merge gera versão, o CircleCI cria a tag e a release no GitHub, compila e publica em produção no Netlify com a mensagem `Release vX.Y.Z`, e registra a release `nardini-select@X.Y.Z` na Sentry. O Netlify continua gerando sozinho as prévias de cada PR; o `netlify.toml` faz ele pular os builds da `main`, que passam a ser feitos só pelo CircleCI.
+
+Rollback: no Netlify, abra a aba Deploys, entre no último deploy bom e clique em Publish deploy. Isso republica o deploy sem compilar de novo. Depois corrija o problema num PR com título `fix: ...`; o merge gera uma nova versão PATCH e volta a publicar automaticamente.
+
 ## Commits
 
-Os commits seguem o padrão [Conventional Commits](https://www.conventionalcommits.org/pt-br/v1.0.0/) e são escritos em inglês, por exemplo `docs(readme): add status badges`. Os PRs são integrados com squash, então o título do PR vira o commit na `main` e segue o mesmo padrão. Detalhes no [AGENTS.md](AGENTS.md#commits-and-pull-requests).
+Os commits seguem o padrão [Conventional Commits](https://www.conventionalcommits.org/pt-br/v1.0.0/) e são escritos em inglês, por exemplo `docs(readme): add status badges`. Os PRs são integrados com squash, então o título do PR vira o commit na `main` e segue o mesmo padrão; uma GitHub Action valida o título. Localmente, o commitlint confere cada commit pelo hook `commit-msg`, instalado pelo `npm install`. Detalhes no [AGENTS.md](AGENTS.md#commits-and-pull-requests).
 
 ## Desenvolvimento com IA
 
