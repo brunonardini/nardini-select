@@ -85,7 +85,9 @@ Commit messages follow [Conventional Commits 1.0.0](https://www.conventionalcomm
 - Description: imperative mood, lowercase, no trailing period. The whole header (type, scope, and description) fits in 72 characters.
 - Body: what changed and why, wrapped at 72 characters (commitlint rejects lines over 100).
 - Breaking changes: `!` before the colon, a `BREAKING CHANGE: <description>` footer, or both.
-- PRs are squash-merged, and the PR title becomes the commit message on `main`. PR titles follow the same format, in English.
+- PRs are squash-merged with a blank message, so the PR title alone becomes the commit on `main` and drives the release and its notes. PR titles follow the same format, in English. A breaking change needs the `!` in the title; a `BREAKING CHANGE:` footer in the PR description is lost.
+- Every PR uses `.github/pull_request_template.md`: fill each section, check what applies, and delete the groups that don't. `gh pr create --body` skips the template, so build the body from it (for example with `--body-file`).
+- When a change touches project rules or configuration (this file, the README, CI, release, lint, test, or commit settings, environment variables, or the rules the checklist covers), update the PR template in the same PR so its checklist stays accurate.
 - `.github/workflows/pr-title.yml` validates PR titles (types, lowercase description, no trailing period).
 - commitlint (`commitlint.config.mjs`, `@commitlint/config-conventional`) checks every local commit through the husky `commit-msg` hook, installed by `npm install`. Don't bypass it with `--no-verify`.
 

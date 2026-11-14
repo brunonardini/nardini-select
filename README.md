@@ -75,7 +75,7 @@ Rollback: no Netlify, abra a aba Deploys, entre no último deploy bom e clique e
 
 ## Commits
 
-Os commits seguem o padrão [Conventional Commits](https://www.conventionalcommits.org/pt-br/v1.0.0/) e são escritos em inglês, por exemplo `docs(readme): add status badges`. Os PRs são integrados com squash, então o título do PR vira o commit na `main` e segue o mesmo padrão; uma GitHub Action valida o título. Localmente, o commitlint confere cada commit pelo hook `commit-msg`, instalado pelo `npm install`. Detalhes no [AGENTS.md](AGENTS.md#commits-and-pull-requests).
+Os commits seguem o padrão [Conventional Commits](https://www.conventionalcommits.org/pt-br/v1.0.0/) e são escritos em inglês, por exemplo `docs(readme): add status badges`. Os PRs são integrados com squash, então o título do PR vira o commit na `main` e segue o mesmo padrão; uma GitHub Action valida o título. A descrição segue o template [.github/pull_request_template.md](.github/pull_request_template.md), que acompanha as regras do projeto. Localmente, o commitlint confere cada commit pelo hook `commit-msg`, instalado pelo `npm install`. Detalhes no [AGENTS.md](AGENTS.md#commits-and-pull-requests).
 
 ## Desenvolvimento com IA
 
