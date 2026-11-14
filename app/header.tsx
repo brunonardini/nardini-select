@@ -1,4 +1,5 @@
 'use client';
+import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 export default function Header() {
   const [open, setOpen] = useState(false);
@@ -21,11 +22,13 @@ export default function Header() {
         aria-label="Nardini Select — início"
         onClick={() => setOpen(false)}
       >
-        <img
+        <Image
           src="/images/logo-horizontal.png"
-          width="1938"
-          height="563"
+          width={1938}
+          height={563}
+          sizes="(max-width: 760px) 170px, (max-width: 1100px) 190px, 220px"
           alt="Nardini Select"
+          loading="eager"
         />
       </a>
       <button

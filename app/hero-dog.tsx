@@ -1,4 +1,5 @@
 'use client';
+import Image from 'next/image';
 import { useLayoutEffect, useRef, useState } from 'react';
 
 export default function HeroDog() {
@@ -44,20 +45,23 @@ export default function HeroDog() {
     };
   }, []);
   return (
-    <img
+    <Image
       ref={image}
       className="hero-dog"
       src="/images/hero-weimaraner-transparente.png"
-      width="1507"
-      height="1044"
+      width={1507}
+      height={1044}
+      sizes="(max-width: 760px) 118vw, 100vw"
       alt="Weimaraner cinza prateado, o cão que inspira a identidade da Nardini Select"
       fetchPriority="high"
+      loading="eager"
       style={
         position
           ? {
               top: position.top,
               left: position.left,
               width: position.width,
+              height: 'auto',
               right: 'auto',
               bottom: 'auto',
             }

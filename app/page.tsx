@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Header from './header';
 import HeroDog from './hero-dog';
 import { Icon } from './icons';
@@ -77,13 +78,13 @@ export default function Home() {
                 especialização
                 <br />e <span>curadoria.</span>
               </h2>
-              <img
+              <Image
                 className="brand-seal"
                 src="/images/selo-transparente.png"
-                width="750"
-                height="749"
+                width={750}
+                height={749}
+                sizes="(max-width: 1100px) 25vw, 260px"
                 alt="Selo Nardini Select"
-                loading="lazy"
               />
             </div>
             <div className="about-copy">
@@ -115,12 +116,12 @@ export default function Home() {
               {pillars.map((p) => (
                 <article className="pillar" key={p.title}>
                   <div className="pillar-art">
-                    <img
+                    <Image
                       src={'/images/' + p.image}
-                      width="1280"
-                      height="1280"
+                      width={1280}
+                      height={1280}
+                      sizes="(max-width: 760px) 95px, (max-width: 1100px) 33vw, 380px"
                       alt=""
-                      loading="lazy"
                     />
                   </div>
                   <h3>{p.title}</h3>
@@ -166,12 +167,12 @@ export default function Home() {
               </a>
             </div>
             <figure className="storefront">
-              <img
+              <Image
                 src="/images/loja-frente.jpg"
-                width="900"
-                height="1600"
+                width={900}
+                height={1600}
+                sizes="(max-width: 760px) 100vw, 50vw"
                 alt="Fachada da Nardini Select, com a identificação 350 e a marca nas portas de vidro"
-                loading="lazy"
               />
             </figure>
           </div>
@@ -233,12 +234,12 @@ export default function Home() {
             </div>
             <footer className="footer">
               <a href="#inicio" aria-label="Voltar ao início">
-                <img
+                <Image
                   src="/images/logo-horizontal.png"
                   alt="Nardini Select"
-                  width="1938"
-                  height="563"
-                  loading="lazy"
+                  width={1938}
+                  height={563}
+                  sizes="180px"
                 />
               </a>
               <p>Uma escolha com assinatura.</p>

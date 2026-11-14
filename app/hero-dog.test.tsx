@@ -69,8 +69,11 @@ describe('HeroDog', () => {
 
   it('leaves positioning to CSS up to 1100px wide', () => {
     vi.stubGlobal('innerWidth', 1100);
+    const image = renderInHero();
 
-    expect(renderInHero()).not.toHaveAttribute('style');
+    expect(image.style.top).toBe('');
+    expect(image.style.left).toBe('');
+    expect(image.style.width).toBe('');
   });
 
   it('aligns the nose with the second heading line on wide screens', () => {
@@ -93,7 +96,10 @@ describe('HeroDog', () => {
     vi.stubGlobal('innerWidth', 1440);
     render(<HeroDog />);
 
-    expect(screen.getByRole('img')).not.toHaveAttribute('style');
+    const image = screen.getByRole('img');
+    expect(image.style.top).toBe('');
+    expect(image.style.left).toBe('');
+    expect(image.style.width).toBe('');
   });
 
   it('drops the computed position when the window shrinks', () => {
