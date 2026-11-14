@@ -2,7 +2,7 @@
 
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/brunonardini/nardini-select/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/brunonardini/nardini-select/tree/main)
 [![codecov](https://codecov.io/gh/brunonardini/nardini-select/branch/main/graph/badge.svg?token=RAnmvbM53n)](https://codecov.io/gh/brunonardini/nardini-select)
-[![Netlify Status](https://api.netlify.com/api/v1/badges/56d8c00c-f7c0-4a7d-a042-c0a8474d5230/deploy-status)](https://app.netlify.com/projects/nardini-select/deploys)
+[![Release](https://img.shields.io/github/v/release/brunonardini/nardini-select?sort=semver)](https://github.com/brunonardini/nardini-select/releases)
 
 Website for Nardini Select, a pet shop in Resende, RJ, Brazil. Today it's the store's institutional home page, built with Next.js, React, and TypeScript; it will grow into an e-commerce site.
 
@@ -69,7 +69,7 @@ There's no catalog, pricing, cart, or Instagram feed. The maps, Instagram, and W
 
 Versions follow SemVer and are cut by semantic-release from the commits on `main`. PRs are squash-merged, so the PR title decides the version: `fix:` releases a PATCH, `feat:` a MINOR, and `docs:`, `chore:`, and similar types release nothing and don't deploy. The project stays on 0.x until the e-commerce launch. The real version lives in the `vX.Y.Z` tag and its GitHub release, whose notes are the changelog. The `version` in `package.json` is fixed and never changes.
 
-When a merge produces a version, CircleCI creates the tag and the GitHub release, builds and deploys to Netlify production with the message `Release vX.Y.Z`, and registers the `nardini-select@X.Y.Z` release in Sentry. Netlify keeps building a preview for each PR on its own; `netlify.toml` makes it skip builds of `main`, which only CircleCI deploys.
+When a merge produces a version, CircleCI creates the tag and the GitHub release, builds and deploys to Netlify production with the message `Release vX.Y.Z`, and registers the `nardini-select@X.Y.Z` release in Sentry. Netlify keeps building a preview for each PR on its own; `netlify.toml` makes it skip builds of `main`, which only CircleCI deploys. Each merge therefore leaves a canceled `main` build in Netlify's deploy list, followed by the CircleCI deploy when there's a release; the canceled entry is expected. The Release badge shows the version in production, since a version is only cut together with its deploy; Netlify's own status badge isn't used because it tracks the canceled Git build, not the CLI deploy.
 
 Rollback: in Netlify, open the Deploys tab, open the last good deploy, and click Publish deploy. This republishes that deploy without rebuilding. Then fix the problem in a PR titled `fix: ...`; the merge releases a new PATCH version and deploys it automatically.
 

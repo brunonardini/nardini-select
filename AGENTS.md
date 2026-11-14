@@ -66,7 +66,7 @@ The project stays on 0.x until the e-commerce launch. A breaking change (`!` or 
 
 - The version lives only in the `vX.Y.Z` tag and its GitHub release, whose notes are the changelog. Nothing is committed back, and `package.json` keeps `0.0.0-development`.
 - On each push to `main`, after every check passes, the CircleCI `release` job runs semantic-release. If it tags a new version, the job deploys to Netlify production with the CLI (`--context production`) and `SENTRY_RELEASE=nardini-select@X.Y.Z`.
-- Netlify only builds PR deploy previews: `netlify.toml` has an `ignore` command that skips its builds of `main`, which the CLI doesn't run. Production deploys come only from CircleCI.
+- Netlify only builds PR deploy previews: `netlify.toml` has an `ignore` command that skips its builds of `main`, which the CLI doesn't run. Production deploys come only from CircleCI. The skipped build shows as a canceled `main` deploy in Netlify; that's expected, not a failure. For the same reason the README uses a release version badge instead of Netlify's deploy status badge.
 
 ## Commits and pull requests
 
