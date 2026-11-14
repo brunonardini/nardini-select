@@ -12,7 +12,7 @@ Esta revisão substitui a organização visual da versão anterior (v2). Os trê
 
 ## Hero
 
-Composição da capa do manual: logo horizontal e texto sobre off-white à esquerda; à direita, um painel Café Profundo de altura total com a haste terracota do N (corte diagonal) e o cão `public/images/hero-weimaraner-transparente.png`. A navegação fica sobre o painel, em off-white. No mobile: cabeçalho, texto e, abaixo, o painel com o cão. Sem selo no hero.
+Composição da capa do manual: logo horizontal e texto sobre off-white à esquerda; à direita, um painel Café Profundo de altura total com a haste terracota do N (corte diagonal) e o cão `public/images/hero-weimaraner-transparente.png`. A navegação fica sobre o painel, em off-white. No mobile (até 760px): só cabeçalho, texto e botões, sem o painel e sem o cão. Sem selo no hero.
 
 Título: Mais bem-estar começa com **boas escolhas**.
 

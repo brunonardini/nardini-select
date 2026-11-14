@@ -146,7 +146,7 @@ The container is capped at 1240px with 56px gutters, 36px at ≤1100px, 22px at 
 
 Surface sequence on the home: hero (off-white copy + café panel) → brand (café) → selection (off-white) → location (areia + storefront photo) → contact and footer (off-white). Adjacent sections alternate surface so no two neighbours share one, except the hero panel bleeding into the brand section, which is intentional.
 
-- **Hero:** two columns like the manual's cover. The left column (off-white) holds the logo and the copy; the right column (46%, 42% at ≤1100px) is a full-height café panel with the N's terracota stem and the dog. The navigation sits on the panel in off-white. At ≤760px it stacks: header, copy, then the panel (`clamp(300px,88vw,540px)` tall).
+- **Hero:** two columns like the manual's cover. The left column (off-white) holds the logo and the copy; the right column (46%, 42% at ≤1100px) is a full-height café panel with the N's terracota stem and the dog. The navigation sits on the panel in off-white. At ≤760px the panel and the dog are removed: the hero is the header plus the copy and actions, vertically centered on off-white.
 - **Brand:** the official seal to the left of the three-line heading at every width (215–260px above 1100px, 25% of the heading group below), copy on the right; stacks at ≤760px.
 - **Selection:** three open columns; at ≤760px each pillar puts a 125px illustration (95px at ≤380px) beside its heading and concept, and the closing line runs full width below.
 - **Location:** copy on areia beside the storefront photo, which fills the right half full-bleed; on mobile the photo comes first at full width.
@@ -202,7 +202,7 @@ WhatsApp and Instagram each pair a 52px line icon (1.6 stroke) with a heading, a
 ### Imagery
 
 - **The brand dog** is the approved illustration in the logo, symbol and seal, drawn from Bacon, a real dog: sober, attentive and imposing. Never alter it.
-- **The hero dog** is a photographic silver-gray Weimaraner that follows that reference (proportions, dropped ears, long muzzle, elegant neck). Keep it as its own transparent asset over the café panel, never on the same panel as the seal.
+- **The hero dog** is a photographic silver-gray Weimaraner that follows that reference (proportions, dropped ears, long muzzle, elegant neck). Keep it as its own transparent asset over the café panel, never on the same panel as the seal. It is not shown at ≤760px.
 - **The storefront** (`loja-frente.jpg`) is the real shop with the printed phone strip concealed.
 
 ### Motion

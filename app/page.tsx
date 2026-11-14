@@ -65,7 +65,8 @@ export default function Home() {
               src="/images/hero-weimaraner-transparente.png"
               width={1507}
               height={1044}
-              sizes="(max-width: 760px) 120vw, 50vw"
+              // Hidden at 760px and below, so request the smallest variant there.
+              sizes="(max-width: 760px) 1px, 50vw"
               alt="Weimaraner cinza prateado, o cão que inspira a identidade da Nardini Select"
               fetchPriority="high"
               loading="eager"

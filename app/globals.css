@@ -693,7 +693,7 @@ h2 span {
   }
   .section.hero {
     grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: auto auto 1fr;
+    grid-template-rows: auto 1fr;
   }
   .site-header {
     min-height: 88px;
@@ -714,8 +714,7 @@ h2 span {
     width: auto;
   }
   .hero-copy {
-    padding: 16px var(--gutter) 40px;
-    align-self: start;
+    padding: 16px var(--gutter) 88px;
   }
   .hero h1 {
     font-size: clamp(2.35rem, 10.4vw, 3.6rem);
@@ -731,20 +730,9 @@ h2 span {
     min-height: 48px;
     padding: 12px 22px;
   }
+  /* Small screens keep the hero to copy and actions; the dog panel is dropped. */
   .hero-panel {
-    grid-column: 1;
-    grid-row: 3;
-    min-height: clamp(300px, 88vw, 540px);
-  }
-  .hero-stem {
-    top: 0;
-    width: 30%;
-    right: 10%;
-    height: 82%;
-  }
-  .hero-dog {
-    width: min(118%, 640px);
-    right: -12%;
+    display: none;
   }
   .about-grid {
     grid-template-columns: 1fr;
