@@ -8,7 +8,12 @@ Website for Nardini Select, a pet shop in Resende, RJ, Brazil. Today it's the st
 
 ## Running
 
-Requires Node.js 20.19.0 or later.
+The project uses the Node.js version in [.nvmrc](.nvmrc), the latest LTS (26.13.1). Install it with [nvm](https://github.com/nvm-sh/nvm) and run `nvm use` at the start of every terminal session in the project, before any `npm` command:
+
+```sh
+nvm install   # once, or when .nvmrc changes
+nvm use
+```
 
 Create a `.env` file at the project root. It stays out of Git. `WHATSAPP_NUMBER` is the phone number used by the WhatsApp redirect: digits only, with the country code, and no `+`, spaces, or punctuation. In development, a fake number is enough for the route to work:
 

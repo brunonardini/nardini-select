@@ -6,7 +6,8 @@ orbs:
 executors:
   node:
     docker:
-      - image: cimg/node:24.22.3
+      # Keep this tag in sync with .nvmrc.
+      - image: cimg/node:26.13.1
     working_directory: ~/project
   playwright:
     docker:

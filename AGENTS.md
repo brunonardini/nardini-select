@@ -8,7 +8,9 @@ Nardini Select: a dog-focused pet shop in Resende, RJ, Brazil. Today the reposit
 
 ## Stack and commands
 
-Next.js 16 (App Router), React 19, TypeScript 6, npm. Node.js 20.19.0 or later. Hosted on Netlify. TypeScript stays on 6.0.x because `typescript-eslint` doesn't support TypeScript 7 yet.
+Next.js 16 (App Router), React 19, TypeScript 6, npm. Node.js 26 (the latest LTS), pinned in `.nvmrc`. Hosted on Netlify. TypeScript stays on 6.0.x because `typescript-eslint` doesn't support TypeScript 7 yet.
+
+Run `nvm use` at the start of every terminal session, before any `node`, `npm`, or `npx` command, so the shell uses the version in `.nvmrc` (`nvm install` if it's missing). If your shell doesn't keep state between commands, chain it: `nvm use && npm test`. Changing the Node version means updating `.nvmrc`, `engines` in `package.json`, and the `cimg/node` image in `.circleci/config.yml` together; Netlify reads `.nvmrc`.
 
 | Task | Command |
 | --- | --- |

@@ -68,6 +68,7 @@ footer in this description isn't part of the commit.
 - [ ] App variables are set in Netlify for Production and Deploy Previews, pipeline-only variables in CircleCI, and both are documented in the README (never set `SENTRY_RELEASE` in Netlify)
 - [ ] The three `Sentry.init` calls are still in sync
 - [ ] Upgrading `@playwright/test` also updates the Playwright image tag in `.circleci/config.yml`
+- [ ] Changing the Node.js version updates `.nvmrc`, `engines` in `package.json`, and the `cimg/node` image in `.circleci/config.yml` together
 - [ ] `AGENTS.md` and `README.md` reflect the change
 - [ ] Docs, code comments, and this PR are in English; only website and business content is in Portuguese
 - [ ] This template still matches the project rules and configuration
