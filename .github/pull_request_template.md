@@ -68,6 +68,7 @@ footer in this description isn't part of the commit.
 - [ ] The three `Sentry.init` calls are still in sync
 - [ ] Upgrading `@playwright/test` also updates the Playwright image tag in `.circleci/config.yml`
 - [ ] `AGENTS.md` and `README.md` reflect the change
+- [ ] Docs, code comments, and this PR are in English; only website and business content is in Portuguese
 - [ ] This template still matches the project rules and configuration
 
 ## Screenshots
