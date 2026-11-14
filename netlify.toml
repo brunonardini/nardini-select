@@ -1,0 +1,5 @@
+# Production deploys come from the CircleCI release job (netlify deploy
+# --prod). Netlify's own Git builds skip the production branch and keep
+# building Deploy Previews. The CLI doesn't run this ignore command.
+[build]
+  ignore = '[ "$BRANCH" = "main" ]'
