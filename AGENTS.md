@@ -31,7 +31,7 @@ Testing:
 - Add or update tests with every behavior change, and run `npm test` before finishing.
 - Coverage: unit tests only (V8, `coverage/lcov.info`). `npm run test:coverage` fails below 90% of statements, branches, functions, or lines (`thresholds` in `vitest.config.mts`); keep new code covered instead of lowering it. CI uploads it to Codecov with the `unit` flag, using the `CODECOV_TOKEN` variable set in CircleCI.
 
-`scripts/check-page.cjs` is an older manual browser check (see README).
+`scripts/check-page.cjs` is an older manual browser check. It needs Edge, Playwright, and a server on port 3100. Set `PLAYWRIGHT_MODULE` if Playwright is installed outside the project. The script checks five viewports and saves screenshots to `.impeccable/review/`.
 
 Knip:
 - `knip.json` keeps the defaults and the auto-detected plugins. It only declares `scripts/*.cjs` as entry files (manual scripts run with `node`) and leaves the installed skills (`.agents/`, `.claude/`, `.cursor/`) out of the project.
@@ -47,6 +47,12 @@ Knip:
 - `WHATSAPP_NUMBER` comes from `.env` and is read only on the server (`app/contato/whatsapp/route.ts`). Never show the phone number in page text, images, or client components.
 - `public/images` holds only files the page uses. Brand source files stay out of Git.
 
+## README
+
+Keep the README focused on what the project does, where to find the live site, how to run it locally, and how to validate changes. Include local prerequisites and example environment values. Link to the relevant documentation for contribution conventions, design decisions, and vulnerability reporting.
+
+Keep CI job details in the workflow configuration, production variables and rollback steps in [the deployment guide](docs/deployment.md), and agent tooling and repository rules in this file. Update the README when the project overview, local setup, validation commands, or documentation links change.
+
 ## Monitoring (Sentry)
 
 Errors, tracing, and logs go to the Sentry project `bruno-nardini/nardini-select` through `@sentry/nextjs`.
@@ -61,6 +67,8 @@ Errors, tracing, and logs go to the Sentry project `bruno-nardini/nardini-select
 - Wrap new Server Actions with `Sentry.withServerActionInstrumentation()`.
 
 ## Releases and deploys
+
+See the [deployment guide](docs/deployment.md) for environment variables and rollback steps.
 
 Versions follow SemVer and are cut by semantic-release (`.releaserc.json`) from the Conventional Commits on `main`. With squash merges, the PR title decides the release.
 
