@@ -40,6 +40,19 @@ describe('MainNavigation', () => {
     }
   });
 
+  it('still opens the menu when it is not inside a header', async () => {
+    // The panel anchors to the header's bottom edge, or to nothing when
+    // there is no header.
+    render(<MainNavigation />);
+    const user = userEvent.setup();
+    const toggle = screen.getByRole('button', { name: 'Abrir menu' });
+
+    await user.click(toggle);
+
+    expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    expect(panel()).toBeInTheDocument();
+  });
+
   it('opens and closes the menu panel from the toggle', async () => {
     const { user, toggle } = renderNavigation();
 
