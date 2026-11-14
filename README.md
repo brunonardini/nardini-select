@@ -25,6 +25,16 @@ npm run dev
 
 Open [localhost:3000](http://localhost:3000). To run a production build locally, use `npm run build` followed by `npm run start`.
 
+## Component catalog
+
+The reusable components live in [components/](components) and are documented in Storybook, with their variants, states, and accessibility checks.
+
+```sh
+npm run storybook
+```
+
+Open [localhost:6006](http://localhost:6006). `npm run build-storybook` writes a static copy to `storybook-static/`.
+
 ## Checks
 
 ```sh
@@ -35,9 +45,10 @@ npm run knip
 npm test
 npm run test:coverage
 npm run test:e2e
+npm run test:storybook
 ```
 
-Before the first E2E run, install Chromium with `npx playwright install chromium`.
+Before the first E2E or story test run, install Chromium with `npx playwright install chromium`.
 
 ## Project documentation
 

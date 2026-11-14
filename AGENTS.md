@@ -8,7 +8,7 @@ Nardini Select: a dog-focused pet shop in Resende, RJ, Brazil. Today the reposit
 
 ## Stack and commands
 
-Next.js 16 (App Router), React 19, TypeScript 6, npm. Node.js 26 (the latest LTS), pinned in `.nvmrc`. Hosted on Netlify. TypeScript stays on 6.0.x because `typescript-eslint` doesn't support TypeScript 7 yet, and ESLint stays on 9 because the React, import, and jsx-a11y plugins in `eslint-config-next` don't support ESLint 10 yet.
+Next.js 16 (App Router), React 19, TypeScript 6, npm. Base UI (`@base-ui/react`) for interactive components; Storybook 10 (`@storybook/nextjs-vite`) for the component catalog. Node.js 26 (the latest LTS), pinned in `.nvmrc`. Hosted on Netlify. TypeScript stays on 6.0.x because `typescript-eslint` doesn't support TypeScript 7 yet, and ESLint stays on 9 because the React, import, and jsx-a11y plugins in `eslint-config-next` don't support ESLint 10 yet.
 
 Run `nvm use` at the start of every terminal session, before any `node`, `npm`, or `npx` command, so the shell uses the version in `.nvmrc` (`nvm install` if it's missing). If your shell doesn't keep state between commands, chain it: `nvm use && npm test`. Changing the Node version means updating `.nvmrc`, `engines` in `package.json`, and the `cimg/node` image in `.circleci/config.yml` together; Netlify reads `.nvmrc`.
 
@@ -23,29 +23,43 @@ Run `nvm use` at the start of every terminal session, before any `node`, `npm`, 
 | Unused code | `npm run knip` (Knip: unused files, dependencies, and exports) |
 | Unit tests | `npm test` (`npm run test:watch` while working, `npm run test:coverage` for coverage) |
 | E2E tests | `npm run test:e2e` |
+| Storybook | `npm run storybook` (http://localhost:6006) / `npm run build-storybook` (static build in `storybook-static/`) |
+| Story tests | `npm run test:storybook` (every story in Chromium, with its play function and axe checks) |
 
 Testing:
-- Unit and component tests: Vitest + React Testing Library, next to the code as `app/**/*.test.ts(x)`. Query by role and accessible name. Async Server Components can't be unit tested; cover them with E2E.
+- Unit and component tests: Vitest + React Testing Library, next to the code as `app/**/*.test.ts(x)` and `components/**/*.test.ts(x)` (the `unit` project in `vitest.config.mts`, jsdom). Query by role and accessible name. Async Server Components can't be unit tested; cover them with E2E.
+- Story tests: `@storybook/addon-vitest` runs each story as a test (the `storybook` project, Chromium through Playwright). First run: `npx playwright install chromium`. Stories render in the viewports set in `.storybook/preview.tsx`, which match the E2E projects.
 - E2E: Playwright in `e2e/`, desktop (1440×900) and mobile (Pixel 7) projects. `npm run test:e2e` builds the app, then Playwright starts that build on port 3200 with a fake `WHATSAPP_NUMBER` (`npx playwright test` alone needs an existing build). First run: `npx playwright install chromium`.
 - Accessibility: `e2e/accessibility.spec.ts` runs axe (`@axe-core/playwright`) against WCAG 2.2 A and AA plus axe best practices, on desktop, on mobile, and with the mobile menu open. Any violation fails the test. Fix the page instead of disabling rules; when a new state or page appears (a dialog, a new route), scan it too.
+- Stories run the same axe rules (`@storybook/addon-a11y`, `parameters.a11y` in `.storybook/preview.tsx`, with `test: 'error'`), including `region`, which Storybook turns off by default; each story renders inside `<main>`. Keep the tags in sync with `e2e/accessibility.spec.ts`.
+- The only exclusion in both scans is Base UI's focus guards (`[data-base-ui-focus-guard]`): visually hidden `aria-hidden` spans with `tabindex="0"` that keep the Tab order around open popups and pass focus on at once. axe reports them as `aria-hidden-focus`. Don't exclude anything else.
 - Add or update tests with every behavior change, and run `npm test` before finishing.
-- Coverage: unit tests only (V8, `coverage/lcov.info`). `npm run test:coverage` fails below 90% of statements, branches, functions, or lines (`thresholds` in `vitest.config.mts`); keep new code covered instead of lowering it. CI uploads it to Codecov with the `unit` flag, using the `CODECOV_TOKEN` variable set in CircleCI.
+- Coverage: unit tests only (V8, `coverage/lcov.info`; stories and tests are left out). `npm run test:coverage` fails below 90% of statements, branches, functions, or lines (`thresholds` in `vitest.config.mts`); keep new code covered instead of lowering it. CI uploads it to Codecov with the `unit` flag, using the `CODECOV_TOKEN` variable set in CircleCI.
 
 `scripts/check-page.cjs` is an older manual browser check. It needs Edge, Playwright, and a server on port 3100. Set `PLAYWRIGHT_MODULE` if Playwright is installed outside the project. The script checks five viewports and saves screenshots to `.impeccable/review/`.
 
 Knip:
-- `knip.json` keeps the defaults and the auto-detected plugins. It only declares `scripts/*.cjs` as entry files (manual scripts run with `node`) and leaves the installed skills (`.agents/`, `.claude/`, `.cursor/`) out of the project.
-- The Knip MCP server (`@knip/mcp`, a dev dependency) is declared in `.mcp.json` (Claude Code), `.cursor/mcp.json`, and `.codex/config.toml`. To configure Knip or resolve its findings, use its `knip-run` tool and read the doc topics it returns with `knip-docs`, instead of guessing.
+- `knip.json` keeps the defaults and the auto-detected plugins (Storybook included: stories are entry files). It only declares `scripts/*.cjs` as entry files (manual scripts run with `node`), adds `.mdx` to the project files for Storybook docs, and leaves the installed skills (`.agents/`, `.claude/`, `.cursor/`) out of the project. `storybook-static/` is gitignored, which Knip, Prettier, and ESLint (`globalIgnores`) skip too.
+- The Knip MCP server (`@knip/mcp`, a dev dependency) is declared in `.mcp.json` (Claude Code), `.cursor/mcp.json`, and `.codex/config.toml`, next to the Storybook one. To configure Knip or resolve its findings, use its `knip-run` tool and read the doc topics it returns with `knip-docs`, instead of guessing.
 - Fix findings by removing dead code or listing the dependency; prefer targeted `entry`, `project`, or `ignoreDependencies` changes over the broad `ignore` option.
 - Keep `knip` on the same version as the one `@knip/mcp` depends on, so the MCP server and CI report the same results.
 
 ## Conventions
 
 - Run `npm run typecheck`, `npm run lint`, `npm run format:check`, `npm run knip`, and `npm test` before finishing a change. CI (CircleCI) runs lint, Prettier, Knip, TypeScript type checking, unit tests, and E2E tests on every push, and releases from `main` (see Releases and deploys).
-- Prettier with single quotes; code lives in `app/`.
+- Prettier with single quotes; code lives in `app/` (routes and page composition) and `components/` (reusable components).
 - Language: website and business content is Portuguese (pt-BR): page copy, product and brand texts, and the approved content specs in `design/`. Everything else is English: documentation (including the README), AI agent instructions, code, code comments, commit messages, and PR titles and descriptions.
 - `WHATSAPP_NUMBER` comes from `.env` and is read only on the server (`app/contato/whatsapp/route.ts`). Never show the phone number in page text, images, or client components.
 - `public/images` holds only files the page uses. Brand source files stay out of Git.
+
+## Components and Storybook
+
+- Reusable components live in `components/<name>/`: `<name>.tsx`, `<name>.test.tsx`, and `<name>.stories.tsx` side by side (for example `components/button/`). Code used by a single page stays in that page under `app/`.
+- Every new component gets stories, covering its variants and states (focus, disabled, open and closed, mobile and desktop). Story names and descriptions are in English; interface text stays in pt-BR.
+- Complex interactive components (modal, menu, combobox, select, tabs, toast, and the like) use Base UI and are never written from scratch. Read the Base UI docs for agents before using one: the index at https://base-ui.com/llms.txt and each page as Markdown (`https://base-ui.com/react/components/<name>.md`). Don't swap a native element for Base UI when it adds no behavior: links stay `<a>` (the `Button` component renders `<a>` when given `href`).
+- Base UI setup: the app renders inside `<div class="root">` (`isolation: isolate`) so portals stack above it, and `body` is `position: relative` for iOS 26+ Safari (`app/layout.tsx`, `app/globals.css`). Storybook mirrors the `.root` wrapper.
+- Storybook loads `app/globals.css` and the brand font from `app/fonts.ts`, the same as `app/layout.tsx`, so stories look like the site.
+- Storybook MCP: `@storybook/addon-mcp` serves `http://localhost:6006/mcp` while `npm run storybook` runs. It's registered as `storybook` in `.mcp.json`, `.cursor/mcp.json`, and `.codex/config.toml`. Before creating a component, start Storybook and use `docs-list` and `docs-show` to check the existing ones; use `get-storybook-story-instructions` before writing stories and `test-run` to run them. Don't install the Storybook Claude Code plugin or skills.
 
 ## README
 
@@ -181,6 +195,8 @@ Drafts, briefs, and review reports go to `.dev/docs/` (gitignored). See [docs/de
 | Interface audit (a11y, UX) | `web-design-guidelines` |
 | Unused files, dependencies, exports | Knip MCP server (`knip-run`, `knip-docs`) |
 | Code structure and relationships | Graphify CLI (`graphify query`, `path`, `explain`; see Code graph) |
+| Existing components, their props and stories | Storybook MCP server (`docs-list`, `docs-show`, `test-run`; see Components and Storybook) |
+| Interactive components | Base UI docs for agents (https://base-ui.com/llms.txt) |
 | Design docs | EGM plugin (`egm-*`) |
 
 Project rules win over skills. Known exception: `web-design-guidelines` fetches its rules from GitHub at run time, so findings that contradict this file don't apply.
