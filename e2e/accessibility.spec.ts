@@ -12,8 +12,17 @@ const tags = [
   'best-practice',
 ];
 
+// Base UI's focus guards: visually hidden aria-hidden spans with tabindex=0
+// that keep Tab order around open popups and pass focus on at once. axe
+// flags them (aria-hidden-focus), so they're the only elements left out;
+// the rule still checks the rest of the page. Same in .storybook/preview.tsx.
+const baseUiFocusGuards = '[data-base-ui-focus-guard]';
+
 async function scan(page: Page) {
-  const results = await new AxeBuilder({ page }).withTags(tags).analyze();
+  const results = await new AxeBuilder({ page })
+    .withTags(tags)
+    .exclude(baseUiFocusGuards)
+    .analyze();
   return results.violations.map(({ id, impact, help, nodes }) => ({
     id,
     impact,

@@ -46,6 +46,8 @@ const preview: Preview = {
       test: 'error',
       // Storybook turns the region rule off by default; the E2E scan keeps it.
       config: { rules: [{ id: 'region', enabled: true }] },
+      // Base UI's focus guards, left out as in e2e/accessibility.spec.ts.
+      context: { exclude: ['[data-base-ui-focus-guard]'] },
       // WCAG 2.2 level A and AA, plus axe best practices.
       options: {
         runOnly: [

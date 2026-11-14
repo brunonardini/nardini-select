@@ -106,6 +106,27 @@ test('mobile menu closes after navigating and on Escape', async ({ page }) => {
   await expect(toggle).toBeFocused();
 });
 
+test('header links fit the café panel or move into the menu', async ({
+  page,
+}) => {
+  test.skip(isMobile(page), 'Checks the desktop widths');
+  const toggle = page.getByRole('button', { name: 'Abrir menu' });
+  const firstLink = page.getByRole('link', { name: 'A marca' });
+
+  // At 1281px and above the links show inline, inside the café panel.
+  await page.setViewportSize({ width: 1281, height: 900 });
+  await expect(toggle).toBeHidden();
+  const link = await firstLink.boundingBox();
+  const panel = await page.locator('.hero-panel').boundingBox();
+  expect(link!.x).toBeGreaterThanOrEqual(panel!.x);
+
+  // Narrower, they would spill onto the off-white side: the toggle takes over.
+  await page.setViewportSize({ width: 1200, height: 900 });
+  await expect(firstLink).toBeHidden();
+  await toggle.click();
+  await expect(firstLink).toBeVisible();
+});
+
 test('contact links open WhatsApp and Instagram in a new tab', async ({
   page,
 }) => {

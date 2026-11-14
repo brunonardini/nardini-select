@@ -2,7 +2,7 @@ import Image from 'next/image';
 import { BrandLogo } from '../components/brand-logo/brand-logo';
 import { Button } from '../components/button/button';
 import { Icon } from '../components/icon/icon';
-import Header from './header';
+import { SiteHeader } from '../components/site-header/site-header';
 const pillars = [
   {
     title: 'Seleção Criteriosa',
@@ -40,7 +40,7 @@ export default function Home() {
           id="inicio"
           aria-labelledby="hero-title"
         >
-          <Header />
+          <SiteHeader />
           <div className="hero-copy">
             <h1 id="hero-title">
               Mais bem-estar começa com <strong>boas escolhas.</strong>

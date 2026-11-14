@@ -222,11 +222,23 @@ button.button {
   height: auto;
 }
 .navigation {
+  font-size: 0.875rem;
+  color: var(--off-white);
+}
+.navigation-list {
   display: flex;
   align-items: center;
   gap: 28px;
-  font-size: 0.875rem;
-  color: var(--off-white);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+/* Block, as when the links were flex items: the contact pill keeps its height. */
+.navigation-item > a {
+  display: block;
+}
+.navigation-menu-item {
+  display: none;
 }
 .navigation a:focus-visible {
   outline-color: var(--off-white);
@@ -575,12 +587,14 @@ button.button {
 }
 
 /* Tablet */
-@media (max-width: 1100px) {
-  :root {
-    --gutter: 36px;
+/* Menu toggle: below 1281px the inline links no longer fit on the café
+   panel, so they move into a panel under the header. */
+@media (max-width: 1280px) {
+  .navigation-item {
+    display: none;
   }
-  .brand-link {
-    width: 180px;
+  .navigation-menu-item {
+    display: block;
   }
   .menu-toggle {
     width: 44px;
@@ -612,42 +626,50 @@ button.button {
   .menu-toggle:focus-visible {
     outline-color: var(--off-white);
   }
-  .navigation {
-    display: none;
-    position: absolute;
-    top: calc(100% - 12px);
-    right: var(--gutter);
-    width: min(340px, calc(100% - 2 * var(--gutter)));
+  /* Base UI positions the panel under the header (--anchor-width); the
+     margin keeps it one gutter from the right edge. */
+  .navigation-panel {
+    margin-right: var(--gutter);
+    width: min(340px, calc(var(--anchor-width) - 2 * var(--gutter)));
     background: var(--off-white);
     color: var(--cafe);
     padding: 20px;
     border-radius: 8px;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 4px;
     font-size: 1rem;
     box-shadow: 0 14px 30px #522e2433;
   }
-  .navigation.is-open {
+  .navigation-panel-links {
     display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
   }
-  .navigation a {
+  .navigation-panel a {
     padding: 10px;
   }
-  .navigation a:focus-visible {
+  .navigation-panel a:focus-visible {
     outline-color: var(--cafe);
     outline-offset: 0;
   }
-  .navigation .header-contact {
+  .navigation-panel .header-contact {
     margin-top: 8px;
     text-align: center;
     border-color: var(--cafe);
   }
   @media (hover: hover) and (pointer: fine) {
-    .navigation .header-contact:hover {
+    .navigation-panel .header-contact:hover {
       background: var(--cafe);
       color: var(--off-white);
     }
+  }
+}
+
+@media (max-width: 1100px) {
+  :root {
+    --gutter: 36px;
+  }
+  .brand-link {
+    width: 180px;
   }
   .section.hero {
     grid-template-columns: minmax(0, 1fr) minmax(0, 42%);
@@ -732,10 +754,8 @@ button.button {
   .menu-toggle:focus-visible {
     outline-color: var(--cafe);
   }
-  .navigation {
-    left: var(--gutter);
-    right: var(--gutter);
-    width: auto;
+  .navigation-panel {
+    width: calc(var(--anchor-width) - 2 * var(--gutter));
   }
   .hero-copy {
     padding: 16px var(--gutter) 88px;

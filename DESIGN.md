@@ -177,7 +177,7 @@ Pill, 50px minimum height (48px in the mobile hero), 800 weight label, 1.5px Caf
 
 ### Navigation
 
-The official horizontal logo on the left (210px, 180px at ≤1100px, 160px at ≤760px), links on the right in Off-white over the café panel, with a Terracota underline on hover, and an Off-white outlined contact pill that scrolls to `#contato`. At ≤1100px a 44px toggle (two strokes that become a cross) opens an Off-white menu with Café links. The menu announces expansion, closes on selection and on Escape, and returns focus to the toggle.
+The official horizontal logo on the left (210px, 180px at ≤1100px, 160px at ≤760px), links on the right in Off-white over the café panel, with a Terracota underline on hover, and an Off-white outlined contact pill that scrolls to `#contato`. At ≤1280px, where the inline links would spill past the café panel, a 44px toggle (two strokes that become a cross) opens an Off-white menu with Café links (Base UI `NavigationMenu`, `components/site-header/`). The menu opens on press, not hover, announces expansion, closes on selection, on Escape, and on a click outside, and returns focus to the toggle.
 
 ### Brand Marks
 
