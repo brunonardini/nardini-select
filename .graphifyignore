@@ -1,0 +1,15 @@
+# Graphify indexes the project's own code for AI agents. It already skips
+# everything in .gitignore; these are tracked files that aren't project code.
+
+# Installed agent skills (third-party)
+.agents/
+.claude/
+.cursor/
+.codex/
+.impeccable/
+
+# Design sources, images, and generated docs
+design/
+assets/
+public/
+docs/

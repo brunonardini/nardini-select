@@ -143,6 +143,17 @@ EGM artifact directory: .dev/docs
 
 Drafts, briefs, and review reports go to `.dev/docs/` (gitignored). See [docs/designs/README.md](docs/designs/README.md).
 
+## Code graph (Graphify)
+
+[Graphify](https://github.com/Graphify-Labs/graphify) keeps a knowledge graph of the code for AI agents in `graphify-out/`. It's built only from code and config, by AST (no LLM, no API cost), and never with the HTML visualization.
+
+- `graphify-out/` is gitignored: each machine builds its own graph. `.graphifyignore` leaves out the installed skills, design sources, images, and `docs/`; everything in `.gitignore` is skipped too.
+- Build or refresh it with `GRAPHIFY_VIZ_NODE_LIMIT=0 graphify update .`. The variable turns off `graph.html`. If `graphify` is missing, install the CLI with `uv tool install graphifyy` (or `pipx install graphifyy`).
+- At the start of a session, if `graphify-out/graph.json` is missing or `git rev-parse HEAD` differs from the commit in `graphify-out/GRAPH_REPORT.md` (Graph Freshness), rebuild it before using it.
+- For codebase questions, first run `graphify query "<question>"`; use `graphify path "<A>" "<B>"` for relationships and `graphify explain "<concept>"` for one concept. Read `graphify-out/GRAPH_REPORT.md` only for a broad architecture overview. Confirm details in the source files before editing.
+- After changing code or config, run `GRAPHIFY_VIZ_NODE_LIMIT=0 graphify update .` so the graph stays current. Use `--force` after deleting or moving code, since `update` refuses to write a graph with fewer nodes.
+- Don't run the full `/graphify` pipeline (semantic extraction with subagents, HTML, Obsidian, or wiki exports), and don't install Graphify's Git hooks or its `claude install` (it writes a `CLAUDE.md`, which hides this file from Claude Code).
+
 ## Skills
 
 | Area | Skill |
@@ -153,6 +164,7 @@ Drafts, briefs, and review reports go to `.dev/docs/` (gitignored). See [docs/de
 | Next.js APIs | bundled docs in `node_modules/next/dist/docs/` (block below) |
 | Interface audit (a11y, UX) | `web-design-guidelines` |
 | Unused files, dependencies, exports | Knip MCP server (`knip-run`, `knip-docs`) |
+| Code structure and relationships | Graphify CLI (`graphify query`, `path`, `explain`; see Code graph) |
 | Design docs | EGM plugin (`egm-*`) |
 
 Project rules win over skills. Known exception: `web-design-guidelines` fetches its rules from GitHub at run time, so findings that contradict this file don't apply.

@@ -34,3 +34,6 @@ tmp/
 /blob-report/
 /playwright/.cache/
 /reports/
+
+# Graphify: knowledge graph for AI agents, rebuilt locally (graphify update .)
+graphify-out/
