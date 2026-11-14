@@ -60,12 +60,13 @@ Commit messages follow [Conventional Commits 1.0.0](https://www.conventionalcomm
 [optional footer(s)]
 ```
 
-- Types: `feat` (new feature) and `fix` (bug fix), plus `build`, `chore`, `ci`, `docs`, `perf`, `refactor`, `style`, and `test`.
+- Types: `feat` (new feature) and `fix` (bug fix), plus `build`, `chore`, `ci`, `docs`, `perf`, `refactor`, `revert`, `style`, and `test`.
 - Scope is optional and names the area changed, e.g. `feat(home): ...`, `ci(circleci): ...`.
-- Description: imperative mood, lowercase, no trailing period, about 72 characters at most.
-- Body: what changed and why, wrapped at 72 characters.
+- Description: imperative mood, lowercase, no trailing period. The whole header (type, scope, and description) fits in 72 characters.
+- Body: what changed and why, wrapped at 72 characters (commitlint rejects lines over 100).
 - Breaking changes: `!` before the colon, a `BREAKING CHANGE: <description>` footer, or both.
 - PRs are squash-merged, and the PR title becomes the commit message on `main`. PR titles follow the same format, in English.
+- commitlint (`commitlint.config.mjs`, `@commitlint/config-conventional`) checks every local commit through the husky `commit-msg` hook, installed by `npm install`. Don't bypass it with `--no-verify`.
 
 Example:
 
