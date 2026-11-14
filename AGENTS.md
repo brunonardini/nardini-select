@@ -18,14 +18,14 @@ Next.js 16 (App Router), React 19, TypeScript 6, npm. Node.js 20.9 or later. Typ
 | Typecheck | `npm run typecheck` |
 | Format | `npm run format:check` / `npm run format` |
 | Lint | `npm run lint` (ESLint with `eslint-config-next`) |
-| Unit tests | `npm test` (`npm run test:watch` while working) |
+| Unit tests | `npm test` (`npm run test:watch` while working, `npm run test:coverage` for coverage) |
 | E2E tests | `npm run test:e2e` |
 
 Testing:
 - Unit and component tests: Vitest + React Testing Library, next to the code as `app/**/*.test.ts(x)`. Query by role and accessible name. Async Server Components can't be unit tested; cover them with E2E.
 - E2E: Playwright in `e2e/`, desktop (1440×900) and mobile (Pixel 7) projects. `npm run test:e2e` builds the app, then Playwright starts that build on port 3200 with a fake `WHATSAPP_NUMBER` (`npx playwright test` alone needs an existing build). First run: `npx playwright install chromium`.
 - Add or update tests with every behavior change, and run `npm test` before finishing.
-- Decided but not set up yet: coverage published to Codecov.
+- Coverage: unit tests only (V8, `coverage/lcov.info`). CI uploads it to Codecov with the `unit` flag, using the `CODECOV_TOKEN` variable set in CircleCI.
 
 `scripts/check-page.cjs` is an older manual browser check (see README).
 

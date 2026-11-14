@@ -34,12 +34,13 @@ Se a porta 3000 estiver ocupada: `npm run start -- --port 3100`.
 npm run lint           # ESLint (regras do Next.js)
 npm run format:check   # Prettier
 npm test               # unidade e componentes (Vitest + React Testing Library)
+npm run test:coverage  # o mesmo, com relatório de cobertura em coverage/
 npm run test:e2e       # ponta a ponta (Playwright), faz o build e sobe o site na porta 3200
 ```
 
 Antes do primeiro `test:e2e`, instale o navegador: `npx playwright install chromium`.
 
-O CircleCI ([.circleci/config.yml](.circleci/config.yml)) instala as dependências uma vez, com cache, e a cada push roda em paralelo o lint, o Prettier, os testes de unidade e o build. Depois do build, os testes E2E rodam em dois jobs paralelos, um para desktop e outro para celular, sobre o mesmo build.
+O CircleCI ([.circleci/config.yml](.circleci/config.yml)) instala as dependências uma vez, com cache, e a cada push roda em paralelo o lint, o Prettier, os testes de unidade e o build. Depois do build, os testes E2E rodam em dois jobs paralelos, um para desktop e outro para celular, sobre o mesmo build. A cobertura dos testes de unidade é enviada ao Codecov.
 
 ## Estrutura
 

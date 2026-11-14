@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+  codecov: codecov/codecov@6.1.0
+
 executors:
   node:
     docker:
@@ -79,10 +82,16 @@ jobs:
     steps:
       - attach_setup
       - run:
-          name: Vitest
-          command: npm test -- --reporter=default --reporter=junit --outputFile.junit=reports/unit/junit.xml
+          name: Vitest with coverage
+          command: npm run test:coverage -- --reporter=default --reporter=junit --outputFile.junit=reports/unit/junit.xml
       - store_test_results:
           path: reports/unit
+      # Uses the CODECOV_TOKEN environment variable set in the CircleCI project.
+      - codecov/upload:
+          files: coverage/lcov.info
+          disable_search: true
+          flags: unit
+          fail_on_error: true
 
   build:
     executor: node
