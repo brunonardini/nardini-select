@@ -231,14 +231,12 @@ workflows:
           # GH_TOKEN, NETLIFY_AUTH_TOKEN, and NETLIFY_SITE_ID live in this
           # context, which only main can use.
           context: nardini-select-release
+          # Gate production releases on checks that catch regressions likely
+          # to break the site. PRs run the full validation suite.
           requires:
             - lint
-            - prettier
-            - knip
             - typecheck
             - unit-tests
-            - e2e-desktop
-            - e2e-mobile
           filters:
             branches:
               only: main
