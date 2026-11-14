@@ -7,8 +7,13 @@
     "build": "next build",
     "start": "next start --hostname 0.0.0.0",
     "typecheck": "tsc --noEmit",
-    "format": "prettier --write ./app",
-    "format:check": "prettier --check ./app"
+    "lint": "eslint .",
+    "format": "prettier --write ./app ./e2e",
+    "format:check": "prettier --check ./app ./e2e",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "npm run build && playwright test"
   },
   "dependencies": {
     "@fontsource-variable/bricolage-grotesque": "latest",
@@ -18,10 +23,21 @@
     "react-dom": "latest"
   },
   "devDependencies": {
+    "@playwright/test": "^1.65.1",
+    "@testing-library/dom": "^10.4.2",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.10",
     "@types/node": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
+    "@vitejs/plugin-react": "^6.3.0",
+    "@vitest/coverage-v8": "^5.1.0",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^16.4.6",
+    "jsdom": "^31.0.1",
     "prettier": "3.9.10",
-    "typescript": "latest"
+    "typescript": "~6.0.3",
+    "vitest": "^5.1.0"
   }
 }

@@ -1,0 +1,162 @@
+version: 2.1
+
+orbs:
+  codecov: codecov/codecov@6.1.0
+
+executors:
+  node:
+    docker:
+      - image: cimg/node:24.22.3
+    working_directory: ~/project
+  playwright:
+    docker:
+      # Keep this tag in sync with @playwright/test in package-lock.json:
+      # the image ships the browsers and system libraries for that version.
+      - image: mcr.microsoft.com/playwright:v1.65.1-noble
+    working_directory: ~/project
+
+commands:
+  attach_setup:
+    description: Restore the checked-out project and node_modules from setup.
+    steps:
+      - attach_workspace:
+          at: ~/project
+
+jobs:
+  setup:
+    executor: node
+    steps:
+      - checkout
+      # node_modules is reused as-is when package-lock.json hasn't changed.
+      - restore_cache:
+          name: Restore node_modules
+          keys:
+            - node-modules-v1-{{ arch }}-{{ checksum "package-lock.json" }}
+      # On a miss, the npm download cache (any older key) speeds up npm ci.
+      - restore_cache:
+          name: Restore npm cache
+          keys:
+            - npm-cache-v1-{{ arch }}-{{ checksum "package-lock.json" }}
+            - npm-cache-v1-{{ arch }}-
+      - run:
+          name: Install dependencies
+          command: |
+            if [ -d node_modules ]; then
+              echo "node_modules restored from cache; skipping npm ci"
+            else
+              npm ci --prefer-offline --no-audit --no-fund
+            fi
+      - save_cache:
+          name: Save npm cache
+          key: npm-cache-v1-{{ arch }}-{{ checksum "package-lock.json" }}
+          paths:
+            - ~/.npm
+      - save_cache:
+          name: Save node_modules
+          key: node-modules-v1-{{ arch }}-{{ checksum "package-lock.json" }}
+          paths:
+            - node_modules
+      - persist_to_workspace:
+          root: ~/project
+          paths:
+            - .
+
+  lint:
+    executor: node
+    steps:
+      - attach_setup
+      - run:
+          name: ESLint
+          command: npm run lint
+
+  prettier:
+    executor: node
+    steps:
+      - attach_setup
+      - run:
+          name: Prettier
+          command: npm run format:check
+
+  unit-tests:
+    executor: node
+    steps:
+      - attach_setup
+      - run:
+          name: Vitest with coverage
+          command: npm run test:coverage -- --reporter=default --reporter=junit --outputFile.junit=reports/unit/junit.xml
+      - store_test_results:
+          path: reports/unit
+      # Uses the CODECOV_TOKEN environment variable set in the CircleCI project.
+      - codecov/upload:
+          files: coverage/lcov.info
+          disable_search: true
+          flags: unit
+          fail_on_error: true
+
+  build:
+    executor: node
+    environment:
+      NEXT_TELEMETRY_DISABLED: '1'
+    steps:
+      - attach_setup
+      # Next.js reuses compiled output from .next/cache across builds.
+      - restore_cache:
+          name: Restore Next.js build cache
+          keys:
+            - next-cache-v1-{{ arch }}-{{ checksum "package-lock.json" }}-{{ .Revision }}
+            - next-cache-v1-{{ arch }}-{{ checksum "package-lock.json" }}-
+      - run:
+          name: Next.js build
+          command: npm run build
+      - save_cache:
+          name: Save Next.js build cache
+          key: next-cache-v1-{{ arch }}-{{ checksum "package-lock.json" }}-{{ .Revision }}
+          paths:
+            - .next/cache
+      - persist_to_workspace:
+          root: ~/project
+          paths:
+            - .next
+
+  e2e-tests:
+    parameters:
+      project:
+        type: enum
+        enum: [desktop, mobile]
+        description: Playwright project from playwright.config.ts.
+    executor: playwright
+    environment:
+      NEXT_TELEMETRY_DISABLED: '1'
+    steps:
+      - attach_setup
+      - run:
+          name: Playwright (<< parameters.project >>)
+          # The build job already produced .next; Playwright only starts it.
+          command: npx playwright test --project=<< parameters.project >>
+      - store_test_results:
+          path: reports/e2e
+      - store_artifacts:
+          path: playwright-report
+      - store_artifacts:
+          path: test-results
+
+workflows:
+  validate:
+    jobs:
+      - setup
+      - lint:
+          requires: [setup]
+      - prettier:
+          requires: [setup]
+      - unit-tests:
+          requires: [setup]
+      - build:
+          requires: [setup]
+      - e2e-tests:
+          name: e2e-desktop
+          project: desktop
+          requires: [build]
+      - e2e-tests:
+          name: e2e-mobile
+          project: mobile
+          requires: [build]
