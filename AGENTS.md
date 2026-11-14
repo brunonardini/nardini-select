@@ -8,7 +8,7 @@ Nardini Select: a dog-focused pet shop in Resende, RJ, Brazil. Today the reposit
 
 ## Stack and commands
 
-Next.js 16 (App Router), React 19, TypeScript, npm. Node.js 20.9 or later.
+Next.js 16 (App Router), React 19, TypeScript 6, npm. Node.js 20.9 or later. TypeScript stays on 6.0.x because `typescript-eslint` doesn't support TypeScript 7 yet.
 
 | Task | Command |
 | --- | --- |
@@ -17,7 +17,7 @@ Next.js 16 (App Router), React 19, TypeScript, npm. Node.js 20.9 or later.
 | Build | `npm run build` |
 | Typecheck | `npm run typecheck` |
 | Format | `npm run format:check` / `npm run format` |
-| Lint | not configured yet |
+| Lint | `npm run lint` (ESLint with `eslint-config-next`) |
 | Unit tests | `npm test` (`npm run test:watch` while working) |
 | E2E tests | `npm run test:e2e` |
 
@@ -31,7 +31,7 @@ Testing:
 
 ## Conventions
 
-- Run `npm run typecheck`, `npm run format:check`, and `npm test` before finishing a change.
+- Run `npm run typecheck`, `npm run lint`, `npm run format:check`, and `npm test` before finishing a change. CI (CircleCI) runs lint, Prettier, unit, and E2E tests on every push.
 - Prettier with single quotes; code lives in `app/`.
 - User-facing copy is Portuguese (pt-BR).
 - `WHATSAPP_NUMBER` comes from `.env` and is read only on the server (`app/contato/whatsapp/route.ts`). Never show the phone number in page text, images, or client components.

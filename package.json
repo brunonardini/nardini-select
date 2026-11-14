@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start --hostname 0.0.0.0",
     "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
     "format": "prettier --write ./app ./e2e",
     "format:check": "prettier --check ./app ./e2e",
     "test": "vitest run",
@@ -30,9 +31,11 @@
     "@types/react": "latest",
     "@types/react-dom": "latest",
     "@vitejs/plugin-react": "^6.3.0",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^16.4.6",
     "jsdom": "^31.0.1",
     "prettier": "3.9.10",
-    "typescript": "latest",
+    "typescript": "~6.0.3",
     "vitest": "^5.1.0"
   }
 }
