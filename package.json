@@ -1,6 +1,6 @@
 {
   "name": "nardini-select",
-  "version": "1.0.0",
+  "version": "0.0.0-development",
   "private": true,
   "scripts": {
     "dev": "next dev --hostname 0.0.0.0",
