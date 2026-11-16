@@ -1,0 +1,14 @@
+services:
+  db:
+    image: postgres:18
+    ports:
+      - "127.0.0.1:54329:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: nardini_m0
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d nardini_m0"]
+      interval: 2s
+      timeout: 5s
+      retries: 30

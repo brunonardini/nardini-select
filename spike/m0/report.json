@@ -1,0 +1,165 @@
+{
+  "betterAuth": "1.7.15",
+  "kysely": "0.28.19",
+  "pg": "8.23.1",
+  "postgres": "PostgreSQL 18.6 (Debian 18.6-1.pgdg13+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit",
+  "rollback": {
+    "status": 302,
+    "body": "",
+    "userCount": 0,
+    "trxInviteUsed": false,
+    "outerInviteUsed": true
+  },
+  "success": {
+    "status": 302,
+    "location": "https://nardini-select.test/admin",
+    "body": "",
+    "secondStatus": 302,
+    "secondLocation": "https://nardini-select.test/admin",
+    "users": [
+      {
+        "id": "4176a700-fc72-4d7b-a0ec-c70ecd9657fd",
+        "display_name": "Owner Name",
+        "email": "owner@example.com",
+        "email_verified": true,
+        "photo_url": "https://lh3.googleusercontent.com/a/photo",
+        "full_name": "Pessoa Convidada"
+      }
+    ],
+    "accounts": [
+      {
+        "id": "cd38068e-092e-4454-b247-d2dacf2570c5",
+        "user_id": "4176a700-fc72-4d7b-a0ec-c70ecd9657fd",
+        "provider_id": "google",
+        "provider_account_id": "google-sub-owner"
+      }
+    ],
+    "sessionCount": 2,
+    "accountColumns": [
+      "id",
+      "user_id",
+      "provider_id",
+      "provider_account_id",
+      "created_at",
+      "updated_at"
+    ],
+    "sessionColumns": [
+      "id",
+      "user_id",
+      "token",
+      "expires_at",
+      "created_at",
+      "updated_at"
+    ]
+  },
+  "events": [
+    {
+      "phase": "rollback",
+      "hook": "user.create.before",
+      "inviteViaGetCookie": "0260276b-cc99-44e2-9b60-e663829f4748",
+      "inviteViaHeader": "0260276b-cc99-44e2-9b60-e663829f4748",
+      "userId": null,
+      "insideTransaction": true,
+      "txid": "783"
+    },
+    {
+      "phase": "rollback",
+      "hook": "account.create.before",
+      "insideTransaction": true,
+      "txid": "783"
+    },
+    {
+      "phase": "success",
+      "hook": "user.create.before",
+      "inviteViaGetCookie": "32c953bc-c88f-43b7-b962-137466c34c39",
+      "inviteViaHeader": "32c953bc-c88f-43b7-b962-137466c34c39",
+      "userId": null,
+      "insideTransaction": true,
+      "txid": "787"
+    },
+    {
+      "phase": "success",
+      "hook": "account.create.before",
+      "insideTransaction": true,
+      "txid": "787"
+    },
+    {
+      "phase": "success",
+      "hook": "session.create.before",
+      "insideTransaction": false,
+      "txid": null,
+      "sawIp": true,
+      "sawUserAgent": true
+    },
+    {
+      "phase": "success",
+      "hook": "session.create.before",
+      "insideTransaction": false,
+      "txid": null,
+      "sawIp": true,
+      "sawUserAgent": true
+    }
+  ],
+  "sessionCookie": {
+    "line": "__Secure-better-auth.session_token",
+    "secure": true,
+    "httpOnly": true,
+    "sameSiteLax": true,
+    "domain": null,
+    "hostOnly": true
+  },
+  "sessionsApi": {
+    "listedCount": 2,
+    "listError": null,
+    "sessionsAfterDelete": 0,
+    "listedAfter": []
+  },
+  "disabled": {
+    "/sign-out": {
+      "status": 404,
+      "body": "Not Found"
+    },
+    "/sign-up/email": {
+      "status": 404,
+      "body": "Not Found"
+    },
+    "/list-sessions": {
+      "status": 404,
+      "body": "Not Found"
+    },
+    "/revoke-sessions": {
+      "status": 404,
+      "body": "Not Found"
+    },
+    "/reset-password/not-a-token": {
+      "status": 404,
+      "body": "{\"message\":\"Not Found\"}"
+    }
+  },
+  "getSession": {
+    "status": 200,
+    "hasUser": true,
+    "afterDelete": "null"
+  },
+  "criteria": {
+    "cookieAndTransaction": {
+      "pass": true,
+      "sameTransaction": true,
+      "sessionInsideUserTransaction": false,
+      "inviteViaGetCookie": "32c953bc-c88f-43b7-b962-137466c34c39"
+    },
+    "namesIdsAndKysely": {
+      "pass": true
+    },
+    "tokensAndClientInfoUnstored": {
+      "pass": true
+    },
+    "endpointsAndCookie": {
+      "pass": true
+    },
+    "listAndDeleteSessions": {
+      "pass": true
+    }
+  },
+  "failed": []
+}

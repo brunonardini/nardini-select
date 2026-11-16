@@ -28,6 +28,8 @@ const eslintConfig = defineConfig([
     'playwright-report/**',
     'blob-report/**',
     'storybook-static/**',
+    // Throwaway M0 investigation. The branch is not merged.
+    'spike/**',
   ]),
   // Lint the Storybook config, which starts with a dot.
   globalIgnores(['!.storybook'], 'Include Storybook directory'),

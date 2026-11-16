@@ -5,6 +5,7 @@
     "**/*.{js,cjs,mjs,jsx,ts,tsx,mts,cts,mdx}",
     "!.agents/**",
     "!.claude/**",
-    "!.cursor/**"
+    "!.cursor/**",
+    "!spike/**"
   ]
 }
