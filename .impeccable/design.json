@@ -82,23 +82,23 @@
     },
     "typographyMeta": {
       "display": {
-        "displayName": "Display (Kanesty ExtBd)",
+        "displayName": "Display (Karvest ExtraBold)",
         "purpose": "Hero heading only; last phrase in Terracota."
       },
       "headline": {
-        "displayName": "Headline (Kanesty ExtBd)",
+        "displayName": "Headline (Karvest ExtraBold)",
         "purpose": "Section headings."
       },
       "title": {
-        "displayName": "Title (Kanesty ExtBd)",
+        "displayName": "Title (Karvest ExtraBold)",
         "purpose": "Pillar and contact headings."
       },
       "body": {
-        "displayName": "Body (Kanesty Regular)",
+        "displayName": "Body (Karvest Regular)",
         "purpose": "Supporting text, descriptions and information."
       },
       "label": {
-        "displayName": "Label (Kanesty ExtBd)",
+        "displayName": "Label (Karvest ExtraBold)",
         "purpose": "Buttons, contact pill and short calls."
       }
     },
@@ -148,7 +148,7 @@
       "refersTo": "button-primary",
       "description": "Café pill with Off-white label; hover adds a Terracota inset ring.",
       "html": "<a class=\"ds-button-primary\" href=\"#selecao\">Conheça nossa seleção</a>",
-      "css": ".ds-button-primary{display:inline-flex;align-items:center;justify-content:center;gap:12px;min-height:50px;padding:13px 26px;border-radius:999px;border:1.5px solid #522e24;font:800 .875rem/1.3 var(--font-brand,'Lexend',sans-serif);letter-spacing:.01em;text-decoration:none;transition:background-color .2s ease,color .2s ease,box-shadow .2s ease,transform .2s cubic-bezier(.16,1,.3,1);background:#522e24;color:#f7efe6}@media(hover:hover) and (pointer:fine){.ds-button-primary:hover{box-shadow:inset 0 0 0 2px #c1754a;transform:translateY(-2px)}}.ds-button-primary:focus-visible{outline:2px solid #522e24;outline-offset:4px}@media(prefers-reduced-motion:reduce){.ds-button-primary:hover{transform:none}}"
+      "css": ".ds-button-primary{display:inline-flex;align-items:center;justify-content:center;gap:12px;min-height:50px;padding:13px 26px;border-radius:999px;border:1.5px solid #522e24;font:800 .875rem/1.3 var(--font-brand,sans-serif);letter-spacing:.01em;text-decoration:none;transition:background-color .2s ease,color .2s ease,box-shadow .2s ease,transform .2s cubic-bezier(.16,1,.3,1);background:#522e24;color:#f7efe6}@media(hover:hover) and (pointer:fine){.ds-button-primary:hover{box-shadow:inset 0 0 0 2px #c1754a;transform:translateY(-2px)}}.ds-button-primary:focus-visible{outline:2px solid #522e24;outline-offset:4px}@media(prefers-reduced-motion:reduce){.ds-button-primary:hover{transform:none}}"
     },
     {
       "name": "Button outline",
@@ -156,7 +156,7 @@
       "refersTo": "button-outline",
       "description": "Transparent pill with Café border; fills with Café on hover.",
       "html": "<a class=\"ds-button-outline\" href=\"#loja\">Visite nossa loja</a>",
-      "css": ".ds-button-outline{display:inline-flex;align-items:center;justify-content:center;gap:12px;min-height:50px;padding:13px 26px;border-radius:999px;border:1.5px solid #522e24;font:800 .875rem/1.3 var(--font-brand,'Lexend',sans-serif);letter-spacing:.01em;text-decoration:none;transition:background-color .2s ease,color .2s ease,box-shadow .2s ease,transform .2s cubic-bezier(.16,1,.3,1);background:transparent;color:#522e24}@media(hover:hover) and (pointer:fine){.ds-button-outline:hover{background:#522e24;color:#f7efe6;transform:translateY(-2px)}}.ds-button-outline:focus-visible{outline:2px solid #522e24;outline-offset:4px}@media(prefers-reduced-motion:reduce){.ds-button-outline:hover{transform:none}}"
+      "css": ".ds-button-outline{display:inline-flex;align-items:center;justify-content:center;gap:12px;min-height:50px;padding:13px 26px;border-radius:999px;border:1.5px solid #522e24;font:800 .875rem/1.3 var(--font-brand,sans-serif);letter-spacing:.01em;text-decoration:none;transition:background-color .2s ease,color .2s ease,box-shadow .2s ease,transform .2s cubic-bezier(.16,1,.3,1);background:transparent;color:#522e24}@media(hover:hover) and (pointer:fine){.ds-button-outline:hover{background:#522e24;color:#f7efe6;transform:translateY(-2px)}}.ds-button-outline:focus-visible{outline:2px solid #522e24;outline-offset:4px}@media(prefers-reduced-motion:reduce){.ds-button-outline:hover{transform:none}}"
     },
     {
       "name": "Hero panel",
@@ -172,7 +172,7 @@
       "refersTo": "pillar",
       "description": "Pillar closing message in ExtBd under a short Terracota rule.",
       "html": "<p class=\"ds-closing\">Escolhas melhores também são cuidado.</p>",
-      "css": ".ds-closing{font:800 .95rem/1.45 var(--font-brand,'Lexend',sans-serif);color:#522e24;max-width:300px}.ds-closing:before{content:'';display:block;width:40px;height:2px;background:#c1754a;margin-bottom:16px}"
+      "css": ".ds-closing{font:800 .95rem/1.45 var(--font-brand,sans-serif);color:#522e24;max-width:300px}.ds-closing:before{content:'';display:block;width:40px;height:2px;background:#c1754a;margin-bottom:16px}"
     }
   ],
   "narrative": {

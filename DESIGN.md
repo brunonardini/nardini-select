@@ -9,30 +9,30 @@ colors:
   off-white: "#f7efe6"
 typography:
   display:
-    fontFamily: "Kanesty, 'Lexend', sans-serif"
+    fontFamily: "Karvest, sans-serif"
     fontSize: "clamp(2.8rem,4.3vw,4.6rem)"
     fontWeight: 800
     lineHeight: 1.04
     letterSpacing: "-.02em"
   headline:
-    fontFamily: "Kanesty, 'Lexend', sans-serif"
+    fontFamily: "Karvest, sans-serif"
     fontSize: "clamp(2.3rem,4vw,3.8rem)"
     fontWeight: 800
     lineHeight: 1.08
     letterSpacing: "-.02em"
   title:
-    fontFamily: "Kanesty, 'Lexend', sans-serif"
+    fontFamily: "Karvest, sans-serif"
     fontSize: "clamp(1.4rem,1.8vw,1.75rem)"
     fontWeight: 800
     lineHeight: 1.15
     letterSpacing: "-.02em"
   body:
-    fontFamily: "Kanesty, 'Lexend', sans-serif"
+    fontFamily: "Karvest, sans-serif"
     fontSize: "16px"
     fontWeight: 400
     lineHeight: 1.65
   label:
-    fontFamily: "Kanesty, 'Lexend', sans-serif"
+    fontFamily: "Karvest, sans-serif"
     fontSize: ".875rem"
     fontWeight: 800
     lineHeight: 1.3
@@ -127,9 +127,9 @@ This is why buttons are Café, not Terracota, and why focus rings are Café on l
 
 ## Typography
 
-**Brand family: Kanesty.** _Kanesty ExtBd_ for titles, calls and words of impact; _Kanesty Regular_ for supporting text, descriptions and informative copy. No other weights or families.
+**Brand family: Karvest.** _Karvest ExtraBold_ for titles, calls and words of impact; _Karvest Regular_ for supporting text, descriptions and informative copy. No other weights or families.
 
-**Current web font: Lexend (400 and 800), a stand-in.** Kanesty has no web license in the project yet. Lexend is loaded with `next/font/google` in `app/layout.tsx` and exposed as `--font-brand`. To switch to Kanesty, replace that call with `next/font/local` pointing at the licensed files and keep the `--font-brand` variable; the CSS needs no change.
+**Web font: Karvest (400 and 800), self-hosted.** `app/fonts/` keeps every Karvest weight as `.woff2`. `app/fonts.ts` loads only `Karvest-Regular.woff2` and `Karvest-ExtraBold.woff2` with `next/font/local`, exposed as `--font-brand`; the CSS reads only that variable. Other weights are added to `app/fonts.ts` when a design needs them. The OTF and TTF sources stay outside Git.
 
 - **Display:** hero heading, 800, the last phrase in Terracota on its own line. Mobile `clamp(2.35rem,10.4vw,3.6rem)`.
 - **Headline:** section headings, 800. Mobile `clamp(2.1rem,8.4vw,3.2rem)`.
