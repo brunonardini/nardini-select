@@ -77,7 +77,7 @@ Four constraints shape the solution:
 
 ## Open Questions
 
-*   **Better Auth fit** (checked in milestone M0, a throwaway investigation branch before implementation; see [Milestones](#milestones)): the exit criteria in [M0 exit criteria](#m0-exit-criteria).
+*   **Better Auth fit** (answered 2026-11-16 in [M0 findings](#m0-findings)): Better Auth 1.7.15 fits criteria 1–5. Arctic is not required. The Netlify runtime check was not executed live.
 *   **Legal and contractual prerequisites** (processor agreements, legal review of the terms and notice) are tracked in the internal risk register. They block the production-data gate.
 
 ## Critical User Journeys (CUJs)
@@ -214,6 +214,50 @@ M0 results can change Parts B and C only; Part A (M1, M2) proceeds without them.
 5.  Our code can list and delete a user's sessions.
 6.  A Netlify Function deployed to the `staging` alias with `--context deploy-preview` reads the deploy-preview variables at runtime.
 7.  Neon's Postgres major version is known (it sets the Docker image tag).
+
+### M0 findings
+
+Recorded on 2026-11-16 from branch `spike/m0-better-auth-fit`. That branch is not merged. Copy this section and the matching section in `docs/deployment.md` onto `main` before M1 merges. Reproduce the library probe from `spike/m0/README.md`. The run writes `spike/m0/report.json`.
+
+**Versions.** `better-auth` 1.7.15, published 2026-11-01. That is the newest 1.7 release that was at least two weeks old on 2026-11-16. 1.7.25 was published 2026-11-14 and was not used. `kysely` 0.28.19, published 2026-11-01, satisfies Better Auth's `^0.28.17 || ^0.29.0`. `pg` 8.23.1, published 2026-09-30. The local `postgres:18` image reported `PostgreSQL 18.6 (Debian 18.6-1.pgdg13+2)`.
+
+**Decision.** Criteria 1–5 pass. M3 keeps Better Auth. The Arctic fallback is not required.
+
+1.  **Cookie and transaction.** `user.create.before` receives the endpoint context. `ctx.getCookie("invite")` read the invitation id. On the OAuth new-user path, `createUser` and `createAccount` share one `runWithTransaction` (`link-account.mjs`). Both hooks saw the same Postgres transaction id. A throw from `account.create.before` rolled back the user insert and an `UPDATE` run on that Kysely transaction. The same `UPDATE` run on the outer Kysely instance stayed committed.
+    The hook does not receive the transaction. The probe joined by wrapping `db.transaction().execute` on the Kysely instance passed into Better Auth, which is the method 1.7.15 calls. Re-run the probe when bumping Better Auth. `getCurrentAdapter` can update Better Auth models inside the same transaction; arbitrary SQL uses the captured Kysely transaction.
+    `user.create.after` is queued with `queueAfterTransactionHook` and runs after commit (`transaction.mjs`). Invitation consumption belongs in `user.create.before` or `account.create.before`.
+    With `generateId: false`, `user.id` is null in the before hook. Postgres assigns it on insert, and the stored ids were uuid v4. The design's `used_by_user_id` needs that id inside the same transaction. M3 should `SELECT gen_random_uuid()` on the captured transaction and return `{ data: { id } }` from the before hook. When `generateId` is false, the adapter's id transform keeps a provided string (`get-id-field.mjs` returns the value). The probe proved the column-default path and did not execute the supplied-id path. M3's test covers that path.
+    The session insert is outside the user and account transaction (`sessionInsideUserTransaction: false`). A failed session insert leaves the user, and a consumed invitation, committed. Consume the invitation in the user transaction.
+2.  **Names, ids, and our Kysely instance.** Pass `{ db, type: "postgres", transaction: true }`. Passing a Kysely instance without `transaction: true` leaves transactions off. Passing a `pg` Pool makes Better Auth build its own Kysely.
+    `modelName` and `fields` mapped `users`, `user_accounts`, `sessions`, and `verifications` onto snake_case columns. Hooks use Better Auth field names. `additionalFields.fullName` with `fieldName: "full_name"` was stored in `full_name`.
+    `advanced.database.generateId: false` omitted `id` from the insert. `DEFAULT gen_random_uuid()` filled it.
+    Set `advanced.database.validateSchema: false`. The built-in account and session models include token, scope, password, IP, and user-agent columns that [A4](#a4-schema) omits, and the startup check throws on that mismatch. The probe set the flag to false and did not execute the throwing check.
+3.  **Tokens and client info left unstored.** No flag removes those columns from the insert. `account.create.before` sets `accessToken`, `refreshToken`, `idToken`, `accessTokenExpiresAt`, `refreshTokenExpiresAt`, and `scope` to `undefined`. Undefined is omitted. Null is written.
+    `account.updateAccountOnSignIn` defaults to on (`!== false`) and would update token columns on a later sign-in. Set it to `false`. Set `account.storeAccountCookie` to `false`.
+    A second Google sign-in for the same `sub` succeeded with those columns absent. The stored account columns match A4.
+    `disableIpTracking` makes the IP lookup return null, and `createSession` still assigns `ipAddress: getIP(...) || ""`. `session.create.before` sets `ipAddress` and `userAgent` to `undefined`. The hook observed both values before clearing them. The stored session columns match A4. Those fields are written only when the session is created.
+4.  **Endpoints and cookie.** `disabledPaths` matches the path relative to the base exactly, in `onRequest`. It returned HTTP 404 with body `Not Found` for `/sign-out`, `/sign-up/email`, `/list-sessions`, and `/revoke-sessions`.
+    It does not match a path with a parameter. `/reset-password/not-a-token` needs a `hooks.before` allowlist (`createAuthMiddleware` and `APIError` `NOT_FOUND`). That hook returned 404 with body `{"message":"Not Found"}`. The allowlist also runs for `auth.api.*`.
+    `advanced.useSecureCookies: true`, with no cross-subdomain cookie, set `__Secure-better-auth.session_token`; `Secure`; `HttpOnly`; `SameSite=Lax`; no `Domain`. The prefix is `__Secure-`. The flag forces that prefix without `NODE_ENV=production`.
+5.  **List and delete sessions.** `auth.$context.internalAdapter.listSessions(userId)` and `deleteUserSessions(userId)` listed 2 sessions, deleted them, and then listed 0. A following `get-session` body was `null`. `get-session` itself stayed enabled and returned the user before the delete. `auth.api.listSessions` returns Not Found while the allowlist is on. M3 uses `internalAdapter`.
+6.  **Netlify runtime variables: not executed live.** `npx netlify-cli@27.19.0 status` reported `Not logged in`, and the environment has no `NETLIFY_AUTH_TOKEN`. No function was deployed to the `staging` alias. This criterion is open.
+    In the pinned CLI, `prepAndRunDeploy` (`dist/commands/deploy/deploy.js`) calls `getEnvelopeEnv` with `options.context` and `scope: "functions"`, then passes the result into `functionsConfig` for that deploy. Function environment is the functions-scoped envelope of the chosen context, copied at deploy time. Editing the variable later leaves the existing deploy unchanged.
+    `--alias staging` names the draft URL. It does not select the context. The CLI default context is `dev`, so a deploy without `--context deploy-preview` does not receive deploy-preview values. Values in `netlify.toml` are not available to functions. The variable needs the Functions scope in Netlify, with a different value for production and for deploy previews.
+    Before M2 trusts `preview-deploy`, run `npx netlify-cli@27.19.0 deploy --context deploy-preview --alias staging` (no `--prod`) with a minimal function that reads one non-secret probe variable, then delete that variable.
+7.  **Postgres major version.** Neon documents Postgres 18 as the default for projects created since the 2026-06-05 changelog. The major is chosen at project creation and cannot be changed in place. Pin the major, not the minor: the Docker tag is `postgres:18`. The image pulled for this probe is PostgreSQL 18.6. Neon was publishing 18.7 in November 2026.
+    This environment has no Neon credentials, so project `nardini-select` was not queried. If that project already exists, read its `pg_version` before M1 freezes the image tag. A project created before June 2026 can still be on 14–17.
+    Neon also sells managed Better Auth. Do not adopt it. It is a Neon-only feature and needs the owner's approval.
+
+The probe mocked Google's token endpoint. It did not call Google. The forced rollback error in the probe log is the rollback case.
+
+M3 configuration that follows from this run:
+
+*   Database: our Kysely instance, `type: "postgres"`, `transaction: true`, `generateId: false`, `validateSchema: false`.
+*   Account: `updateAccountOnSignIn: false`, `storeAccountCookie: false`, and the before hook clears token fields.
+*   Session: the before hook clears `ipAddress` and `userAgent`.
+*   Routes: `disabledPaths` for every static unused path, including `/sign-out`, plus a before-hook allowlist for parameterized paths. Leave `/sign-in/social`, `/callback/:id`, and `/get-session` enabled.
+*   Session administration goes through `internalAdapter`.
+*   `useSecureCookies: true`, and no cookie `Domain`.
 
 ### Code organization and testing rule
 
@@ -716,7 +760,7 @@ Accepted risks, legal status, and external prerequisites are tracked in an inter
 
 ## Detailed Implementation Plan
 
-Exact library versions are pinned in `package.json` at implementation time, using releases at least two weeks old. M0 results (Postgres major version, Better Auth findings, Netlify variable behavior) are recorded in `docs/deployment.md` and in this document before M1 merges. Each entry below names its milestone.
+Exact library versions are pinned in `package.json` at implementation time, using releases at least two weeks old. M0 results are recorded in [M0 findings](#m0-findings) and in `docs/deployment.md` (2026-11-16). Copy both onto `main` before M1 merges. The investigation branch itself is not merged. Each entry below names its milestone.
 
 ### Target Files to Create/Modify
 
