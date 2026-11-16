@@ -3,8 +3,8 @@ import { describe, expect, it, vi } from 'vitest';
 import Layout, { metadata, viewport } from './layout';
 
 // next/font only runs inside the Next.js compiler.
-vi.mock('next/font/google', () => ({
-  Lexend: () => ({ variable: 'font-brand' }),
+vi.mock('next/font/local', () => ({
+  default: () => ({ variable: 'font-brand' }),
 }));
 
 describe('Layout', () => {

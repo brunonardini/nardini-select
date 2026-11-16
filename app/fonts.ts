@@ -1,11 +1,21 @@
-import { Lexend } from 'next/font/google';
+import localFont from 'next/font/local';
 
-// Stand-in for Kanesty, the brand typeface, until a web license is in place.
-// Swap this for next/font/local with the Kanesty files; the CSS only reads
-// the --font-brand variable. Shared by app/layout.tsx and Storybook.
-export const brandFont = Lexend({
-  subsets: ['latin'],
-  weight: ['400', '800'],
+// Karvest, the brand typeface (official web export, see DESIGN.md).
+// Regular (400) sets supporting text; ExtraBold (800) sets titles and calls.
+// Shared by app/layout.tsx and Storybook; the CSS only reads --font-brand.
+export const brandFont = localFont({
+  src: [
+    {
+      path: './fonts/Karvest-Regular.woff2',
+      weight: '400',
+      style: 'normal',
+    },
+    {
+      path: './fonts/Karvest-ExtraBold.woff2',
+      weight: '800',
+      style: 'normal',
+    },
+  ],
   variable: '--font-brand',
   display: 'swap',
 });

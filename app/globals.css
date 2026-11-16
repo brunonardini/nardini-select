@@ -5,7 +5,7 @@
   --argila: #c8af9a;
   --areia: #e2d1be;
   --off-white: #f7efe6;
-  --font: var(--font-brand), 'Lexend', sans-serif;
+  --font: var(--font-brand), sans-serif;
   --gutter: 56px;
   --header-height: 116px;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
@@ -67,7 +67,7 @@ figure {
 p {
   text-wrap: pretty;
 }
-/* Kanesty ExtBd role: titles, calls and words of impact. */
+/* Karvest ExtraBold role: titles, calls and words of impact. */
 h1,
 h2,
 h3 {
