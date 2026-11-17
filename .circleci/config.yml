@@ -47,7 +47,7 @@ commands:
       - run:
           name: Wait for Postgres
           command: |
-            node --input-type=module <<'EOF'
+            node --input-type=module \<<'EOF'
             import pg from 'pg';
 
             const connectionString = process.env.PROVISION_URL;
