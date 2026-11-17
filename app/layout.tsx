@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { brandFont } from './fonts';
+import { brandFont, displayFont } from './fonts';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -17,7 +17,10 @@ export const metadata: Metadata = {
 export const viewport: Viewport = { themeColor: '#522e24' };
 export default function Layout({ children }: LayoutProps<'/'>) {
   return (
-    <html lang="pt-BR" className={brandFont.variable}>
+    <html
+      lang="pt-BR"
+      className={`${brandFont.variable} ${displayFont.variable}`}
+    >
       <body>
         {/* Base UI portals render beside .root and stack above it. */}
         <div className="root">{children}</div>

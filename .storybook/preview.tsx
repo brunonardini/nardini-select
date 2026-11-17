@@ -1,10 +1,13 @@
 import type { Preview } from '@storybook/nextjs-vite';
-import { brandFont } from '../app/fonts';
+import { brandFont, displayFont } from '../app/fonts';
 import '../app/globals.css';
 
-// Same <html> setup as app/layout.tsx: page language and brand font.
+// Same <html> setup as app/layout.tsx: page language and both brand fonts.
 document.documentElement.lang = 'pt-BR';
-document.documentElement.classList.add(brandFont.variable);
+document.documentElement.classList.add(
+  brandFont.variable,
+  displayFont.variable,
+);
 
 const preview: Preview = {
   tags: ['autodocs'],

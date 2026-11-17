@@ -5,7 +5,8 @@
   --argila: #c8af9a;
   --areia: #e2d1be;
   --off-white: #f7efe6;
-  --font: var(--font-brand), sans-serif;
+  --font: var(--font-brand), 'Montserrat', sans-serif;
+  --font-title: var(--font-display), var(--font), sans-serif;
   --gutter: 56px;
   --header-height: 116px;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
@@ -67,13 +68,16 @@ figure {
 p {
   text-wrap: pretty;
 }
-/* Karvest ExtraBold role: titles, calls and words of impact. */
+/* Karvest ExtraBold role: h1, h2 and h3 only. Montserrat sets everything else. */
 h1,
 h2,
 h3 {
+  font-family: var(--font-title);
   font-weight: 800;
   line-height: 1.08;
-  letter-spacing: -0.02em;
+  /* Karvest is compact: no negative tracking, and a wider word space. */
+  letter-spacing: 0;
+  word-spacing: 0.08em;
   text-wrap: balance;
 }
 h2 {
@@ -424,13 +428,13 @@ button.button {
   max-width: 330px;
 }
 .pillar-concept {
-  font-size: 0.95rem;
+  font-size: 1rem;
   margin-top: 16px;
 }
 .pillar-message {
   margin-top: auto;
   padding-top: 28px;
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-weight: 800;
   line-height: 1.45;
   max-width: 300px;
@@ -536,7 +540,7 @@ button.button {
   line-height: 1.2;
 }
 .contact-option p {
-  font-size: 0.97rem;
+  font-size: 1rem;
   max-width: 320px;
   margin: 14px 0 26px;
 }
@@ -792,7 +796,7 @@ button.button {
   .pillar-concept {
     grid-column: 2;
     grid-row: 2;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     margin-top: 10px;
   }
   .pillar-message {
@@ -845,7 +849,7 @@ button.button {
     font-size: 1.35rem;
   }
   .contact-option p {
-    font-size: 0.93rem;
+    font-size: 1rem;
     margin: 12px 0 20px;
   }
   .footer {

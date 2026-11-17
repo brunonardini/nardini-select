@@ -3,8 +3,11 @@ import { describe, expect, it, vi } from 'vitest';
 import Layout, { metadata, viewport } from './layout';
 
 // next/font only runs inside the Next.js compiler.
+vi.mock('next/font/google', () => ({
+  Montserrat: () => ({ variable: 'font-brand' }),
+}));
 vi.mock('next/font/local', () => ({
-  default: () => ({ variable: 'font-brand' }),
+  default: () => ({ variable: 'font-display' }),
 }));
 
 describe('Layout', () => {
@@ -19,6 +22,7 @@ describe('Layout', () => {
 
     expect(document.documentElement).toHaveAttribute('lang', 'pt-BR');
     expect(document.documentElement).toHaveClass('font-brand');
+    expect(document.documentElement).toHaveClass('font-display');
     expect(screen.getByRole('main')).toHaveTextContent('Conteúdo');
   });
 

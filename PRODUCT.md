@@ -42,7 +42,7 @@ Voice: specialist but close. Secure without sounding technical, affectionate wit
 ## Brand Commitments
 
 - Name: "Nardini Select".
-- The brand manual (_Nardini Select — Manual da Marca_, v2) and the brand source files (logo variations, dog symbol, promotional artwork) are kept outside the repository; the site uses the official exports in `public/images/` and `app/icon.png`. DESIGN.md translates the manual into web rules: five-color palette, Karvest typography, logo versions, protection area, monogram graphics and voice.
+- The brand manual (_Nardini Select — Manual da Marca_, v2) and the brand source files (logo variations, dog symbol, promotional artwork) are kept outside the repository; the site uses the official exports in `public/images/` and `app/icon.png`. DESIGN.md translates the manual into web rules: five-color palette, Karvest headings with Montserrat text, logo versions, protection area, monogram graphics and voice.
 - Existing brand line: "Uma escolha com assinatura."
 - Only the official palette: Café Profundo, Terracota, Argila, Areia and Off-white. No saturated colors. Never redraw, recolor, crop, distort or regenerate a brand mark.
 - Current home composition is specified in `design/home-content-v3.md`: five sections of at least one viewport height, lighter layout, no pillar cards, no reasons-to-choose section, no feed. Hero follows the manual's cover: copy on off-white beside a café panel with the dog. Hero headline: "Mais bem-estar começa com boas escolhas." Support: "Produtos selecionados com critério para cuidar, estimular e enriquecer a vida do seu cão."

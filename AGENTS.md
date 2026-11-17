@@ -159,7 +159,7 @@ Security scanning (CodeQL) and disclosure — the repository is public, so vulne
 - Read alerts with `gh api repos/brunonardini/nardini-select/code-scanning/alerts` and report them only in this private session, never in a file that gets committed.
 - Outside reports come through private vulnerability reporting (see `SECURITY.md`).
 
-Fonts load through `next/font`: Karvest, the brand typeface, is self-hosted from `app/fonts/` as the `--font-brand` variable (see DESIGN.md). `app/fonts/` keeps every Karvest weight as `.woff2` so the licensed files stay in the repository, but `app/fonts.ts` loads only the two in use (Regular and ExtraBold). Add other weights to `app/fonts.ts` only when a design needs them.
+Fonts load through `next/font`. Montserrat sets the text as `--font-brand` (`brandFont`, from Google). Karvest ExtraBold sets h1, h2, and h3 as `--font-display` (`displayFont`, self-hosted from `app/fonts/`). `app/fonts/` keeps every Karvest weight as `.woff2` so the licensed files stay in the repository, but `app/fonts.ts` loads only the weights in use. Add other weights to `app/fonts.ts` only when a design needs them (see DESIGN.md).
 
 ## Design workflow (EGM)
 

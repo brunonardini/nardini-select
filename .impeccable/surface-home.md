@@ -6,7 +6,7 @@ Visitor mode: Persuade. Audience: dog owners in Resende, RJ. Goal: understand th
 
 THESIS: An open, light institutional presentation in five sections of at least 100vh, with no boxes per pillar and no e-commerce elements.
 
-OWN-WORLD: The brand manual's world: Café Profundo, Terracota, Argila, Areia and Off-white only; one robust sans-serif (Karvest) in ExtraBold and Regular; N monogram blocks and diagonal cuts as support; official brand marks. Curation as the language, not a catalog.
+OWN-WORLD: The brand manual's world: Café Profundo, Terracota, Argila, Areia and Off-white only; Karvest ExtraBold for headings and Montserrat for text; N monogram blocks and diagonal cuts as support; official brand marks. Curation as the language, not a catalog.
 
 STORY: Meet the brand; understand quality, specialization, and curation; explore three commitments; recognize the storefront and open directions; chat on WhatsApp or follow on Instagram.
 
