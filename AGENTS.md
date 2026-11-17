@@ -26,6 +26,8 @@ Run `nvm use` at the start of every terminal session, before any `node`, `npm`, 
 | Storybook | `npm run storybook` (http://localhost:6006) / `npm run build-storybook` (static build in `storybook-static/`) |
 | Story tests | `npm run test:storybook` (every story in Chromium, with its play function and axe checks) |
 | Database up | `npm run db:up` (Docker Postgres 18 on 127.0.0.1:5432) |
+| Database down | `npm run db:down` (stops and removes the container; keeps the data volume and the image) |
+| Database clean | `npm run db:clean` (also removes the Postgres image; the data volume stays) |
 | Provision | `npm run db:provision` |
 | Migrate | `npm run db:migrate` |
 | Seed | `npm run db:seed` |

@@ -10,7 +10,7 @@ Website for Nardini Select. [Visit the live site](https://nardiniselect.com.br).
 
 Use the Node.js version pinned in [.nvmrc](.nvmrc). With [nvm](https://github.com/nvm-sh/nvm), run `nvm install` once and `nvm use` in each new shell. Docker is required for the local Postgres 18 database. Port 5432 on 127.0.0.1 must be free.
 
-Copy [.env.example](.env.example) to `.env`. The example values are local placeholders. Sentry is optional; set `NEXT_PUBLIC_SENTRY_DSN` to enable it.
+Copy [.env.example](.env.example) to `.env`. The database scripts read that file; a variable already set in the shell wins. The example values are local placeholders. Sentry is optional; set `NEXT_PUBLIC_SENTRY_DSN` to enable it.
 
 ```sh
 npm ci
@@ -22,6 +22,8 @@ npm run dev
 ```
 
 Open [localhost:3000](http://localhost:3000). To run a production build locally, use `npm run build` followed by `npm run start`.
+
+`npm run db:down` stops the database and removes its container. `npm run db:clean` also removes the Postgres image. Both keep the named volume, so the data is still there on the next `npm run db:up`.
 
 ## Component catalog
 
