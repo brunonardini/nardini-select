@@ -15,6 +15,25 @@ executors:
       # the image ships the browsers and system libraries for that version.
       - image: mcr.microsoft.com/playwright:v1.65.1-noble
     working_directory: ~/project
+  # Postgres 18 matches Neon. The password below is for this CI container only.
+  node-postgres:
+    docker:
+      - image: cimg/node:26.13.1
+      - image: postgres:18
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+    working_directory: ~/project
+  playwright-postgres:
+    docker:
+      - image: mcr.microsoft.com/playwright:v1.65.1-noble
+      - image: postgres:18
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+    working_directory: ~/project
 
 commands:
   attach_setup:
@@ -22,6 +41,36 @@ commands:
     steps:
       - attach_workspace:
           at: ~/project
+  wait_for_postgres:
+    description: Wait until the Postgres service container accepts connections.
+    steps:
+      - run:
+          name: Wait for Postgres
+          command: |
+            node --input-type=module <<'EOF'
+            import pg from 'pg';
+
+            const connectionString = process.env.PROVISION_URL;
+            if (!connectionString) {
+              console.error('PROVISION_URL is not set.');
+              process.exit(1);
+            }
+
+            for (let attempt = 1; attempt <= 30; attempt += 1) {
+              const client = new pg.Client({ connectionString });
+              try {
+                await client.connect();
+                await client.end();
+                process.exit(0);
+              } catch {
+                await client.end().catch(() => {});
+                await new Promise((resolve) => setTimeout(resolve, 1000));
+              }
+            }
+
+            console.error('Postgres did not accept connections.');
+            process.exit(1);
+            EOF
 
 jobs:
   setup:
@@ -141,11 +190,31 @@ jobs:
         type: enum
         enum: [desktop, mobile]
         description: Playwright project from playwright.config.ts.
-    executor: playwright
+    executor: playwright-postgres
     environment:
       NEXT_TELEMETRY_DISABLED: '1'
+      # CI-only role passwords. They are not used anywhere else.
+      PROVISION_URL: postgres://postgres:postgres@127.0.0.1:5432/postgres
+      PROVISION_CREATE_DATABASES: '1'
+      APP_MIGRATOR_PASSWORD: ci-migrator
+      APP_RUNTIME_PASSWORD: ci-runtime
+      AUDIT_MAINTAINER_PASSWORD: ci-audit
+      DATABASE_MIGRATION_URL: postgres://app_migrator:ci-migrator@127.0.0.1:5432/nardini_test
+      DATABASE_URL: postgres://app_runtime:ci-runtime@127.0.0.1:5432/nardini_test
+      BETTER_AUTH_URL: http://localhost:3200
+      BETTER_AUTH_SECRET: test-secret-at-least-32-characters-long
+      GOOGLE_CLIENT_ID: test-google-client
+      GOOGLE_CLIENT_SECRET: test-google-secret
+      WHATSAPP_NUMBER: '5511999999999'
     steps:
       - attach_setup
+      - wait_for_postgres
+      - run:
+          name: Provision, migrate, and seed nardini_test
+          command: |
+            npm run db:provision
+            npm run db:migrate
+            npm run db:seed
       - run:
           name: Playwright (<< parameters.project >>)
           # The build job already produced .next; Playwright only starts it.
@@ -174,6 +243,81 @@ jobs:
           name: Storybook static build
           command: npm run build-storybook
 
+  db-check:
+    executor: node-postgres
+    environment:
+      # CI-only role passwords. They are not used anywhere else.
+      PROVISION_URL: postgres://postgres:postgres@127.0.0.1:5432/postgres
+      PROVISION_CREATE_DATABASES: '1'
+      APP_MIGRATOR_PASSWORD: ci-migrator
+      APP_RUNTIME_PASSWORD: ci-runtime
+      AUDIT_MAINTAINER_PASSWORD: ci-audit
+      DATABASE_MIGRATION_URL: postgres://app_migrator:ci-migrator@127.0.0.1:5432/nardini_dev
+      DATABASE_URL: postgres://app_runtime:ci-runtime@127.0.0.1:5432/nardini_dev
+    steps:
+      - attach_setup
+      - wait_for_postgres
+      - run:
+          name: Provision and migrate an empty database
+          command: |
+            npm run db:provision
+            npm run db:migrate
+      - run:
+          name: Lint migrations
+          command: npm run db:lint
+      - run:
+          name: Check generated schema types
+          command: |
+            DATABASE_URL="$DATABASE_MIGRATION_URL" npm run db:codegen
+            git diff --exit-code db/schema.d.ts
+      - run:
+          name: Check grants
+          command: npm run db:grants
+
+  migrate-production:
+    executor: node
+    steps:
+      - attach_setup
+      - run:
+          name: Migrate production
+          # DATABASE_MIGRATION_URL comes from the nardini-select-prod-migrate
+          # context: the direct Neon endpoint as app_migrator.
+          command: |
+            set -o pipefail
+            mkdir -p reports
+            npm run db:migrate | tee reports/migrate-production.txt
+      - store_artifacts:
+          path: reports/migrate-production.txt
+
+  deploy-production:
+    executor: node
+    environment:
+      NEXT_TELEMETRY_DISABLED: '1'
+    steps:
+      - attach_workspace:
+          at: ~/project
+      - run:
+          name: Stop when this commit has no release
+          command: |
+            if [ ! -f release/version ]; then
+              echo "No release version; skipping the production deploy."
+              circleci-agent step halt
+            fi
+      - run:
+          name: Build and deploy to Netlify production
+          # Builds with the production context, so the build gets the site's
+          # production variables and CONTEXT=production, plus SENTRY_RELEASE
+          # from this shell. NETLIFY_AUTH_TOKEN and NETLIFY_SITE_ID come from
+          # the nardini-select-prod-deploy context.
+          command: |
+            version=$(tr -d '[:space:]' < release/version)
+            export RELEASE_VERSION="$version"
+            export SENTRY_RELEASE="nardini-select@$version"
+            npx --yes netlify-cli@27.19.0 deploy \
+              --prod \
+              --context production \
+              --message "Release v$RELEASE_VERSION ($SENTRY_RELEASE)"
+
   release:
     executor: node
     environment:
@@ -197,28 +341,23 @@ jobs:
             --package conventional-changelog-conventionalcommits@9.3.1
             semantic-release
       - run:
-          name: Detect the new version
+          name: Record the release version
+          # Downstream deploy reads this file. No file means this commit
+          # does not release. Do not halt before the workspace is saved.
           command: |
+            mkdir -p release
             tag=$(git tag --points-at HEAD --list 'v*' | sort -V | tail -n 1)
             if [ -z "$tag" ]; then
-              echo "No new version for this commit; skipping the production deploy."
-              circleci-agent step halt
+              echo "No new version for this commit."
               exit 0
             fi
             version="${tag#v}"
+            printf '%s\n' "$version" > release/version
             echo "Releasing $tag"
-            echo "export RELEASE_VERSION=$version" >> "$BASH_ENV"
-            echo "export SENTRY_RELEASE=nardini-select@$version" >> "$BASH_ENV"
-      - run:
-          name: Build and deploy to Netlify production
-          # Builds with the production context, so the build gets the site's
-          # production variables and CONTEXT=production, plus SENTRY_RELEASE
-          # from this shell. Reads NETLIFY_AUTH_TOKEN and NETLIFY_SITE_ID.
-          command: >-
-            npx --yes netlify-cli@27.19.0 deploy
-            --prod
-            --context production
-            --message "Release v$RELEASE_VERSION ($SENTRY_RELEASE)"
+      - persist_to_workspace:
+          root: ~/project
+          paths:
+            - .
 
 workflows:
   validate:
@@ -238,6 +377,8 @@ workflows:
           requires: [setup]
       - storybook:
           requires: [setup]
+      - db-check:
+          requires: [setup]
       - e2e-tests:
           name: e2e-desktop
           project: desktop
@@ -246,16 +387,30 @@ workflows:
           name: e2e-mobile
           project: mobile
           requires: [build]
-      - release:
-          # GH_TOKEN, NETLIFY_AUTH_TOKEN, and NETLIFY_SITE_ID live in this
-          # context, which only main can use.
-          context: nardini-select-release
-          # Gate production releases on checks that catch regressions likely
-          # to break the site. PRs run the full validation suite.
+      - migrate-production:
+          # DATABASE_MIGRATION_URL lives in this context, which only main can use.
+          context: nardini-select-prod-migrate
           requires:
             - lint
             - typecheck
             - unit-tests
+            - db-check
+          filters:
+            branches:
+              only: main
+      - release:
+          # GH_TOKEN lives in this context, which only main can use.
+          context: nardini-select-release
+          requires:
+            - migrate-production
+          filters:
+            branches:
+              only: main
+      - deploy-production:
+          # NETLIFY_AUTH_TOKEN and NETLIFY_SITE_ID live in this context.
+          context: nardini-select-prod-deploy
+          requires:
+            - release
           filters:
             branches:
               only: main

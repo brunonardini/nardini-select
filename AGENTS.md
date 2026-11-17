@@ -8,7 +8,7 @@ Nardini Select: a dog-focused pet shop in Resende, RJ, Brazil. Today the reposit
 
 ## Stack and commands
 
-Next.js 16 (App Router), React 19, TypeScript 6, npm. Base UI (`@base-ui/react`) for interactive components; Storybook 10 (`@storybook/nextjs-vite`) for the component catalog. Node.js 26 (the latest LTS), pinned in `.nvmrc`. Hosted on Netlify. TypeScript stays on 6.0.x because `typescript-eslint` doesn't support TypeScript 7 yet, and ESLint stays on 9 because the React, import, and jsx-a11y plugins in `eslint-config-next` don't support ESLint 10 yet.
+Next.js 16 (App Router), React 19, TypeScript 6, npm. Base UI (`@base-ui/react`) for interactive components; Storybook 10 (`@storybook/nextjs-vite`) for the component catalog. Postgres 18, Kysely, and node-pg-migrate. Better Auth is the session library; its dependency lands with the session milestone. Node.js 26 (the latest LTS), pinned in `.nvmrc`. Hosted on Netlify. TypeScript stays on 6.0.x because `typescript-eslint` doesn't support TypeScript 7 yet, and ESLint stays on 9 because the React, import, and jsx-a11y plugins in `eslint-config-next` don't support ESLint 10 yet.
 
 Run `nvm use` at the start of every terminal session, before any `node`, `npm`, or `npx` command, so the shell uses the version in `.nvmrc` (`nvm install` if it's missing). If your shell doesn't keep state between commands, chain it: `nvm use && npm test`. Changing the Node version means updating `.nvmrc`, `engines` in `package.json`, and the `cimg/node` image in `.circleci/config.yml` together; Netlify reads `.nvmrc`.
 
@@ -25,16 +25,24 @@ Run `nvm use` at the start of every terminal session, before any `node`, `npm`, 
 | E2E tests | `npm run test:e2e` |
 | Storybook | `npm run storybook` (http://localhost:6006) / `npm run build-storybook` (static build in `storybook-static/`) |
 | Story tests | `npm run test:storybook` (every story in Chromium, with its play function and axe checks) |
+| Database up | `npm run db:up` (Docker Postgres 18 on 127.0.0.1:5432) |
+| Provision | `npm run db:provision` |
+| Migrate | `npm run db:migrate` |
+| Seed | `npm run db:seed` |
+| Reset | `npm run db:reset` |
+| Schema types | `npm run db:codegen` |
+| SQL lint | `npm run db:lint` |
+| Grants | `npm run db:grants` |
 
 Testing:
-- Unit and component tests: Vitest + React Testing Library, next to the code as `app/**/*.test.ts(x)` and `components/**/*.test.ts(x)` (the `unit` project in `vitest.config.mts`, jsdom). Query by role and accessible name. Async Server Components can't be unit tested; cover them with E2E.
+- Unit and component tests: Vitest + React Testing Library, next to the code as `app/**/*.test.ts(x)`, `components/**/*.test.ts(x)`, `lib/**/*.test.ts(x)`, and `db/**/*.test.ts(x)` (the `unit` project in `vitest.config.mts`, jsdom). Query by role and accessible name. Async Server Components can't be unit tested; cover them with E2E.
 - Story tests: `@storybook/addon-vitest` runs each story as a test (the `storybook` project, Chromium through Playwright). First run: `npx playwright install chromium`. Stories render in the viewports set in `.storybook/preview.tsx`, which match the E2E projects.
-- E2E: Playwright in `e2e/`, desktop (1440×900) and mobile (Pixel 7) projects. `npm run test:e2e` builds the app, then Playwright starts that build on port 3200 with a fake `WHATSAPP_NUMBER` (`npx playwright test` alone needs an existing build). First run: `npx playwright install chromium`.
+- E2E: Playwright in `e2e/`, desktop (1440×900) and mobile (Pixel 7) projects, at most 4 workers. `npm run test:e2e` builds the app, then Playwright starts that build on port 3200 with a fake `WHATSAPP_NUMBER` (`npx playwright test` alone needs an existing build). Locally, global setup provisions, resets, migrates, and seeds `nardini_test` on the Docker database. CI provisions, migrates, and seeds a fresh database in the job. E2E never connects to Neon or to a deployed URL. First run: `npx playwright install chromium`.
 - Accessibility: `e2e/accessibility.spec.ts` runs axe (`@axe-core/playwright`) against WCAG 2.2 A and AA plus axe best practices, on desktop, on mobile, and with the mobile menu open. Any violation fails the test. Fix the page instead of disabling rules; when a new state or page appears (a dialog, a new route), scan it too.
 - Stories run the same axe rules (`@storybook/addon-a11y`, `parameters.a11y` in `.storybook/preview.tsx`, with `test: 'error'`), including `region`, which Storybook turns off by default; each story renders inside `<main>`. Keep the tags in sync with `e2e/accessibility.spec.ts`.
 - The only exclusion in both scans is Base UI's focus guards (`[data-base-ui-focus-guard]`): visually hidden `aria-hidden` spans with `tabindex="0"` that keep the Tab order around open popups and pass focus on at once. axe reports them as `aria-hidden-focus`. Don't exclude anything else.
 - Add or update tests with every behavior change, and run `npm test` before finishing.
-- Coverage: unit tests only (V8, `coverage/lcov.info`; stories and tests are left out). `npm run test:coverage` fails below 90% of statements, branches, functions, or lines (`thresholds` in `vitest.config.mts`); keep new code covered instead of lowering it. CI uploads it to Codecov with the `unit` flag, using the `CODECOV_TOKEN` variable set in CircleCI.
+- Coverage: unit tests only (V8, `coverage/lcov.info`; stories and tests are left out). `npm run test:coverage` fails below 90% of statements, branches, functions, or lines (`thresholds` in `vitest.config.mts`). `lib/**/logic/**` stays at 100%. I/O adapters, pages, layouts, actions, and route handlers are excluded and covered by E2E. Keep new code covered instead of lowering the thresholds. CI uploads it to Codecov with the `unit` flag, using the `CODECOV_TOKEN` variable set in CircleCI.
 
 `scripts/check-page.cjs` is an older manual browser check. It needs Edge, Playwright, and a server on port 3100. Set `PLAYWRIGHT_MODULE` if Playwright is installed outside the project. The script checks five viewports and saves screenshots to `.impeccable/review/`.
 
@@ -47,7 +55,7 @@ Knip:
 ## Conventions
 
 - Run `npm run typecheck`, `npm run lint`, `npm run format:check`, `npm run knip`, and `npm test` before finishing a change. CI (CircleCI) runs lint, Prettier, Knip, TypeScript type checking, unit tests, and E2E tests on every push, and releases from `main` (see Releases and deploys).
-- Prettier with single quotes; code lives in `app/` (routes and page composition) and `components/` (reusable components).
+- Prettier with single quotes; code lives in `app/` (routes and page composition), `components/` (reusable components), `lib/` (domain logic and adapters), and `db/` (migrations, provision, and seeds).
 - Language: website and business content is Portuguese (pt-BR): page copy, product and brand texts, and the approved content specs in `design/`. Everything else is English: documentation (including the README), AI agent instructions, code, code comments, commit messages, and PR titles and descriptions.
 - `WHATSAPP_NUMBER` comes from `.env` and is read only on the server (`app/contato/whatsapp/route.ts`). Never show the phone number in page text, images, or client components.
 - `public/images` holds only files the page uses. Brand source files stay out of Git.
@@ -74,10 +82,10 @@ Errors, tracing, and logs go to the Sentry project `bruno-nardini/nardini-select
 - SDK init: `instrumentation-client.ts` (browser), `sentry.server.config.ts` and `sentry.edge.config.ts` (loaded by `instrumentation.ts`), and `app/global-error.tsx` for render errors. Keep the three `Sentry.init` calls in sync.
 - `NEXT_PUBLIC_SENTRY_DSN` enables the SDK; without it, Sentry stays off (tests and CI run without it).
 - Environment comes from Netlify's `CONTEXT` (`production`, `deploy-preview`, `branch-deploy`), falling back to `NODE_ENV`.
-- Release: production builds use `nardini-select@X.Y.Z` from `SENTRY_RELEASE`, set only by the CircleCI release job, for the source map upload (`withSentryConfig`) and the three `Sentry.init` calls (as `NEXT_PUBLIC_SENTRY_RELEASE`). The build also associates commits and records a production deploy. Deploy previews have no `SENTRY_RELEASE`, so their release is the commit SHA. Never set `SENTRY_RELEASE` in Netlify.
+- Release: production builds use `nardini-select@X.Y.Z` from `SENTRY_RELEASE`, set only by the CircleCI production deploy job, for the source map upload (`withSentryConfig`) and the three `Sentry.init` calls (as `NEXT_PUBLIC_SENTRY_RELEASE`). The build also associates commits and records a production deploy. Deploy previews have no `SENTRY_RELEASE`, so their release is the commit SHA. Never set `SENTRY_RELEASE` in Netlify.
 - Client source maps are uploaded and then deleted from the build, so the site never serves them.
 - Trace sample rate: 100% in development, 10% otherwise.
-- `SENTRY_AUTH_TOKEN` exists only in Netlify, for source map upload during the build; the CircleCI release build reads it from Netlify through the CLI. Never commit it, copy it to CircleCI, or ask for it in chat.
+- `SENTRY_AUTH_TOKEN` exists only in Netlify, for source map upload during the build; the CircleCI production deploy reads it from Netlify through the CLI. Never commit it, copy it to CircleCI, or ask for it in chat.
 - Wrap new Server Actions with `Sentry.withServerActionInstrumentation()`.
 
 ## Releases and deploys
@@ -97,7 +105,7 @@ Other types (`docs`, `chore`, `ci`, `build`, `refactor`, `style`, `test`, `rever
 The project stays on 0.x until the e-commerce launch. A breaking change (`!` or `BREAKING CHANGE:`) jumps straight to 1.0.0, so don't use it before that launch.
 
 - The version lives only in the `vX.Y.Z` tag and its GitHub release, whose notes are the changelog. Nothing is committed back, and `package.json` keeps `0.0.0-development`.
-- On each push to `main`, after lint, type checking, and unit tests pass, the CircleCI `release` job runs semantic-release. PRs run the full validation suite. If semantic-release tags a new version, the job deploys to Netlify production with the CLI (`--context production`) and `SENTRY_RELEASE=nardini-select@X.Y.Z`.
+- On each push to `main`, after lint, type checking, unit tests, and `db-check` pass, CircleCI migrates production, then runs semantic-release, then deploys. PRs run the full validation suite. If semantic-release tags a new version, the deploy job builds with `SENTRY_RELEASE=nardini-select@X.Y.Z` and deploys to Netlify production with the CLI (`--context production`). A commit that does not release still migrates, and the deploy job stops.
 - Netlify only builds PR deploy previews: `netlify.toml` has an `ignore` command that skips its builds of `main`, which the CLI doesn't run. Production deploys come only from CircleCI. The skipped build shows as a canceled `main` deploy in Netlify; that's expected, not a failure. For the same reason the README uses a release version badge instead of Netlify's deploy status badge.
 
 ## Commits and pull requests
@@ -151,6 +159,23 @@ Security:
 - Check authorization in every Server Action and Route Handler.
 - No secrets in client code or in the repository.
 - Card data never passes through our server.
+
+Database:
+- Primary keys are UUIDs. Table names are plural snake_case. Timestamp columns end in `_at` and leave Postgres as UTC ISO 8601 strings.
+- Migrations are forward-only SQL, run inside a transaction, and must work with the previous release (expand/contract).
+- The database enforces structure and grants, not business rules.
+- Ask before using a feature that only Neon provides.
+
+Code:
+- Business rules live in `lib/**/logic/` as pure functions with 100% unit coverage. Inputs are passed in: no I/O, clock, or randomness.
+- Code that touches Postgres, Better Auth, Google, Sentry, cookies, or the clock lives in `lib/**/io/`.
+
+Access:
+- Every private entry point is listed in the guard route table. The guard reads the role on each request.
+- Do not cache role or permission data in the session or the cookie.
+
+Privacy:
+- A change that stores or reads personal data updates `docs/privacy/backoffice-data-inventory.md` with its purpose, legal basis, and retention.
 
 Security scanning (CodeQL) and disclosure — the repository is public, so vulnerabilities stay private until fixed:
 - `.github/workflows/codeql.yml` scans JavaScript/TypeScript and the GitHub workflows (`security-extended` queries) on pushes to `main`, weekly, and on demand. Alerts appear only in the Security tab, which only the owner can see.

@@ -13,25 +13,52 @@ export default defineConfig({
     // unit project only.
     coverage: {
       provider: 'v8',
-      include: ['app/**/*.{ts,tsx}', 'components/**/*.{ts,tsx}'],
-      exclude: ['**/*.test.{ts,tsx}', '**/*.stories.{ts,tsx}'],
+      include: [
+        'app/**/*.{ts,tsx}',
+        'components/**/*.{ts,tsx}',
+        'lib/**/*.{ts,tsx}',
+      ],
+      exclude: [
+        '**/*.test.{ts,tsx}',
+        '**/*.stories.{ts,tsx}',
+        'lib/**/io/**',
+        'lib/permissions/catalog.ts',
+        'db/**',
+        'app/**/page.tsx',
+        'app/**/layout.tsx',
+        'app/**/actions.ts',
+        'app/**/route.ts',
+        'proxy.ts',
+      ],
       reporter: ['text', 'lcov'],
       reportsDirectory: 'coverage',
       // CI fails when unit test coverage drops below 90%.
+      // Pure logic stays fully covered.
       thresholds: {
         statements: 90,
         branches: 90,
         functions: 90,
         lines: 90,
+        'lib/**/logic/**': {
+          statements: 100,
+          branches: 100,
+          functions: 100,
+          lines: 100,
+        },
       },
     },
     projects: [
       {
+        resolve: {
+          alias: {
+            'server-only': path.join(dirname, 'test/server-only.ts'),
+          },
+        },
         plugins: [react()],
         test: {
           name: 'unit',
           environment: 'jsdom',
-          include: ['{app,components}/**/*.test.{ts,tsx}'],
+          include: ['{app,components,lib,db}/**/*.test.{ts,tsx}'],
           setupFiles: ['./vitest.setup.ts'],
         },
       },

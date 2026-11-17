@@ -1,0 +1,9 @@
+{
+  "dateParser": "string",
+  "logLevel": "error",
+  "outFile": "db/schema.d.ts",
+  "typeMapping": {
+    "timestamp": "string",
+    "timestamptz": "string"
+  }
+}

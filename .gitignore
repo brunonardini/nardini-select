@@ -34,6 +34,7 @@ tmp/
 /blob-report/
 /playwright/.cache/
 /reports/
+/release/
 
 # Storybook static build (npm run build-storybook)
 /storybook-static/
