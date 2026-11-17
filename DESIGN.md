@@ -9,30 +9,30 @@ colors:
   off-white: "#f7efe6"
 typography:
   display:
-    fontFamily: "Kanesty, 'Lexend', sans-serif"
+    fontFamily: "Karvest, sans-serif"
     fontSize: "clamp(2.8rem,4.3vw,4.6rem)"
     fontWeight: 800
     lineHeight: 1.04
-    letterSpacing: "-.02em"
+    letterSpacing: "0"
   headline:
-    fontFamily: "Kanesty, 'Lexend', sans-serif"
+    fontFamily: "Karvest, sans-serif"
     fontSize: "clamp(2.3rem,4vw,3.8rem)"
     fontWeight: 800
     lineHeight: 1.08
-    letterSpacing: "-.02em"
+    letterSpacing: "0"
   title:
-    fontFamily: "Kanesty, 'Lexend', sans-serif"
+    fontFamily: "Karvest, sans-serif"
     fontSize: "clamp(1.4rem,1.8vw,1.75rem)"
     fontWeight: 800
     lineHeight: 1.15
-    letterSpacing: "-.02em"
+    letterSpacing: "0"
   body:
-    fontFamily: "Kanesty, 'Lexend', sans-serif"
+    fontFamily: "Montserrat, sans-serif"
     fontSize: "16px"
     fontWeight: 400
     lineHeight: 1.65
   label:
-    fontFamily: "Kanesty, 'Lexend', sans-serif"
+    fontFamily: "Montserrat, sans-serif"
     fontSize: ".875rem"
     fontWeight: 800
     lineHeight: 1.3
@@ -127,16 +127,16 @@ This is why buttons are Café, not Terracota, and why focus rings are Café on l
 
 ## Typography
 
-**Brand family: Kanesty.** _Kanesty ExtBd_ for titles, calls and words of impact; _Kanesty Regular_ for supporting text, descriptions and informative copy. No other weights or families.
+**Two families, split by role.** _Karvest ExtraBold_ sets the headings only (h1, h2 and h3): the hero heading, section headings, and pillar and contact subtitles. _Montserrat_ (400 and 800) sets everything else: body copy, buttons, labels, the header, and the About motto. No other weights or families.
 
-**Current web font: Lexend (400 and 800), a stand-in.** Kanesty has no web license in the project yet. Lexend is loaded with `next/font/google` in `app/layout.tsx` and exposed as `--font-brand`. To switch to Kanesty, replace that call with `next/font/local` pointing at the licensed files and keep the `--font-brand` variable; the CSS needs no change.
+**Web fonts.** Karvest is self-hosted: `app/fonts/` keeps every Karvest weight as `.woff2`, and `app/fonts.ts` loads only `Karvest-ExtraBold.woff2` with `next/font/local`, exposed as `--font-display`. Montserrat loads from Google with `next/font/google`, exposed as `--font-brand`. `app/globals.css` sets h1, h2 and h3 to `--font-title`, which reads `--font-display` first. Other Karvest weights are added to `app/fonts.ts` when a design needs them. The OTF and TTF sources stay outside Git.
 
 - **Display:** hero heading, 800, the last phrase in Terracota on its own line. Mobile `clamp(2.35rem,10.4vw,3.6rem)`.
 - **Headline:** section headings, 800. Mobile `clamp(2.1rem,8.4vw,3.2rem)`.
 - **Title:** pillar and contact headings, 800.
 - **Body:** 400, 16px base, line height 1.65, `text-wrap: pretty` against orphans.
 - **Label:** buttons, the header contact pill, the address street and pillar closing lines, 800.
-- **Tracking:** the manual asks for _leveza no espaçamento_. Headings stay at `-0.02em` (the face is already wide); the small uppercase motto uses `0.14em`. Never tighter than `-0.02em`.
+- **Tracking:** the manual asks for _leveza no espaçamento_. Karvest is compact, so headings use `0` tracking with `word-spacing: 0.08em` to keep words apart; the small uppercase motto uses `0.14em`. Never use negative tracking on Karvest.
 - No italics: the brand family is set in roman only.
 
 ## Layout
