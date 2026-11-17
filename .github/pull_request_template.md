@@ -67,9 +67,17 @@ footer in this description isn't part of the commit.
 - [ ] No secrets in the repository or in client code; the WhatsApp number stays out of page text, images, and client components
 - [ ] Security fixes use a neutral title and description, with no vulnerability details, alert links, or exploit steps (the PR and its release notes are public)
 
+**Database and access**
+
+- [ ] Migrations are forward-only and safe for the previous release (expand/contract), and `db/schema.d.ts` was regenerated
+- [ ] New private entry points are listed in the guard route table
+- [ ] New audit actions include their metadata schema
+- [ ] Personal-data changes are reflected in `docs/privacy/backoffice-data-inventory.md`
+- [ ] Production still migrates, then releases, then deploys. Republishing a deploy does not undo a committed migration
+
 **Configuration and docs**
 
-- [ ] The CircleCI release job requires lint, type checking, and unit tests to pass, and PRs run the full validation suite
+- [ ] On `main`, CircleCI migrates production only after lint, type checking, unit tests, and `db-check`, then releases, then deploys. PRs run the full validation suite
 - [ ] App variables are set in Netlify for Production and Deploy Previews, pipeline-only variables in CircleCI, and both are documented in `docs/deployment.md` (never set `SENTRY_RELEASE` in Netlify)
 - [ ] The three `Sentry.init` calls are still in sync
 - [ ] Upgrading `@playwright/test` also updates the Playwright image tag in `.circleci/config.yml`

@@ -1,0 +1,10 @@
+{
+  "migrations-dir": "db/migrations",
+  "migration-file-language": "sql",
+  "migrations-table": "schema_migrations",
+  "migrations-schema": "public",
+  "schema": ["public"],
+  "decamelize": false,
+  "verbose": false,
+  "lock": true
+}
