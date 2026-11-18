@@ -85,3 +85,58 @@ GRANT USAGE ON SCHEMA audit TO audit_maintainer;
 
 ALTER DEFAULT PRIVILEGES FOR ROLE app_migrator IN SCHEMA public
   GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO app_runtime;
+
+-- Tables created before app_migrator owned the schema stay owned by the
+-- previous role. app_migrator cannot see them in information_schema, so the
+-- migrator tries to create schema_migrations again. Grant first, then move
+-- ownership. The final grant runs as app_migrator so a second provision
+-- still reaches tables it now owns.
+DO $$
+DECLARE
+  table_name name;
+  sequence_name name;
+  switched boolean := false;
+BEGIN
+  FOR table_name IN
+    SELECT c.relname
+    FROM pg_class c
+    JOIN pg_namespace n ON n.oid = c.relnamespace
+    JOIN pg_roles r ON r.oid = c.relowner
+    WHERE n.nspname = 'public'
+      AND c.relkind = 'r'
+      AND r.rolname <> 'app_migrator'
+  LOOP
+    EXECUTE format(
+      'GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE public.%I TO app_runtime',
+      table_name
+    );
+    EXECUTE format('ALTER TABLE public.%I OWNER TO app_migrator', table_name);
+  END LOOP;
+
+  FOR sequence_name IN
+    SELECT c.relname
+    FROM pg_class c
+    JOIN pg_namespace n ON n.oid = c.relnamespace
+    JOIN pg_roles r ON r.oid = c.relowner
+    WHERE n.nspname = 'public'
+      AND c.relkind = 'S'
+      AND r.rolname <> 'app_migrator'
+  LOOP
+    EXECUTE format(
+      'ALTER SEQUENCE public.%I OWNER TO app_migrator',
+      sequence_name
+    );
+  END LOOP;
+
+  IF current_user <> 'app_migrator' THEN
+    EXECUTE 'SET ROLE app_migrator';
+    switched := true;
+  END IF;
+
+  EXECUTE 'GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO app_runtime';
+
+  IF switched THEN
+    EXECUTE 'RESET ROLE';
+  END IF;
+END
+$$;
