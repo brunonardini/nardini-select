@@ -5,11 +5,11 @@
 | Environment | Database | Where it runs | Data |
 | --- | --- | --- | --- |
 | Production | Neon project `nardini-select`, database `nardini_prod` | Netlify production context | Real, after the production-data gate |
-| Preview | Neon project `nardini-select-stg`, database `nardini_stg` | Not deployed by this change | Fake seed data |
+| Preview | Neon project `nardini-select-stg`, database `nardini_stg` | Netlify alias `staging`, deploy-preview context, after the `preview-approval` hold | Fake seed data |
 | Development | Docker Postgres 18, database `nardini_dev` | `npm run dev` | Fake seed data |
 | Test | Docker locally, Postgres 18 service container in CircleCI, database `nardini_test` | Playwright | Fake seed data |
 
-Local and CI databases are created by `npm run db:provision`. Preview and production databases are created in Neon. The preview deploy job is not part of this change. Netlify still builds PR deploy previews from Git, and it skips its Git-triggered production build, so a canceled Netlify build for `main` is expected.
+Local and CI databases are created by `npm run db:provision`. Preview and production databases are created in Neon. Netlify does not build from Git. Two settings do that. In Project configuration, Developer settings, Build settings, Build status is Stopped builds, so a push does not start a build and does not leave a canceled deploy. `netlify.toml` sets `ignore` to `exit 0` as the backup. The CLI does not run that command. It runs only if builds are active again, including after the repository is relinked, and then that Git build is canceled. CircleCI deploys production and, after a manual approval, the `staging` alias. `netlify deploy` builds on the CircleCI machine and uploads the result. Do not pass `--remote`: that asks Netlify to build, and a stopped site refuses it.
 
 ## Neon
 
@@ -23,7 +23,7 @@ Then store one URL per role:
 | `DATABASE_MIGRATION_URL` | `app_migrator` | Direct | Same database |
 | `AUDIT_MAINTAINER_URL` | `audit_maintainer` | Direct | Same database |
 
-`DATABASE_URL` is a Netlify variable with the Functions scope. Production and deploy previews get different values. Do not put the migration or audit URLs in Netlify.
+`DATABASE_URL` is a Netlify variable with the Functions scope. Production and deploy previews get different values. Do not put the migration or audit URLs in Netlify. On Neon, keep `channel_binding=require` beside `sslmode=verify-full`.
 
 Postgres 18 is the major for new Neon projects and for the Docker image. The major cannot be changed after a Neon project is created. If project `nardini-select` already exists, read its `pg_version` before the first production migration. A project created before June 2026 may still be on an older major. Do not adopt Neon's managed Better Auth.
 
@@ -45,16 +45,38 @@ In CircleCI, set `CODECOV_TOKEN` for the unit coverage upload. Keep credential v
 | `nardini-select-prod-migrate` | `main` | `DATABASE_MIGRATION_URL` |
 | `nardini-select-release` | `main` | `GH_TOKEN` |
 | `nardini-select-prod-deploy` | `main` | `NETLIFY_AUTH_TOKEN`, `NETLIFY_SITE_ID` |
+| `nardini-select-preview-db` | Branches of this repository, not `main` | `DATABASE_MIGRATION_URL`, `DATABASE_URL` |
+| `nardini-select-preview-deploy` | Branches of this repository, not `main` | `NETLIFY_AUTH_TOKEN`, `NETLIFY_SITE_ID` |
 
-`NETLIFY_AUTH_TOKEN` and `NETLIFY_SITE_ID` used to live in `nardini-select-release`. Copy them into `nardini-select-prod-deploy` before the first production deploy from this pipeline. The deploy fails without them. `GH_TOKEN` stays on the release context.
+`NETLIFY_AUTH_TOKEN` and `NETLIFY_SITE_ID` used to live in `nardini-select-release`. Copy them into `nardini-select-prod-deploy` before the first production deploy from this pipeline, and into `nardini-select-preview-deploy` before the first preview. The deploy fails without them. `GH_TOKEN` stays on the release context.
 
-Create both new contexts before merging. The next push to `main` runs `migrate-production`.
+In CircleCI, restrict the production contexts to `main` and the preview contexts to non-fork pipelines. The config also ignores `main` for the preview group and stops a fork before it uses those variables.
+
+Create the preview contexts before approving the first preview. Merging to `main` does not deploy the `staging` alias.
+
+The preview database URLs point at `nardini_stg`. `DATABASE_MIGRATION_URL` is the direct endpoint as `app_migrator`. `DATABASE_URL` is the pooled endpoint as `app_runtime`. Both use `sslmode=verify-full&channel_binding=require`. Provision the Neon project `nardini-select-stg` once, the same way as production, with `PROVISION_CREATE_DATABASES` empty, before that approval.
 
 ## Release flow
 
 CircleCI validates each push, including `db-check` (provision, migrate an empty database, Squawk, schema types, grants). On `main`, after lint, type checking, unit tests, and `db-check`, `migrate-production` applies pending migrations to Neon. semantic-release then uses the squash-merged PR titles to determine the next version. The `vX.Y.Z` tag and GitHub release record the version and its changelog. See the [release rules](../AGENTS.md#releases-and-deploys) and the [CircleCI configuration](../.circleci/config.yml).
 
 When semantic-release creates a version, it writes `release/version`. `deploy-production` reads that file, builds with `SENTRY_RELEASE=nardini-select@X.Y.Z`, and deploys to Netlify production with `--context production`. A commit that does not call for a version leaves the file absent, and the deploy job stops. The migration still runs.
+
+## Preview
+
+On a branch of this repository, after lint, type checking, unit tests, the database check, the build, Storybook, and end-to-end tests pass, CircleCI shows the `preview-approval` hold. It is not a required status check. Approving it runs `npm run db:reset` against `nardini_stg` (drop `public` and `audit`, reapply schema grants, migrate, and seed), then builds on the CircleCI machine and deploys with `netlify deploy --context deploy-preview --alias staging`. The message is `Preview <branch> <sha>`. There is no `--prod`, no `--remote`, and no `SENTRY_RELEASE`; the preview release is the commit SHA.
+
+The approval, the database reset, and the deploy share the serial group `preview`. Only one preview runs at a time. CircleCI skips an older preview still queued when a newer pipeline is waiting. The reset refuses any database other than `nardini_dev`, `nardini_test`, and `nardini_stg`.
+
+Google sign-in is not in the app yet. Create the preview OAuth client now and store it for the auth milestone:
+
+| Environment | Redirect URI |
+| --- | --- |
+| Production | `https://nardiniselect.com.br/api/auth/callback/google` |
+| Preview | `https://staging--<site-name>.netlify.app/api/auth/callback/google` |
+| Development | `http://localhost:3000/api/auth/callback/google` |
+
+`<site-name>` is the site name in Netlify (Site configuration, Site details). Put the preview client's `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` in the Netlify deploy-preview context, Functions scope. Do not put them in CircleCI or in Git. The home page deployed to `staging` does not read them yet.
 
 ## Failed migration
 
@@ -68,9 +90,9 @@ Recorded from branch `spike/m0-better-auth-fit`, which is not merged. The findin
 
 **Deploy-preview variables for functions.** Not checked with a live deploy. The Netlify CLI in this environment is not logged in, and `NETLIFY_AUTH_TOKEN` is unset. No function was published to the `staging` alias.
 
-The CLI pinned in CircleCI, `netlify-cli@27.19.0`, copies function environment at deploy time. `netlify deploy --context deploy-preview` loads the deploy-preview envelope with the Functions scope and sends it in that deploy's function config. A variable changed afterward stays on the old deploy until the next deploy. `--alias staging` sets the draft URL only. Without `--context deploy-preview`, the CLI uses the `dev` context. `netlify.toml` values are not visible to functions. Give the variable the Functions scope in Netlify, with one value for production and another for deploy previews.
+The CLI pinned in CircleCI, `netlify-cli@27.19.0`, copies function environment at deploy time. `netlify deploy --context deploy-preview` loads the deploy-preview envelope with the Functions scope and sends it in that deploy's function config. A variable changed afterward stays on the old deploy until the next deploy. `--alias staging` sets the draft URL only. Without `--context deploy-preview`, the CLI uses the `dev` context. `netlify.toml` only sets `ignore`. A value set only there would not reach functions. Give the variable the Functions scope in Netlify, with one value for production and another for deploy previews.
 
-Before the preview job in the design is trusted, deploy a minimal function with `npx netlify-cli@27.19.0 deploy --context deploy-preview --alias staging` (no `--prod`), read one non-secret probe variable from it, and then delete that variable.
+The preview deploy job is in the pipeline. Before trusting function environment on that deploy, run a minimal function with `npx netlify-cli@27.19.0 deploy --context deploy-preview --alias staging` (no `--prod`), read one non-secret probe variable from it, and then delete that variable. That live check has not been run.
 
 ## Rollback
 
