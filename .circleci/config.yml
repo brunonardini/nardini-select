@@ -71,6 +71,18 @@ commands:
             console.error('Postgres did not accept connections.');
             process.exit(1);
             EOF
+  refuse_forks:
+    description: Stop when this pipeline comes from a fork.
+    steps:
+      - run:
+          name: Refuse forks
+          # Preview credentials stay on branches of this repository. A fork
+          # pull request sets CIRCLE_PR_USERNAME to the fork owner.
+          command: |
+            if [ -n "$CIRCLE_PR_USERNAME" ] && [ "$CIRCLE_PR_USERNAME" != "$CIRCLE_PROJECT_USERNAME" ]; then
+              echo "Fork pipelines do not receive preview credentials."
+              exit 1
+            fi
 
 jobs:
   setup:
@@ -305,10 +317,13 @@ jobs:
             fi
       - run:
           name: Build and deploy to Netlify production
-          # Builds with the production context, so the build gets the site's
-          # production variables and CONTEXT=production, plus SENTRY_RELEASE
-          # from this shell. NETLIFY_AUTH_TOKEN and NETLIFY_SITE_ID come from
-          # the nardini-select-prod-deploy context.
+          # Builds on this machine with the production context, so the
+          # build gets the site's production variables and
+          # CONTEXT=production, plus SENTRY_RELEASE from this shell.
+          # Do not pass --remote: Netlify Build status is Stopped
+          # builds. The netlify.toml ignore command does not run here.
+          # NETLIFY_AUTH_TOKEN and NETLIFY_SITE_ID come from the
+          # nardini-select-prod-deploy context.
           command: |
             version=$(tr -d '[:space:]' < release/version)
             export RELEASE_VERSION="$version"
@@ -317,6 +332,44 @@ jobs:
               --prod \
               --context production \
               --message "Release v$RELEASE_VERSION ($SENTRY_RELEASE)"
+
+  preview-migrate:
+    executor: node
+    steps:
+      - attach_setup
+      - refuse_forks
+      - run:
+          name: Reset, migrate, and seed nardini_stg
+          # DATABASE_MIGRATION_URL and DATABASE_URL come from the
+          # nardini-select-preview-db context. db:reset refuses every
+          # database except nardini_dev, nardini_test, and nardini_stg.
+          command: |
+            set -o pipefail
+            mkdir -p reports
+            npm run db:reset | tee reports/preview-migrate.txt
+      - store_artifacts:
+          path: reports/preview-migrate.txt
+
+  preview-deploy:
+    executor: node
+    environment:
+      NEXT_TELEMETRY_DISABLED: '1'
+    steps:
+      - attach_setup
+      - refuse_forks
+      - run:
+          name: Build and deploy the staging alias
+          # Builds on this machine. NETLIFY_AUTH_TOKEN and NETLIFY_SITE_ID
+          # come from the nardini-select-preview-deploy context. No
+          # SENTRY_RELEASE: the preview release is the commit SHA. Do not
+          # pass --prod or --remote. Netlify Build status is Stopped
+          # builds, and the netlify.toml ignore command does not run
+          # here.
+          command: |
+            npx --yes netlify-cli@27.19.0 deploy \
+              --context deploy-preview \
+              --alias staging \
+              --message "Preview ${CIRCLE_BRANCH} ${CIRCLE_SHA1}"
 
   release:
     executor: node
@@ -358,6 +411,30 @@ jobs:
           root: ~/project
           paths:
             - .
+
+# One preview at a time. A newer pipeline skips an older one still queued.
+job-groups:
+  preview:
+    jobs:
+      - preview-approval:
+          type: approval
+          filters:
+            branches:
+              ignore: main
+      - preview-migrate:
+          context: nardini-select-preview-db
+          requires:
+            - preview-approval
+          filters:
+            branches:
+              ignore: main
+      - preview-deploy:
+          context: nardini-select-preview-deploy
+          requires:
+            - preview-migrate
+          filters:
+            branches:
+              ignore: main
 
 workflows:
   validate:
@@ -414,3 +491,21 @@ workflows:
           filters:
             branches:
               only: main
+      - preview:
+          # Not a required status check. Approve preview-approval to reset
+          # nardini_stg and deploy this branch to the staging alias.
+          serial-group: preview
+          requires:
+            - lint
+            - prettier
+            - knip
+            - typecheck
+            - unit-tests
+            - build
+            - storybook
+            - db-check
+            - e2e-desktop
+            - e2e-mobile
+          filters:
+            branches:
+              ignore: main

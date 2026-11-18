@@ -1,5 +1,6 @@
-# Production deploys come from the CircleCI release job (netlify deploy
-# --prod). Netlify's own Git builds skip the production branch and keep
-# building Deploy Previews. The CLI doesn't run this ignore command.
+# Build status in Netlify is Stopped builds, so a Git push does not
+# start a build. If builds are turned back on, including by relinking
+# the repository, this command cancels that Git build. CircleCI deploys
+# production and the staging alias. The CLI does not run this command.
 [build]
-  ignore = '[ "$BRANCH" = "main" ]'
+  ignore = 'exit 0'

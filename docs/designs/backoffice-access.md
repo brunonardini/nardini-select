@@ -242,7 +242,7 @@ Recorded on 2026-11-16 from branch `spike/m0-better-auth-fit`. That branch is no
 5.  **List and delete sessions.** `auth.$context.internalAdapter.listSessions(userId)` and `deleteUserSessions(userId)` listed 2 sessions, deleted them, and then listed 0. A following `get-session` body was `null`. `get-session` itself stayed enabled and returned the user before the delete. `auth.api.listSessions` returns Not Found while the allowlist is on. M3 uses `internalAdapter`.
 6.  **Netlify runtime variables: not executed live.** `npx netlify-cli@27.19.0 status` reported `Not logged in`, and the environment has no `NETLIFY_AUTH_TOKEN`. No function was deployed to the `staging` alias. This criterion is open.
     In the pinned CLI, `prepAndRunDeploy` (`dist/commands/deploy/deploy.js`) calls `getEnvelopeEnv` with `options.context` and `scope: "functions"`, then passes the result into `functionsConfig` for that deploy. Function environment is the functions-scoped envelope of the chosen context, copied at deploy time. Editing the variable later leaves the existing deploy unchanged.
-    `--alias staging` names the draft URL. It does not select the context. The CLI default context is `dev`, so a deploy without `--context deploy-preview` does not receive deploy-preview values. Values in `netlify.toml` are not available to functions. The variable needs the Functions scope in Netlify, with a different value for production and for deploy previews.
+    `--alias staging` names the draft URL. It does not select the context. The CLI default context is `dev`, so a deploy without `--context deploy-preview` does not receive deploy-preview values. A value that exists only in a `netlify.toml` file is not available to functions. The variable needs the Functions scope in Netlify, with a different value for production and for deploy previews.
     Before M2 trusts `preview-deploy`, run `npx netlify-cli@27.19.0 deploy --context deploy-preview --alias staging` (no `--prod`) with a minimal function that reads one non-secret probe variable, then delete that variable.
 7.  **Postgres major version.** Neon documents Postgres 18 as the default for projects created since the 2026-06-05 changelog. The major is chosen at project creation and cannot be changed in place. Pin the major, not the minor: the Docker tag is `postgres:18`. The image pulled for this probe is PostgreSQL 18.6. Neon was publishing 18.7 in November 2026.
     This environment has no Neon credentials, so project `nardini-select` was not queried. If that project already exists, read its `pg_version` before M1 freezes the image tag. A project created before June 2026 can still be on 14–17.
@@ -274,7 +274,7 @@ All business rules are pure functions in `lib/<area>/logic/` (no I/O, no clock, 
 | Development | Docker, database `nardini_dev` | `npm run dev` | Fake (seed) | Development client, redirect `http://localhost:3000/api/auth/callback/google` |
 | Test | Docker locally, service container in CircleCI, database `nardini_test` | Playwright E2E | Fake (seed, fixed faker seed) | None: tests never call Google |
 
-Netlify's automatic Git builds are turned off for every branch. CircleCI deploys production and the preview.
+Netlify's automatic Git builds are turned off for every branch. Build status is Stopped builds, so a push does not start a build. `netlify.toml` sets `ignore` to `exit 0` so a Git build is canceled if builds are turned back on, including when the repository is relinked. The CLI does not run that command. CircleCI deploys production and the preview with `netlify deploy` and no `--remote`.
 
 #### A2. Database roles and grants
 
@@ -872,9 +872,9 @@ Exact library versions are pinned in `package.json` at implementation time, usin
     *   Scheduled workflow `retention`, cron `0 6 * * 1,5`, running `node db/maintenance/retention.ts` per environment.
     *   Comments name contexts and variables, never values.
 
-##### 24. `netlify.toml` (Modify, M2)
+##### 24. `netlify.toml` and Netlify Build status (M2)
 
-*   **Proposed Changes**: `ignore = 'exit 0'` so Netlify never builds from Git; comment that CircleCI deploys production and the `staging` alias.
+*   **Proposed Changes**: `ignore = 'exit 0'`. The comment says CircleCI deploys production and the `staging` alias, and that the CLI does not run the command. In Project configuration, Developer settings, Build settings, Build status is Stopped builds, so a Git push does not start a build and does not show as a canceled deploy. The ignore command is the backup if builds are activated again or the repository is relinked. `netlify deploy` does not pass `--remote`.
 
 ##### 25. `docs/deployment.md` (Modify, M1, M2, M3, M5)
 
