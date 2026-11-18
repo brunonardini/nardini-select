@@ -4,7 +4,7 @@
 -- Sections:
 --   @roles             cluster-wide, superuser, once
 --   @database-grants   current database, superuser, each application database
---   @schema-grants     current database, superuser or app_migrator
+--   @schema-grants     current database, superuser, Neon owner, or app_migrator
 
 -- @roles
 
@@ -58,6 +58,17 @@ END
 $$;
 
 -- @schema-grants
+
+-- ALTER SCHEMA ... OWNER TO and ALTER DEFAULT PRIVILEGES FOR ROLE require
+-- membership in app_migrator. A superuser passes without it. The Neon owner
+-- does not. Reset runs this section as app_migrator, which cannot join itself.
+DO $$
+BEGIN
+  IF current_user <> 'app_migrator' THEN
+    EXECUTE format('GRANT app_migrator TO %I', current_user);
+  END IF;
+END
+$$;
 
 REVOKE CREATE ON SCHEMA public FROM PUBLIC;
 
