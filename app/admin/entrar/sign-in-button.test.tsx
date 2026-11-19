@@ -48,6 +48,20 @@ describe('SignInButton', () => {
     expect(screen.getByRole('button')).toBeDisabled();
   });
 
+  it('drops a second sign-in that starts before the button disables', async () => {
+    render(<SignInButton />);
+    const button = screen.getByRole('button', { name: 'Entrar com Google' });
+    signInSocial.mockImplementation(() => {
+      // A second activation can land before React commits the disabled state.
+      button.click();
+      return new Promise(() => {});
+    });
+    await userEvent.click(button);
+    expect(signInSocial).toHaveBeenCalledTimes(1);
+    expect(button).toBeDisabled();
+    expect(button).toHaveAttribute('aria-busy', 'true');
+  });
+
   it('shows the safe server error and clears it when retrying', async () => {
     signInSocial.mockReturnValue(new Promise(() => {}));
     render(
