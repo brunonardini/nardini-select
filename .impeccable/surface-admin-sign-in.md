@@ -35,3 +35,5 @@ The owner approved the composition, copy, two-color normal Admin, infinite paw l
 The owner clarified that primary is shared between login and other primary actions; there is no sign-in variant. Icon position uses leadingIcon/trailingIcon, including the unchanged right-hand arrows on the home. Every action variant uses the same disabled/busy three-paw loading. Surrounding surface tokens provide light/dark contrast without changing the variant.
 
 Alert defaults to a neutral Off-white surface when variant is omitted or default. The danger variant retains the approved pink error treatment. Both fill 100% of available width; the login content column owns the width constraint.
+
+Desktop photo cropping anchors at 50% 25% to preserve the Weimaraner head in short landscape windows. Mobile retains its own crop. Check the head bounds against the visible image and viewport, including 1254x592 and wide/short desktops.

@@ -204,3 +204,48 @@ test('admin responses send the frame and referrer headers', async ({
     expect(headers['referrer-policy']).toBe('same-origin');
   }
 });
+test('desktop photo keeps the entire head inside short and wide windows', async ({
+  page,
+}, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop');
+  for (const viewport of [
+    { width: 1254, height: 592 },
+    { width: 1024, height: 600 },
+    { width: 1440, height: 900 },
+    { width: 1920, height: 540 },
+    { width: 2560, height: 600 },
+  ]) {
+    await page.setViewportSize(viewport);
+    await page.goto('/admin/entrar');
+    const bounds = await page
+      .locator('picture img')
+      .evaluate((image: HTMLImageElement) => {
+        const box = image.getBoundingClientRect();
+        const position = getComputedStyle(image)
+          .objectPosition.split(' ')
+          .map(parseFloat);
+        const scale = Math.max(box.width / 1024, box.height / 1536);
+        const x = box.x + ((box.width - 1024 * scale) * position[0]) / 100;
+        const y = box.y + ((box.height - 1536 * scale) * position[1]) / 100;
+        // Head and ears in the approved source photograph (1024x1536).
+        return {
+          left: x + 335 * scale,
+          right: x + 670 * scale,
+          top: y + 345 * scale,
+          bottom: y + 580 * scale,
+          clipLeft: box.left,
+          clipRight: box.right,
+          clipBottom: box.bottom,
+        };
+      });
+    expect(
+      bounds.top,
+      `${viewport.width}x${viewport.height}: head top`,
+    ).toBeGreaterThanOrEqual(0);
+    expect(bounds.bottom).toBeLessThanOrEqual(
+      Math.min(bounds.clipBottom, viewport.height),
+    );
+    expect(bounds.left).toBeGreaterThanOrEqual(bounds.clipLeft);
+    expect(bounds.right).toBeLessThanOrEqual(bounds.clipRight);
+  }
+});

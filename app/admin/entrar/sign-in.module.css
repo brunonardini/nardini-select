@@ -174,7 +174,8 @@
     left: auto;
   }
   .scene img {
-    object-position: 50% 44%;
+    /* Keep the head in frame when cover crops the portrait in short windows. */
+    object-position: 50% 25%;
   }
   .veil {
     background:
