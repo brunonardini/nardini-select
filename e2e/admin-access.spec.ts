@@ -1,0 +1,172 @@
+import { expect, test } from '@playwright/test';
+
+import { INVITE_TOKENS } from '../db/seeds/tokens';
+
+import { sessionCookie, setTerms, slotUser } from './fixtures/auth';
+
+test('an unsigned request to the admin home goes to sign-in', async ({
+  page,
+}) => {
+  await page.goto('/admin');
+  await expect(page).toHaveURL(/\/admin\/entrar$/);
+  await expect(
+    page.getByRole('button', { name: 'Entrar com Google' }),
+  ).toBeVisible();
+});
+
+test('a known sign-in error is shown and an unknown one stays generic', async ({
+  page,
+}) => {
+  await page.goto('/admin/entrar?erro=acesso_negado');
+  await expect(page.getByRole('main').getByRole('alert')).toHaveText(
+    'Esta conta não tem acesso. Peça um convite a um administrador.',
+  );
+  await page.goto('/admin/entrar?error=something_else');
+  await expect(page.getByRole('main').getByRole('alert')).toHaveText(
+    'Não foi possível entrar. Tente de novo.',
+  );
+});
+
+test('pending and active sessions see their own home', async ({
+  page,
+}, testInfo) => {
+  const pending = slotUser(testInfo.parallelIndex, 'no-role');
+  await page.context().addCookies([await sessionCookie(pending)]);
+  await page.goto('/admin');
+  await expect(
+    page.getByRole('heading', { name: 'Cadastro em aprovação' }),
+  ).toBeVisible();
+
+  const active = slotUser(testInfo.parallelIndex, 'approved');
+  await setTerms(active, 'current');
+  await page.context().clearCookies();
+  await page.context().addCookies([await sessionCookie(active)]);
+  await page.goto('/admin');
+  await expect(
+    page.getByRole('heading', { name: /^Olá, worker-/ }),
+  ).toBeVisible();
+});
+
+test('a pending account cannot open the terms acceptance page', async ({
+  page,
+}, testInfo) => {
+  const pending = slotUser(testInfo.parallelIndex, 'no-role');
+  await page.context().addCookies([await sessionCookie(pending)]);
+  await page.goto('/admin/termos/aceitar');
+  await expect(page).toHaveURL(/\/admin$/);
+  await expect(
+    page.getByRole('heading', { name: 'Cadastro em aprovação' }),
+  ).toBeVisible();
+});
+
+test('the first acceptance opens the profile and a later one goes home', async ({
+  page,
+}, testInfo) => {
+  const userId = slotUser(testInfo.parallelIndex, 'approved');
+  await setTerms(userId, 'none');
+  await page.context().addCookies([await sessionCookie(userId)]);
+  await page.goto('/admin/termos/aceitar');
+  await page
+    .getByRole('checkbox', { name: 'Li e aceito os termos de uso' })
+    .check();
+  await page.getByRole('button', { name: 'Continuar' }).click();
+  await expect(page).toHaveURL(/\/admin\/perfil$/);
+  await expect(
+    page.getByText(userId).or(page.getByText(/@seed\.invalid/)),
+  ).toBeVisible();
+
+  await setTerms(userId, 'outdated');
+  await page.goto('/admin/termos/aceitar');
+  await page
+    .getByRole('checkbox', { name: 'Li e aceito os termos de uso' })
+    .check();
+  await page.getByRole('button', { name: 'Continuar' }).click();
+  await expect(page).toHaveURL(/\/admin$/);
+  await expect(
+    page.getByRole('heading', { name: /^Olá, worker-/ }),
+  ).toBeVisible();
+});
+
+test('signing out in one tab ends the session in the other', async ({
+  browser,
+}, testInfo) => {
+  const userId = slotUser(testInfo.parallelIndex, 'approved');
+  await setTerms(userId, 'current');
+  const cookie = await sessionCookie(userId);
+  const first = await browser.newContext();
+  const second = await browser.newContext();
+  await first.addCookies([cookie]);
+  await second.addCookies([cookie]);
+  const pageA = await first.newPage();
+  const pageB = await second.newPage();
+  await pageA.goto('/admin');
+  await pageB.goto('/admin');
+  await pageA.getByRole('banner').getByRole('button', { name: 'Sair' }).click();
+  await expect(pageA).toHaveURL(/\/admin\/entrar$/);
+  await pageB.evaluate(() => window.dispatchEvent(new Event('focus')));
+  await expect(pageB).toHaveURL(/\/admin\/entrar$/);
+  await first.close();
+  await second.close();
+});
+
+test('a broken, expired, canceled, or used invite does not start sign-in', async ({
+  page,
+}) => {
+  await page.goto('/admin/convite/not-a-token');
+  await expect(page.getByRole('main').getByRole('alert')).toHaveText(
+    'Este convite não é válido.',
+  );
+
+  await page.goto(`/admin/convite/${INVITE_TOKENS.expired}`);
+  await expect(page.getByRole('main').getByRole('alert')).toHaveText(
+    'Este convite expirou.',
+  );
+
+  await page.goto(`/admin/convite/${INVITE_TOKENS.canceled}`);
+  await expect(page.getByRole('main').getByRole('alert')).toHaveText(
+    'Este convite não é válido.',
+  );
+
+  await page.goto(`/admin/convite/${INVITE_TOKENS.used}`);
+  await expect(page.getByRole('main').getByRole('alert')).toHaveText(
+    'Este convite não é válido.',
+  );
+});
+
+test('the valid invite stays closed until the terms are accepted', async ({
+  page,
+  request,
+}) => {
+  await page.goto(`/admin/convite/${INVITE_TOKENS.valid}`);
+  await expect(page.getByText('Valid invite')).toBeVisible();
+  const button = page.getByRole('button', { name: 'Entrar com Google' });
+  await expect(button).toBeDisabled();
+  await page
+    .getByRole('checkbox', { name: 'Li e aceito os termos de uso' })
+    .check();
+  await expect(button).toBeEnabled();
+
+  const refused = await request.post(
+    `/admin/convite/${INVITE_TOKENS.valid}/iniciar`,
+    {
+      form: { aceite: 'off' },
+      headers: { origin: 'http://localhost:3200' },
+    },
+  );
+  expect(refused.url()).toContain('erro=termos_obrigatorios');
+  await expect(refused).toBeOK();
+});
+
+test('admin responses send the frame and referrer headers', async ({
+  request,
+}) => {
+  for (const path of ['/admin/entrar', '/api/auth/get-session']) {
+    const response = await request.get(path);
+    const headers = response.headers();
+    expect(headers['x-frame-options']).toBe('DENY');
+    expect(headers['content-security-policy']).toContain(
+      "frame-ancestors 'none'",
+    );
+    expect(headers['referrer-policy']).toBe('same-origin');
+  }
+});

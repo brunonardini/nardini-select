@@ -2,6 +2,12 @@ import type { Kysely, Transaction } from 'kysely';
 
 import type { DB } from '../schema';
 
+import { hashInvitationToken } from '../../lib/auth/logic/invitation-token.ts';
+import {
+  PRIVACY_NOTICE_VERSION,
+  TERMS_VERSION,
+} from '../../lib/legal/versions.ts';
+
 import {
   ADMIN_ROLE_ID,
   ADMIN_USER_ID,
@@ -10,19 +16,24 @@ import {
   ESTOQUE_ROLE_ID,
   EXPIRED_INVITATION_ID,
   SYSTEM_ACTOR_ID,
+  USED_INVITATION_ID,
   VALID_INVITATION_ID,
   WORKER_SLOTS,
   workerUserId,
 } from './ids.ts';
+import { INVITE_TOKENS } from './tokens.ts';
 
 type Database = Kysely<DB> | Transaction<DB>;
 
 const CREATED_AT = '2026-06-01T12:00:00.000Z';
 const LATER = '2026-11-01T12:00:00.000Z';
 
-function tokenHash(byte: number): Buffer {
-  return Buffer.alloc(32, byte);
-}
+const ACCEPTED = {
+  terms_version: TERMS_VERSION,
+  terms_accepted_at: CREATED_AT,
+  privacy_notice_version: PRIVACY_NOTICE_VERSION,
+  privacy_notice_acknowledged_at: CREATED_AT,
+};
 
 export async function seedFixed(db: Database): Promise<void> {
   await db
@@ -56,6 +67,7 @@ export async function seedFixed(db: Database): Promise<void> {
       photo_source: 'none',
       role_id: ADMIN_ROLE_ID,
       registered_at: CREATED_AT,
+      ...ACCEPTED,
       created_at: CREATED_AT,
       updated_at: CREATED_AT,
     })
@@ -75,6 +87,7 @@ export async function seedFixed(db: Database): Promise<void> {
             email_verified: false,
             photo_source: 'none' as const,
             role_id: null,
+            ...ACCEPTED,
             created_at: CREATED_AT,
             updated_at: CREATED_AT,
           },
@@ -87,6 +100,7 @@ export async function seedFixed(db: Database): Promise<void> {
             photo_source: 'none' as const,
             role_id: ATENDIMENTO_ROLE_ID,
             registered_at: CREATED_AT,
+            ...ACCEPTED,
             created_at: CREATED_AT,
             updated_at: CREATED_AT,
           },
@@ -127,7 +141,7 @@ export async function seedFixed(db: Database): Promise<void> {
       {
         id: VALID_INVITATION_ID,
         full_name: 'Valid invite',
-        token_hash: tokenHash(1),
+        token_hash: hashInvitationToken(INVITE_TOKENS.valid),
         expires_at: '2027-01-01T00:00:00.000Z',
         created_by: ADMIN_USER_ID,
         created_at: CREATED_AT,
@@ -135,7 +149,7 @@ export async function seedFixed(db: Database): Promise<void> {
       {
         id: EXPIRED_INVITATION_ID,
         full_name: 'Expired invite',
-        token_hash: tokenHash(2),
+        token_hash: hashInvitationToken(INVITE_TOKENS.expired),
         expires_at: '2026-01-01T00:00:00.000Z',
         created_by: ADMIN_USER_ID,
         created_at: CREATED_AT,
@@ -143,11 +157,21 @@ export async function seedFixed(db: Database): Promise<void> {
       {
         id: CANCELED_INVITATION_ID,
         full_name: 'Canceled invite',
-        token_hash: tokenHash(3),
+        token_hash: hashInvitationToken(INVITE_TOKENS.canceled),
         expires_at: '2026-12-01T00:00:00.000Z',
         created_by: ADMIN_USER_ID,
         created_at: CREATED_AT,
         canceled_at: LATER,
+      },
+      {
+        id: USED_INVITATION_ID,
+        full_name: 'Used invite',
+        token_hash: hashInvitationToken(INVITE_TOKENS.used),
+        expires_at: '2027-01-01T00:00:00.000Z',
+        created_by: ADMIN_USER_ID,
+        created_at: CREATED_AT,
+        used_at: LATER,
+        used_by_user_id: ADMIN_USER_ID,
       },
     ])
     .execute();

@@ -889,6 +889,111 @@ button.button {
   }
 }
 
+/* Admin area. The public home keeps the rules above. */
+.admin {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.admin-header {
+  min-height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 16px var(--gutter);
+  border-bottom: 1px solid var(--areia);
+}
+.admin-brand {
+  font-weight: 800;
+  text-decoration: none;
+}
+.admin-account {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.admin-account a {
+  font-weight: 700;
+}
+.admin-main {
+  width: min(720px, 100%);
+  margin: 0 auto;
+  padding: 48px var(--gutter) 80px;
+}
+.admin-panel h1,
+.empty-state h1 {
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  margin-bottom: 16px;
+}
+.admin-panel p,
+.empty-state p {
+  margin-bottom: 16px;
+}
+.admin-form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  margin-top: 8px;
+}
+.admin-links a {
+  font-weight: 700;
+}
+.admin-details {
+  display: grid;
+  gap: 16px;
+  margin: 24px 0 0;
+}
+.admin-details div {
+  display: grid;
+  gap: 4px;
+}
+.admin-details dt {
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+.checkbox-control {
+  width: 1.25rem;
+  height: 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1.5px solid var(--cafe);
+  background: var(--off-white);
+}
+.checkbox-control:focus-visible {
+  outline: 2px solid var(--cafe);
+  outline-offset: 4px;
+}
+.checkbox-indicator {
+  width: 0.7rem;
+  height: 0.7rem;
+  background: transparent;
+}
+.checkbox-control[data-checked] .checkbox-indicator {
+  background: var(--cafe);
+}
+.checkbox-control[data-disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
 /* Reduced motion: drop movement, keep color and opacity fades. */
 @media (prefers-reduced-motion: reduce) {
   html {

@@ -1,6 +1,10 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
 
+import { INVITE_TOKENS } from '../db/seeds/tokens';
+
+import { sessionCookie, setTerms, slotUser } from './fixtures/auth';
+
 // WCAG 2.2 level A and AA, plus axe best practices.
 const tags = [
   'wcag2a',
@@ -52,5 +56,35 @@ test('open mobile menu has no detectable accessibility violations', async ({
   await page.getByRole('button', { name: 'Abrir menu' }).click();
   await expect(page.getByRole('navigation')).toBeVisible();
 
+  expect(await scan(page)).toEqual([]);
+});
+
+test('admin sign-in, invite, terms, and home have no detectable violations', async ({
+  page,
+}, testInfo) => {
+  const slot = testInfo.parallelIndex;
+  await page.goto('/admin/entrar');
+  expect(await scan(page)).toEqual([]);
+
+  await page.goto(`/admin/convite/${INVITE_TOKENS.valid}`);
+  expect(await scan(page)).toEqual([]);
+
+  const approved = slotUser(slot, 'approved');
+  await setTerms(approved, 'none');
+  await page.context().addCookies([await sessionCookie(approved)]);
+  await page.goto('/admin/termos/aceitar');
+  expect(await scan(page)).toEqual([]);
+
+  await setTerms(approved, 'current');
+  await page.goto('/admin');
+  expect(await scan(page)).toEqual([]);
+  await page.goto('/admin/perfil');
+  expect(await scan(page)).toEqual([]);
+
+  await page.context().clearCookies();
+  await page
+    .context()
+    .addCookies([await sessionCookie(slotUser(slot, 'no-role'))]);
+  await page.goto('/admin');
   expect(await scan(page)).toEqual([]);
 });
