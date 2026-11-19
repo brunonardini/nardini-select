@@ -16,6 +16,8 @@ export const EXPIRED_INVITATION_ID = 'a1d20000-0000-4000-8000-000000000002';
 
 export const CANCELED_INVITATION_ID = 'a1d20000-0000-4000-8000-000000000003';
 
+export const USED_INVITATION_ID = 'a1d20000-0000-4000-8000-000000000004';
+
 export const WORKER_SLOTS = [0, 1, 2, 3] as const;
 
 export type SeedUserState = 'no-role' | 'approved' | 'disabled' | 'anonymized';

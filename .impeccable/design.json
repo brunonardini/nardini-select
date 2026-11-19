@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-14T14:07:25.458771Z",
+  "generatedAt": "2026-11-19T16:58:01.9070238Z",
   "title": "Design System: Nardini Select",
   "extensions": {
     "colorMeta": {
@@ -78,6 +78,36 @@
           "oklch(87% 0.015 70)",
           "oklch(95% 0.015 70)"
         ]
+      },
+      "error-border": {
+        "role": "error",
+        "displayName": "Error boundary",
+        "canonical": "#c9796b"
+      },
+      "error-surface": {
+        "role": "error",
+        "displayName": "Error surface",
+        "canonical": "#fce6e1"
+      },
+      "error-rule": {
+        "role": "error",
+        "displayName": "Error top rule",
+        "canonical": "#a3382d"
+      },
+      "error-text": {
+        "role": "error",
+        "displayName": "Error body text",
+        "canonical": "#792820"
+      },
+      "error-icon-surface": {
+        "role": "error",
+        "displayName": "Error icon surface",
+        "canonical": "#f3c9bf"
+      },
+      "error-accent": {
+        "role": "error",
+        "displayName": "Error title and icon",
+        "canonical": "#8b2c23"
       }
     },
     "typographyMeta": {
@@ -100,6 +130,14 @@
       "label": {
         "displayName": "Label (Montserrat ExtraBold)",
         "purpose": "Buttons, contact pill and short calls."
+      },
+      "feedback": {
+        "purpose": "Montserrat error descriptions, with a separate 13px bold summary.",
+        "displayName": "Error feedback"
+      },
+      "admin-word": {
+        "purpose": "Approved separate Karvest Admin lettering beside the unmodified logo.",
+        "displayName": "Admin word"
       }
     },
     "shadows": [
@@ -124,6 +162,11 @@
         "name": "state-fade",
         "value": "0.2s ease",
         "purpose": "Button and link color changes; kept under reduced motion."
+      },
+      {
+        "purpose": "Indeterminate action feedback. Opacity and scale; reduced motion keeps opacity only.",
+        "value": "1.2s ease-in-out infinite, staggered by 0.15s",
+        "name": "paw-loading"
       }
     ],
     "breakpoints": [
@@ -138,6 +181,10 @@
       {
         "name": "tablet",
         "value": "1100px"
+      },
+      {
+        "name": "admin-desktop",
+        "value": "701px"
       }
     ]
   },
@@ -173,15 +220,39 @@
       "description": "Pillar closing message in ExtBd under a short Terracota rule.",
       "html": "<p class=\"ds-closing\">Escolhas melhores também são cuidado.</p>",
       "css": ".ds-closing{font:800 .95rem/1.45 var(--font-brand,'Montserrat',sans-serif);color:#522e24;max-width:300px}.ds-closing:before{content:'';display:block;width:40px;height:2px;background:#c1754a;margin-bottom:16px}"
+    },
+    {
+      "description": "Explicit danger variant: pink semantic error feedback. Fluid width; the parent owns max-width and outer spacing.",
+      "refersTo": "alert-danger",
+      "name": "Danger Alert",
+      "css": ".ds-error{box-sizing:border-box;width:100%;min-width:0;display:flex;gap:11px;align-items:flex-start;padding:15px 14px;border:1px solid #c9796b;border-top:3px solid #a3382d;border-radius:8px;background:#fce6e1;color:#792820;font:400 12px/1.65 var(--font-brand,Montserrat,sans-serif)}.ds-error strong{display:block;margin-bottom:4px;color:#8b2c23;font-size:13px;font-weight:800}.ds-error p{margin:0}.ds-error-icon{display:flex;flex:0 0 34px;padding:7px;margin-top:1px;border-radius:50%;background:#f3c9bf;color:#8b2c23}.ds-error-icon svg{width:20px;height:20px}",
+      "kind": "custom",
+      "html": "<div class=\"ds-error\" role=\"alert\"><span class=\"ds-error-icon\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" aria-hidden=\"true\"><rect x=\"5\" y=\"10\" width=\"14\" height=\"11\" rx=\"2\"/><path d=\"M8 10V7a4 4 0 0 1 8 0v3M12 14v3\"/></svg></span><div><strong>Acesso negado</strong><p>Esta conta não tem acesso. Use outra conta Google ou peça um convite ao administrador.</p></div></div>"
+    },
+    {
+      "description": "Quiet action or native navigation link, with optional left/right icons and shared paw loading for actions.",
+      "css": ".ds-secondary{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 16px;border:1.5px solid transparent;border-radius:999px;background:#f7efe6;color:#522e24;font:400 12px/1.65 var(--font-brand,Montserrat,sans-serif);text-decoration:none}.ds-secondary:focus-visible{outline:2px solid #522e24;outline-offset:4px}@media(hover:hover) and (pointer:fine){.ds-secondary:hover{background:#e2d1be;text-decoration:underline}}",
+      "html": "<a class=\"ds-secondary\" href=\"/\">Voltar ao site</a>",
+      "kind": "button",
+      "name": "Secondary Button",
+      "refersTo": "button-secondary"
+    },
+    {
+      "description": "Omitted or explicit default variant: neutral Off-white background, Cafe text, Argila boundary and Areia icon circle. Fills the parent width.",
+      "refersTo": "alert-default",
+      "name": "Default Alert",
+      "css": ".ds-error{box-sizing:border-box;width:100%;min-width:0;display:flex;gap:11px;align-items:flex-start;padding:15px 14px;border:1px solid #c8af9a;border-top:3px solid #c8af9a;border-radius:8px;background:#f7efe6;color:#522e24;font:400 12px/1.65 var(--font-brand,Montserrat,sans-serif)}.ds-error strong{display:block;margin-bottom:4px;color:#522e24;font-size:13px;font-weight:800}.ds-error p{margin:0}.ds-error-icon{display:flex;flex:0 0 34px;padding:7px;margin-top:1px;border-radius:50%;background:#e2d1be;color:#522e24}.ds-error-icon svg{width:20px;height:20px}",
+      "kind": "custom",
+      "html": "<div class=\"ds-error\" role=\"alert\"><span class=\"ds-error-icon\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" aria-hidden=\"true\"><rect x=\"5\" y=\"10\" width=\"14\" height=\"11\" rx=\"2\"/><path d=\"M8 10V7a4 4 0 0 1 8 0v3M12 14v3\"/></svg></span><div><strong>Aviso</strong><p>Confira as informações antes de continuar.</p></div></div>"
     }
   ],
   "narrative": {
     "northStar": "Uma escolha com assinatura",
-    "overview": "Nardini is a founder's surname: every product is a signed choice. The identity is natural without being rustic and premium without being cold: five earthy colors, one robust contemporary sans-serif with light spacing, and the N monogram where the founder's initial meets a dog's silhouette. Pages read like the brand manual's spreads: quiet off-white and areia surfaces, solid café blocks, one terracota accent, and generous room around the mark.",
+    "overview": "Nardini is a founder's surname, not a name invented to sound premium: every product is a signed choice. The identity says _mais seleção, menos convencional_. It is natural without being rustic and premium without being cold: earthy colors drawn from clay, ceramics and natural food, one robust contemporary sans-serif with light spacing, and the N monogram, where the founder's initial meets a dog's silhouette.\n\nThe page reads like the manual's own spreads: large quiet off-white and areia surfaces, solid Café Profundo blocks, a single terracota accent, and generous breathing room around the mark. Priority, in the manual's words: _leitura, respiro e contraste_.",
     "keyCharacteristics": [
-      "The five official colors only, with Café as the base and Terracota as the accent.",
-      "One brand family in two weights: ExtraBold for titles, Regular for everything else.",
-      "Graphic blocks and diagonal cuts from the N monogram, used as support, never as excess.",
+      "The five official brand colors, with Café as the base and Terracota as the accent; scoped semantic colors for errors.",
+      "Karvest ExtraBold for headings and the Admin word; Montserrat 400/800 for body text and controls.",
+      "Graphic blocks and diagonal cuts taken from the N monogram, used as support, never as excess.",
       "Official logo files, never redrawn, recolored, cropped or distorted.",
       "A dog shown with presence, confidence and bond: affection without infantilization."
     ],
@@ -200,24 +271,30 @@
         "name": "The Breathing Room Rule",
         "section": "layout",
         "body": "Keep a clear area around every logo at least the height of the word SELECT."
+      },
+      {
+        "section": "colors",
+        "name": "The Semantic Feedback Rule",
+        "body": "Error colors belong to feedback, never marketing decoration or primary actions. Meaning comes from the title, recovery text and icon as well as color."
       }
     ],
     "dos": [
-      "Do check every piece against the manual's approval checklist: right logo version, contrast, official palette, readable type, unaltered dog, breathing room.",
-      "Do write in the brand voice: specialist but close; say cão and cães.",
-      "Do keep Café as the base and Terracota as the accent, only where the Contrast Rule allows.",
-      "Do keep text, links and images independent in code.",
-      "Do use real storefront photography to help visitors recognize the shop."
+      "**Do** check every piece against the manual's approval checklist: right logo version, enough contrast, official palette, readable type, unaltered dog, breathing room around the mark.",
+      "**Do** write in the brand voice: specialist but close, secure without sounding technical, affectionate without infantilizing. Say _cão_ and _cães_; say “Curadoria especializada para cães” and “Escolhas melhores também são cuidado.”",
+      "**Do** keep Café as the base and Terracota as the accent, and only on the surfaces the Contrast Rule allows.",
+      "**Do** keep text, links and images independent in code; never rasterize text.",
+      "**Do** use real storefront photography to help visitors recognize the shop."
     ],
     "donts": [
-      "Don't use colors outside the five-color palette, or saturated combinations.",
-      "Don't redraw, recolor, crop, distort or regenerate any brand mark.",
-      "Don't put the horizontal logo on Café or Terracota, or small text and buttons on Terracota.",
-      "Don't combine a giant dog, the seal and text in the same panel.",
-      "Don't call the store a pet shop or use infantilizing copy.",
-      "Don't turn the pillars or contact options into decorative cards.",
-      "Don't display the phone number in the interface or the storefront image.",
-      "Don't add a feed, prices, a product catalog or checkout to the institutional home."
+      "**Don't** expand the five-color brand palette with decoration. The documented semantic error tokens are the approved exception for feedback only.",
+      "**Don't** redraw, recolor, crop, distort or regenerate any brand mark, including with AI (the earlier regenerated transparent seal was removed for this reason).",
+      "**Don't** put the horizontal logo on Café or Terracota, or put buttons and small text on a Terracota fill.",
+      "**Don't** combine a giant dog, the seal and text in the same panel.",
+      "**Don't** call the store a pet shop, or write “Tudo para o seu pet em um só lugar” or “Mimos fofinhos para seu doguinho.” The brand is _seleção com critério_.",
+      "**Don't** turn the pillars or contact options into decorative cards.",
+      "**Don't** display the phone number in the interface or the storefront image.",
+      "**Don't** replace the silver-gray Weimaraner with a golden or caramel Labrador.",
+      "**Don't** add a feed, prices, a product catalog or checkout to the institutional home."
     ]
   }
 }

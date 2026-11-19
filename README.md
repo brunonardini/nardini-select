@@ -21,7 +21,7 @@ npm run db:seed
 npm run dev
 ```
 
-Open [localhost:3000](http://localhost:3000). To run a production build locally, use `npm run build` followed by `npm run start`.
+Open [localhost:4473](http://localhost:4473). To run a production build locally, use `npm run build` followed by `npm run start`.
 
 `npm run db:down` stops the database and removes its container. `npm run db:clean` also removes the Postgres image. Both keep the named volume, so the data is still there on the next `npm run db:up`.
 

@@ -37,6 +37,11 @@ Configure these variables in Netlify for Production and Deploy Previews.
 | `NEXT_PUBLIC_SENTRY_DSN` | Enables Sentry. Find the DSN under Settings > Projects > nardini-select > Client Keys (DSN). |
 | `SENTRY_AUTH_TOKEN` | Sentry organization token used to upload source maps during the build. Store it only in Netlify. |
 | `DATABASE_URL` | Runtime connection for Functions. See the table above. |
+| `BETTER_AUTH_SECRET` | Signs the session cookie. At least 32 characters. Rotation deletes every row in `sessions`. |
+| `BETTER_AUTH_URL` | Public origin of this environment, with no path. |
+| `GOOGLE_CLIENT_ID` | Google OAuth client for admin sign-in. |
+| `GOOGLE_CLIENT_SECRET` | Google OAuth client secret. |
+| `BOOTSTRAP_ADMIN_EMAIL` | Google account that becomes the first admin while `users` is empty. |
 
 In CircleCI, set `CODECOV_TOKEN` for the unit coverage upload. Keep credential values out of Git.
 
@@ -68,15 +73,17 @@ On a branch of this repository, after lint, type checking, unit tests, the datab
 
 The approval, the database reset, and the deploy share the serial group `preview`. Only one preview runs at a time. CircleCI skips an older preview still queued when a newer pipeline is waiting. The reset refuses any database other than `nardini_dev`, `nardini_test`, and `nardini_stg`.
 
-Google sign-in is not in the app yet. Create the preview OAuth client now and store it for the auth milestone:
+Google sign-in is the admin sign-in. Keep these variables in Netlify, Functions scope, with one value for production and another for deploy previews. Do not put them in Git or in CircleCI: `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, and `BOOTSTRAP_ADMIN_EMAIL`.
+
+Set `BOOTSTRAP_ADMIN_EMAIL` to the owner's Google account before the first sign-in, and only while `users` is empty. After the first user, that path no longer runs. The owner accepts the terms and stays the only administrator until the production-data gate. To rotate the secret, change `BETTER_AUTH_SECRET` and delete every row in `sessions`.
 
 | Environment | Redirect URI |
 | --- | --- |
 | Production | `https://nardiniselect.com.br/api/auth/callback/google` |
 | Preview | `https://staging--<site-name>.netlify.app/api/auth/callback/google` |
-| Development | `http://localhost:3000/api/auth/callback/google` |
+| Development | `http://localhost:4473/api/auth/callback/google` |
 
-`<site-name>` is the site name in Netlify (Site configuration, Site details). Put the preview client's `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` in the Netlify deploy-preview context, Functions scope. Do not put them in CircleCI or in Git. The home page deployed to `staging` does not read them yet.
+`<site-name>` is the site name in Netlify (Site configuration, Site details). Keep both Netlify protections: Stopped builds, and `ignore` in `netlify.toml`.
 
 ## Failed migration
 

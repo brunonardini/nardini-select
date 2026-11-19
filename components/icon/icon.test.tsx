@@ -3,7 +3,15 @@ import { describe, expect, it } from 'vitest';
 import { Icon } from './icon';
 
 describe('Icon', () => {
-  it.each(['down', 'pin', 'whatsapp', 'instagram'] as const)(
+  it.each([
+    'down',
+    'pin',
+    'whatsapp',
+    'instagram',
+    'lock',
+    'google',
+    'left',
+  ] as const)(
     'renders the %s icon hidden from assistive technology',
     (name) => {
       const { container } = render(<Icon name={name} />);

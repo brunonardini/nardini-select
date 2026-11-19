@@ -50,9 +50,13 @@ export default defineConfig({
     projects: [
       {
         resolve: {
-          alias: {
-            'server-only': path.join(dirname, 'test/server-only.ts'),
-          },
+          alias: [
+            {
+              find: 'server-only',
+              replacement: path.join(dirname, 'test/server-only.ts'),
+            },
+            { find: /^@\//, replacement: `${dirname}/` },
+          ],
         },
         plugins: [react()],
         test: {

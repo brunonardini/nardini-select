@@ -1,6 +1,11 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
-  "entry": ["scripts/*.cjs", "db/provision/*.ts", "lib/db/io/client.ts"],
+  "entry": [
+    "scripts/*.cjs",
+    "db/provision/*.ts",
+    "lib/db/io/client.ts",
+    "lib/invitations/io/invitations.ts"
+  ],
   "project": [
     "**/*.{js,cjs,mjs,jsx,ts,tsx,mts,cts,mdx}",
     "!.agents/**",

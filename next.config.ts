@@ -9,8 +9,20 @@ const environment = process.env.CONTEXT ?? process.env.NODE_ENV;
 // previews don't have it, so their release stays the built commit SHA.
 const versionRelease = process.env.SENTRY_RELEASE;
 
+const securityHeaders = [
+  { key: 'X-Frame-Options', value: 'DENY' },
+  { key: 'Content-Security-Policy', value: "frame-ancestors 'none'" },
+  { key: 'Referrer-Policy', value: 'same-origin' },
+];
+
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  async headers() {
+    return ['/admin', '/admin/:path*', '/api/auth/:path*'].map((source) => ({
+      source,
+      headers: securityHeaders,
+    }));
+  },
   env: {
     NEXT_PUBLIC_SENTRY_ENVIRONMENT: environment,
     ...(versionRelease && { NEXT_PUBLIC_SENTRY_RELEASE: versionRelease }),

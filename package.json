@@ -6,7 +6,7 @@
     "node": ">=26.13.1"
   },
   "scripts": {
-    "dev": "next dev --hostname 0.0.0.0",
+    "dev": "next dev --hostname 0.0.0.0 --port 4473",
     "build": "next build",
     "start": "next start --hostname 0.0.0.0",
     "storybook": "storybook dev -p 6006",
@@ -36,12 +36,15 @@
   "dependencies": {
     "@base-ui/react": "^1.9.0",
     "@sentry/nextjs": "^11.12.0",
+    "better-auth": "1.7.15",
+    "better-call": "1.4.4",
     "kysely": "0.28.19",
     "next": "^16.4.6",
     "pg": "8.23.1",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
-    "server-only": "0.0.1"
+    "server-only": "0.0.1",
+    "zod": "4.1.12"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.14.0",

@@ -1,6 +1,27 @@
 import * as Sentry from '@sentry/nextjs';
 
+import {
+  beforeSend as scrubEvent,
+  beforeSendTransaction as scrubTransaction,
+} from './lib/sentry/logic/scrub';
+
 Sentry.init({
+  // This SDK replaced sendDefaultPii. These switches keep automatic PII off.
+  dataCollection: {
+    userInfo: false,
+    cookies: false,
+    httpHeaders: false,
+    urlQueryParams: false,
+    httpBodies: [],
+    databaseQueryData: false,
+    stackFrameVariables: false,
+  },
+  beforeSend(event) {
+    return scrubEvent(event);
+  },
+  beforeSendTransaction(event) {
+    return scrubTransaction(event);
+  },
   dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
   environment: process.env.NEXT_PUBLIC_SENTRY_ENVIRONMENT,
   // nardini-select@X.Y.Z in production. Elsewhere the key is left out (an
