@@ -1,10 +1,17 @@
-/* Official palette from the brand manual (Paleta cromática). No other hues. */
+/* Official brand palette, plus the approved semantic error tokens. */
 :root {
   --cafe: #522e24;
   --terracota: #c1754a;
   --argila: #c8af9a;
   --areia: #e2d1be;
   --off-white: #f7efe6;
+  /* Semantic feedback only; these do not expand the marketing palette. */
+  --error-surface: #fce6e1;
+  --error-border: #c9796b;
+  --error-text: #792820;
+  --error-accent: #8b2c23;
+  --error-rule: #a3382d;
+  --error-icon-surface: #f3c9bf;
   --font: var(--font-brand), 'Montserrat', sans-serif;
   --font-title: var(--font-display), var(--font), sans-serif;
   --gutter: 56px;
@@ -68,7 +75,7 @@ figure {
 p {
   text-wrap: pretty;
 }
-/* Karvest ExtraBold role: h1, h2 and h3 only. Montserrat sets everything else. */
+/* Karvest sets headings and the separate Admin word; Montserrat sets text/controls. */
 h1,
 h2,
 h3 {
@@ -154,8 +161,42 @@ h2 span {
   flex-shrink: 0;
 }
 .button-primary {
+  border-color: var(--button-primary-background, var(--cafe));
+  background: var(--button-primary-background, var(--cafe));
+  color: var(--button-primary-text, var(--off-white));
+}
+.button:focus-visible {
+  outline-color: var(--button-focus-color, var(--cafe));
+}
+/* A surface context changes contrast, not the semantic button variant. */
+.button-surface-dark {
+  --button-primary-background: var(--off-white);
+  --button-primary-text: var(--cafe);
+  --button-focus-color: var(--off-white);
   background: var(--cafe);
   color: var(--off-white);
+}
+.button-secondary {
+  min-height: 44px;
+  gap: 8px;
+  padding: 0 16px;
+  border-color: transparent;
+  background: var(--off-white);
+  color: var(--cafe);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.65;
+}
+.button-secondary svg {
+  width: 18px;
+  height: 18px;
+}
+@media (hover: hover) and (pointer: fine) {
+  .button-secondary:not([data-disabled]):hover {
+    transform: none;
+    background: var(--areia);
+    text-decoration: underline;
+  }
 }
 .button-outline {
   background: transparent;
@@ -193,6 +234,125 @@ button.button {
     background: transparent;
     color: var(--cafe);
   }
+}
+
+/* All action variants share the same indeterminate loading. */
+.button[aria-busy='true'] {
+  opacity: 1;
+  cursor: wait;
+  transform: none;
+}
+.button-paws {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 24px;
+  gap: 4px;
+  flex: 0 0 50px;
+}
+.button-paws > span {
+  display: block;
+  width: 14px;
+  height: 16px;
+  opacity: 0.35;
+  animation: button-paw-pulse 1.2s ease-in-out infinite;
+}
+.button-paws > span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.button-paws > span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.button-paws svg {
+  width: 14px;
+  height: 16px;
+}
+@keyframes button-paw-pulse {
+  0%,
+  65%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.8);
+  }
+  30% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes button-paw-fade {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .button-paws > span {
+    animation-name: button-paw-fade;
+  }
+}
+
+/* Fluid alerts: neutral by default; semantic error colors require danger. */
+.alert {
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+  min-width: 0;
+  gap: 11px;
+  padding: 15px 14px;
+  border: 1px solid var(--argila);
+  border-top: 3px solid var(--argila);
+  border-radius: 8px;
+  background: var(--off-white);
+  color: var(--cafe);
+  font-size: 12px;
+  line-height: 1.6;
+}
+.alert-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 34px;
+  padding: 7px;
+  margin-top: 1px;
+  border-radius: 50%;
+  background: var(--areia);
+  color: var(--cafe);
+}
+.alert-icon svg {
+  width: 20px;
+  height: 20px;
+}
+.alert-content {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.alert-content strong {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--cafe);
+  font-size: 13px;
+  font-weight: 800;
+}
+.alert-content p {
+  font-size: 12px;
+  line-height: 1.65;
+}
+.alert-danger {
+  border-color: var(--error-border);
+  border-top-color: var(--error-rule);
+  background: var(--error-surface);
+  color: var(--error-text);
+}
+.alert-danger .alert-icon {
+  background: var(--error-icon-surface);
+  color: var(--error-accent);
+}
+.alert-danger .alert-content strong {
+  color: var(--error-accent);
 }
 
 /* Hero: off-white copy beside the dog and the brand's N. */

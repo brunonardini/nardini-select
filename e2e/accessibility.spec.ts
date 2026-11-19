@@ -66,6 +66,16 @@ test('admin sign-in, invite, terms, and home have no detectable violations', asy
   await page.goto('/admin/entrar');
   expect(await scan(page)).toEqual([]);
 
+  await page.goto('/admin/entrar?erro=acesso_negado');
+  expect(await scan(page)).toEqual([]);
+
+  await page.route('**/api/auth/sign-in/social', () => Promise.resolve());
+  await page.getByRole('button', { name: 'Entrar com Google' }).click();
+  await expect(
+    page.getByRole('button', { name: 'Conectando ao Google…' }),
+  ).toBeDisabled();
+  expect(await scan(page)).toEqual([]);
+
   await page.goto(`/admin/convite/${INVITE_TOKENS.valid}`);
   expect(await scan(page)).toEqual([]);
 

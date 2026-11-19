@@ -271,7 +271,7 @@ All business rules are pure functions in `lib/<area>/logic/` (no I/O, no clock, 
 | --- | --- | --- | --- | --- |
 | Production | Neon project `nardini-select`, database `nardini_prod` | Netlify production context | Real (after the production-data gate) | Production client, redirect `https://<production domain>/api/auth/callback/google` |
 | Preview | Neon project `nardini-select-stg`, database `nardini_stg` | Netlify alias `staging`, deploy-preview context | Fake (seed) | Preview client, redirect `https://staging--<site>.netlify.app/api/auth/callback/google` |
-| Development | Docker, database `nardini_dev` | `npm run dev` | Fake (seed) | Development client, redirect `http://localhost:3000/api/auth/callback/google` |
+| Development | Docker, database `nardini_dev` | `npm run dev` | Fake (seed) | Development client, redirect `http://localhost:4473/api/auth/callback/google` |
 | Test | Docker locally, service container in CircleCI, database `nardini_test` | Playwright E2E | Fake (seed, fixed faker seed) | None: tests never call Google |
 
 Netlify's automatic Git builds are turned off for every branch. Build status is Stopped builds, so a push does not start a build. `netlify.toml` sets `ignore` to `exit 0` so a Git build is canceled if builds are turned back on, including when the repository is relinked. The CLI does not run that command. CircleCI deploys production and the preview with `netlify deploy` and no `--remote`.

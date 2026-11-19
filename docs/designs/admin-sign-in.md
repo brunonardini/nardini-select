@@ -12,7 +12,7 @@ The user explicitly approved two scoped brand exceptions: Karvest for the Admin 
 
 ## State and implementation decisions
 
-- Keep the page as a Server Component and reuse the existing Button. Page-only icons and styling remain under app/admin/entrar; no new shared component is required.
+- Keep the page as a Server Component. Following the owner's design-system extraction request, use the shared Button primary variant and its loading/loadingLabel/leadingIcon/trailingIcon API, and secondary for the back link, shared Alert variant=danger, and Icon family. The route retains only composition and outer spacing. DESIGN.md and the Impeccable surface brief record these decisions; Storybook covers the primitives and their states.
 - Retain the existing Google social sign-in, callback and error callback URLs. Show disabled/busy feedback immediately. Three 14 x 16px paw icons pulse in a staggered infinite loop while redirecting. The loop does not indicate progress. Restore an actionable error state if the request fails, without a fake timeout or percentage.
 - Keep keyboard focus visible: Cafe on light surfaces and Off-white around the mobile action. Reduced motion replaces scaling with opacity fades.
 - Scope full-viewport styling to the sign-in page so other admin routes retain their current shell and guards. No new private entry point, role cache or personal-data store is introduced.
@@ -25,3 +25,5 @@ The owner reviewed mobile/desktop prototypes and chose the title, Admin treatmen
 Add unit tests for pending sign-in, duplicate submissions and failed-request recovery. Update E2E text assertions and scan initial, denied and pending states with the project's axe rules. Validate the layout at narrow mobile, regular mobile, intermediate and desktop widths. Run format, lint, Knip, type checking, unit tests and E2E checks. Record actual results and any remaining limits; do not claim physical-device or production performance measurements.
 
 No database, privacy inventory, authorization or deployment change is required. The change can be rolled back with the prior application build.
+
+The owner clarified that primary is shared between login and other primary actions; there is no sign-in variant. Icon position uses leadingIcon/trailingIcon, including the unchanged right-hand arrows on the home. Every action variant uses the same disabled/busy three-paw loading. Surrounding surface tokens provide light/dark contrast without changing the variant.

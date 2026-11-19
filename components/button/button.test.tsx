@@ -70,4 +70,90 @@ describe('Button', () => {
     expect(button).toHaveFocus();
     expect(button).toHaveAttribute('aria-disabled', 'true');
   });
+  it('uses the primary variant and a leading icon', () => {
+    render(
+      <Button
+        variant="primary"
+        leadingIcon={<svg aria-hidden="true" data-testid="leading-icon" />}
+      >
+        Entrar com Google
+      </Button>,
+    );
+    expect(
+      screen.getByRole('button', { name: 'Entrar com Google' }),
+    ).toHaveClass('button-primary');
+    expect(screen.getByTestId('leading-icon')).toBeInTheDocument();
+  });
+
+  it.each(['primary', 'secondary', 'outline'] as const)(
+    'disables the %s action and replaces both icons with paws while loading',
+    async (variant) => {
+      const onClick = vi.fn();
+      const { rerender } = render(
+        <Button
+          loading
+          variant={variant}
+          loadingLabel="Conectando ao Google…"
+          trailingIcon={<svg aria-hidden="true" data-testid="trailing-icon" />}
+          leadingIcon={<svg aria-hidden="true" data-testid="leading-icon" />}
+          onClick={onClick}
+        >
+          Entrar com Google
+        </Button>,
+      );
+      const button = screen.getByRole('button', {
+        name: 'Conectando ao Google…',
+      });
+      expect(button).toBeDisabled();
+      expect(button).toHaveAttribute('aria-busy', 'true');
+      expect(button.querySelectorAll('svg')).toHaveLength(3);
+      expect(screen.queryByTestId('leading-icon')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('trailing-icon')).not.toBeInTheDocument();
+      await userEvent.click(button);
+      expect(onClick).not.toHaveBeenCalled();
+      rerender(<Button onClick={onClick}>Entrar com Google</Button>);
+      await userEvent.click(
+        screen.getByRole('button', { name: 'Entrar com Google' }),
+      );
+      expect(onClick).toHaveBeenCalledOnce();
+    },
+  );
+
+  it('provides a default loading label and preserves explicit disabled state', () => {
+    const { rerender } = render(
+      <Button loading disabled>
+        Salvar
+      </Button>,
+    );
+    expect(screen.getByRole('button', { name: 'Carregando…' })).toBeDisabled();
+    rerender(
+      <Button loading={false} disabled>
+        Salvar
+      </Button>,
+    );
+    expect(screen.getByRole('button', { name: 'Salvar' })).toBeDisabled();
+  });
+  it('keeps trailing icons after the label for actions and links', () => {
+    render(
+      <>
+        <Button
+          trailingIcon={<svg aria-hidden="true" data-testid="action-tail" />}
+        >
+          Ver detalhes
+        </Button>
+        <Button
+          href="#loja"
+          trailingIcon={<svg aria-hidden="true" data-testid="link-tail" />}
+        >
+          Visite nossa loja
+        </Button>
+      </>,
+    );
+    expect(
+      screen.getByRole('button', { name: 'Ver detalhes' }).lastElementChild,
+    ).toHaveAttribute('data-testid', 'action-tail');
+    expect(
+      screen.getByRole('link', { name: 'Visite nossa loja' }).lastElementChild,
+    ).toHaveAttribute('data-testid', 'link-tail');
+  });
 });

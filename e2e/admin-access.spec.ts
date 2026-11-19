@@ -18,13 +18,47 @@ test('a known sign-in error is shown and an unknown one stays generic', async ({
   page,
 }) => {
   await page.goto('/admin/entrar?erro=acesso_negado');
-  await expect(page.getByRole('main').getByRole('alert')).toHaveText(
-    'Esta conta não tem acesso. Peça um convite a um administrador.',
+  await expect(page.getByRole('main').getByRole('alert')).toContainText(
+    'Esta conta não tem acesso. Use outra conta Google ou peça um convite ao administrador.',
   );
   await page.goto('/admin/entrar?error=something_else');
-  await expect(page.getByRole('main').getByRole('alert')).toHaveText(
+  await expect(page.getByRole('main').getByRole('alert')).toContainText(
     'Não foi possível entrar. Tente de novo.',
   );
+});
+
+test('sign-in uses the approved layout and an indeterminate loading state', async ({
+  page,
+}) => {
+  await page.goto('/admin/entrar');
+  await expect(
+    page.getByRole('heading', { name: 'Por trás de cada escolha.' }),
+  ).toBeVisible();
+  await expect(
+    page.getByText('Acesso restrito para funcionários'),
+  ).toBeVisible();
+  await expect(
+    page.getByText('Nardini Select · Admin', { exact: true }),
+  ).toHaveCount(0);
+  await expect(
+    page.getByText('Uma escolha com assinatura.', { exact: true }),
+  ).toHaveCount(0);
+  const mobile = (page.viewportSize()?.width ?? 0) <= 700;
+  const back = page.getByRole('link', { name: 'Voltar ao site' });
+  if (mobile) await expect(back).toBeHidden();
+  else await expect(back).toBeVisible();
+  const photo = page.locator('picture img');
+  await expect(photo).toBeVisible();
+  expect(
+    await photo.evaluate((image: HTMLImageElement) => image.currentSrc),
+  ).toContain(mobile ? 'admin-sign-in-mobile' : 'admin-sign-in-desktop');
+  // Hold the provider request so the real pending UI can be inspected.
+  await page.route('**/api/auth/sign-in/social', () => Promise.resolve());
+  await page.getByRole('button', { name: 'Entrar com Google' }).click();
+  const pending = page.getByRole('button', { name: 'Conectando ao Google…' });
+  await expect(pending).toBeDisabled();
+  await expect(pending).toHaveAttribute('aria-busy', 'true');
+  await expect(pending.locator('svg')).toHaveCount(3);
 });
 
 test('pending and active sessions see their own home', async ({

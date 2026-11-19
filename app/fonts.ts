@@ -10,8 +10,8 @@ export const brandFont = Montserrat({
   display: 'swap',
 });
 
-// Karvest ExtraBold (official web export, see DESIGN.md) sets headings only:
-// h1, h2 and h3. Other Karvest weights stay in app/fonts/ until a design uses them.
+// Karvest ExtraBold (official web export, see DESIGN.md) sets headings and
+// the separate Admin word. Other weights stay in app/fonts/ until needed.
 export const displayFont = localFont({
   src: [
     {

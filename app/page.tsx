@@ -50,13 +50,15 @@ export default function Home() {
               enriquecer a vida do seu cão.
             </p>
             <div className="hero-actions">
-              <Button href="#selecao">
+              <Button href="#selecao" trailingIcon={<Icon name="down" />}>
                 Conheça nossa seleção
-                <Icon name="down" />
               </Button>
-              <Button variant="outline" href="#loja">
+              <Button
+                variant="outline"
+                href="#loja"
+                trailingIcon={<Icon name="down" />}
+              >
                 Visite nossa loja
-                <Icon name="down" />
               </Button>
             </div>
           </div>

@@ -4,9 +4,23 @@ export function Icon({
   name,
   ...props
 }: SVGProps<SVGSVGElement> & {
-  name: 'down' | 'pin' | 'whatsapp' | 'instagram';
+  name: 'down' | 'pin' | 'whatsapp' | 'instagram' | 'lock' | 'google' | 'left';
 }) {
   const paths = {
+    left: <path d="M20 12H4M11 5l-7 7 7 7" />,
+    google: (
+      <path
+        stroke="none"
+        fill="currentColor"
+        d="M21.6 12.23c0-.71-.06-1.39-.18-2.05H12v3.88h5.38a4.61 4.61 0 0 1-2 3.03v2.51h3.24c1.9-1.75 2.98-4.33 2.98-7.37ZM12 22c2.7 0 4.96-.9 6.62-2.4l-3.24-2.51c-.9.6-2.05.96-3.38.96-2.6 0-4.81-1.76-5.6-4.12H3.06v2.59A10 10 0 0 0 12 22ZM6.4 13.93a6 6 0 0 1 0-3.86V7.48H3.06a10 10 0 0 0 0 9.04l3.34-2.59ZM12 5.95c1.47 0 2.79.5 3.82 1.49l2.87-2.87A9.6 9.6 0 0 0 12 2a10 10 0 0 0-8.94 5.48l3.34 2.59A5.99 5.99 0 0 1 12 5.95Z"
+      />
+    ),
+    lock: (
+      <>
+        <rect x="5" y="10" width="14" height="11" rx="2" />
+        <path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3" />
+      </>
+    ),
     down: <path d="M12 4v16M5 13l7 7 7-7" />,
     pin: (
       <>

@@ -81,7 +81,7 @@ Set `BOOTSTRAP_ADMIN_EMAIL` to the owner's Google account before the first sign-
 | --- | --- |
 | Production | `https://nardiniselect.com.br/api/auth/callback/google` |
 | Preview | `https://staging--<site-name>.netlify.app/api/auth/callback/google` |
-| Development | `http://localhost:3000/api/auth/callback/google` |
+| Development | `http://localhost:4473/api/auth/callback/google` |
 
 `<site-name>` is the site name in Netlify (Site configuration, Site details). Keep both Netlify protections: Stopped builds, and `ignore` in `netlify.toml`.
 
