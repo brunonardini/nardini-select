@@ -109,6 +109,7 @@
   width: 44px;
   height: 44px;
   border: 1.5px solid var(--cafe);
+  border-radius: 8px;
   background: var(--off-white);
   color: var(--cafe);
 }
