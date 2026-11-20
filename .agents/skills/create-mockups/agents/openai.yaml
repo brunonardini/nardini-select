@@ -1,0 +1,4 @@
+interface:
+  display_name: 'Create Mockups'
+  short_description: 'Build responsive temporary UI proposals'
+  default_prompt: 'Use $create-mockups to create 3 responsive proposals for the requested interface.'

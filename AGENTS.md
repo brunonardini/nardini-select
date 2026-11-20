@@ -215,6 +215,8 @@ Drafts, briefs, and review reports go to `.dev/docs/` (gitignored). See [docs/de
 
 | Area | Skill |
 | --- | --- |
+| Temporary responsive design proposals | `create-mockups` (writes only under `tmp/mockups/`; requires a proposal count) |
+| Selected proposal implementation | `implement-mockup` (explicit selection; shared components and Storybook first) |
 | Design, layout, visual polish | `impeccable` (base of the current design; reads PRODUCT.md, DESIGN.md, `.impeccable/`) |
 | Animation | `emil-design-eng`, `animation-performance`; `review-animations` on request |
 | React/Next.js performance | `vercel-react-best-practices` |

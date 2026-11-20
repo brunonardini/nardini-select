@@ -87,6 +87,7 @@ footer in this description isn't part of the commit.
 - [ ] Changing the Node.js version updates `.nvmrc`, `engines` in `package.json`, and the `cimg/node` image in `.circleci/config.yml` together
 - [ ] The affected docs reflect the change, and the README stays focused on the project overview, local setup, checks, and links
 - [ ] Docs, code comments, and this PR are in English; only website and business content is in Portuguese
+- [ ] Project mockup skills stay versioned; generated studies stay under `tmp/mockups/`, with no temporary-study references in shipped code or durable product docs
 - [ ] This template still matches the project rules and configuration
 
 ## Screenshots
