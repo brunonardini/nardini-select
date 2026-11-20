@@ -55,7 +55,7 @@ In CircleCI, set `CODECOV_TOKEN` for the unit coverage upload. Keep credential v
 
 `NETLIFY_AUTH_TOKEN` and `NETLIFY_SITE_ID` used to live in `nardini-select-release`. Copy them into `nardini-select-prod-deploy` before the first production deploy from this pipeline, and into `nardini-select-preview-deploy` before the first preview. The deploy fails without them. `GH_TOKEN` stays on the release context.
 
-In CircleCI, restrict the production contexts to `main` and the preview contexts to non-fork pipelines. The config also ignores `main` for the preview group and stops a fork before it uses those variables.
+In CircleCI, restrict the production contexts to `main` and the preview contexts to non-fork pipelines. The `preview` workflow does not run on `main`, and its jobs stop a fork before they use those variables.
 
 Create the preview contexts before approving the first preview. Merging to `main` does not deploy the `staging` alias.
 
@@ -69,9 +69,9 @@ When semantic-release creates a version, it writes `release/version`. `deploy-pr
 
 ## Preview
 
-On a branch of this repository, after lint, type checking, unit tests, the database check, the build, Storybook, and end-to-end tests pass, CircleCI shows the `preview-approval` hold. It is not a required status check. Approving it runs `npm run db:reset` against `nardini_stg` (drop `public` and `audit`, reapply schema grants, migrate, and seed), then builds on the CircleCI machine and deploys with `netlify deploy --context deploy-preview --alias staging`. The message is `Preview <branch> <sha>`. There is no `--prod`, no `--remote`, and no `SENTRY_RELEASE`; the preview release is the commit SHA.
+On a branch of this repository other than `main`, the `preview` workflow runs on its own. It does not wait for `validate`, and it is not a required status check. `preview-setup` checks out the branch and installs dependencies. `preview-approval` is a manual hold. Approving it, once `preview-setup` has finished, runs `npm run db:reset` against `nardini_stg` (drop `public` and `audit`, reapply schema grants, migrate, and seed), then builds on the CircleCI machine and deploys with `netlify deploy --context deploy-preview --alias staging`. The message is `Preview <branch> <sha>`. There is no `--prod`, no `--remote`, and no `SENTRY_RELEASE`; the preview release is the commit SHA.
 
-The approval, the database reset, and the deploy share the serial group `preview`. Only one preview runs at a time. CircleCI skips an older preview still queued when a newer pipeline is waiting. The reset refuses any database other than `nardini_dev`, `nardini_test`, and `nardini_stg`.
+`preview-migrate` and `preview-deploy` attach that workflow's workspace. The `validate` setup cannot supply it. The workflow does not use a serial group, so two approved previews can reset `nardini_stg` at the same time. The reset refuses any database other than `nardini_dev`, `nardini_test`, and `nardini_stg`.
 
 Google sign-in is the admin sign-in. Keep these variables in Netlify, Functions scope, with one value for production and another for deploy previews. Do not put them in Git or in CircleCI: `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, and `BOOTSTRAP_ADMIN_EMAIL`.
 

@@ -81,7 +81,7 @@ footer in this description isn't part of the commit.
 **Configuration and docs**
 
 - [ ] On `main`, CircleCI migrates production only after lint, type checking, unit tests, and `db-check`, then releases, then deploys. PRs run the full validation suite
-- [ ] Preview stays a manual hold after validation, then resets and seeds `nardini_stg`, then deploys the `staging` alias. Those jobs are not required checks
+- [ ] Preview is its own workflow on branches other than `main`: `preview-setup`, then a manual hold, then a reset and seed of `nardini_stg`, then the `staging` alias. It does not wait for `validate`, and those jobs are not required checks
 - [ ] App variables are set in Netlify for Production and Deploy Previews, pipeline-only variables in CircleCI, and both are documented in `docs/deployment.md` (never set `SENTRY_RELEASE` in Netlify)
 - [ ] The three `Sentry.init` calls are still in sync
 - [ ] Upgrading `@playwright/test` also updates the Playwright image tag in `.circleci/config.yml`

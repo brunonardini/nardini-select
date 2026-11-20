@@ -474,10 +474,14 @@ workflows:
     jobs:
       - preview-approval:
           type: approval
+      - setup:
+          name: preview-setup
+          requires:
+            - preview-approval
       - preview-migrate:
           context: nardini-select-preview-db
           requires:
-            - preview-approval
+            - preview-setup
       - preview-deploy:
           context: nardini-select-preview-deploy
           requires:
