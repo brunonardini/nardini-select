@@ -277,6 +277,21 @@ and custom-description states under **Components / Error 500**. The approved
 decision and integration details live in [docs/designs/error-500.md](docs/designs/error-500.md).
 Preserve `tmp/error-proposals/` unless the owner explicitly requests deletion.
 
+### Error 404
+
+`Error404` uses the approved silver-gray Weimaraner searching beneath a rug
+and the fixed Karvest title "Procurei em todo canto.". Its optional description
+defaults to "Até debaixo do tapete. Mas esta página não foi encontrada.";
+`children` supplies recovery actions. The image and title stay fixed. Layout,
+container breakpoint, typography and spacing follow Error 500 above. Use the
+optimized transparent WebP through `next/image` and keep the image decorative.
+
+The root `app/not-found.tsx` renders this component for unmatched URLs and
+`notFound()` cases, with "Voltar ao início" and "Voltar". Next.js owns status
+and noindex behavior. Storybook documents the component under **Error 404**;
+[the approved design](docs/designs/error-404.md) records the route behavior.
+Preserve `tmp/error-404-proposals/` and the prior error mockup.
+
 ### Navigation
 
 The off-white header holds the official horizontal logo on the left (210px, 180px at ≤1100px, 160px at ≤760px) and Café links on the right, with a Terracota underline on hover and a Café outlined contact pill that scrolls to `#contato`. At ≤760px, a 44px toggle (two strokes that become a cross) opens an Off-white menu with Café links (Base UI `NavigationMenu`, `components/site-header/`). The menu opens on press, announces expansion, closes on selection, on Escape, and on a click outside, and returns focus to the toggle.

@@ -57,7 +57,7 @@ footer in this description isn't part of the commit.
 - [ ] `prefers-reduced-motion` drops movement but keeps fades; hover motion is gated behind `@media (hover: hover) and (pointer: fine)`
 - [ ] Images use `next/image` and fonts use `next/font`
 - [ ] Primary/secondary/outline buttons, left/right icons, shared loading and alerts match `DESIGN.md` and their Storybook states; semantic error colors stay reserved for feedback
-- [ ] Error 500 keeps its approved image/title, safe description and caller-owned recovery actions; actions adapt to the container width
+- [ ] Error 404/500 keep their approved images/titles, safe descriptions and caller-owned recovery actions; actions adapt to the container width
 - [ ] `"use client"` only where there is interactivity
 
 **Server and data**

@@ -49,6 +49,30 @@ test('home page has no detectable accessibility violations', async ({
   expect(await scan(page)).toEqual([]);
 });
 
+test('default 404 is accessible, noindex and provides home and back recovery', async ({
+  page,
+}) => {
+  const response = await page.goto('/pagina-inexistente-error-404');
+  expect(response?.status()).toBe(404);
+  await expect(
+    page.getByRole('heading', { name: 'Procurei em todo canto.' }),
+  ).toBeVisible();
+  await expect(
+    page.getByText(
+      'Até debaixo do tapete. Mas esta página não foi encontrada.',
+    ),
+  ).toBeVisible();
+  await expect(
+    page.locator('meta[name="robots"][content*="noindex"]'),
+  ).toHaveCount(1);
+  expect(await scan(page)).toEqual([]);
+  await page.getByRole('button', { name: 'Voltar', exact: true }).click();
+  await expect(page).toHaveURL('/');
+  await page.goto('/pagina-inexistente-error-404');
+  await page.getByRole('link', { name: 'Voltar ao início' }).click();
+  await expect(page).toHaveURL('/');
+});
+
 for (const kind of ['database', 'generic'] as const) {
   test(`admin ${kind} failure is safe, accessible and recoverable`, async ({
     page,
