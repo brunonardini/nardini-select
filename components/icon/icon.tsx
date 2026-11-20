@@ -21,7 +21,12 @@ export function Icon({
     | 'collapse'
     | 'chevron'
     | 'profile'
-    | 'sign-out';
+    | 'sign-out'
+    | 'search'
+    | 'filter'
+    | 'sort'
+    | 'mail'
+    | 'right';
 }) {
   const paths = {
     home: <path d="m3 10 9-7 9 7v10h-6v-6H9v6H3z" />,
@@ -39,6 +44,21 @@ export function Icon({
     close: <path d="m5 5 14 14M19 5 5 19" />,
     collapse: <path d="m14 6-6 6 6 6m5-12-6 6 6 6" />,
     chevron: <path d="m7 10 5 5 5-5" />,
+    right: <path d="m10 7 5 5-5 5" />,
+    search: (
+      <>
+        <circle cx="11" cy="11" r="6.5" />
+        <path d="m16 16 4.5 4.5" />
+      </>
+    ),
+    filter: <path d="M4 7h10m4 0h2M4 17h2m4 0h10M16 5v4M8 15v4" />,
+    sort: <path d="M8 4v16m0 0-3-3m3 3 3-3M16 20V4m0 0-3 3m3-3 3 3" />,
+    mail: (
+      <>
+        <rect x="3" y="5.5" width="18" height="13" rx="1.5" />
+        <path d="m3.5 7 8.5 6.5L20.5 7" />
+      </>
+    ),
     profile: (
       <>
         <circle cx="12" cy="8" r="3.5" />

@@ -65,6 +65,20 @@ export const Arrows: Story = {
   ),
 };
 
+/** Listing controls: search, filters, sort, invitations and the next-page arrow. */
+export const ListIcons: Story = {
+  argTypes: { name: { control: false } },
+  render: (args) => (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
+      {(['search', 'filter', 'sort', 'mail', 'left', 'right'] as const).map(
+        (name) => (
+          <Icon key={name} {...args} name={name} />
+        ),
+      )}
+    </div>
+  ),
+};
+
 /** Instagram, WhatsApp and Google together, with the same dimensions. */
 export const Social: Story = {
   argTypes: { name: { control: false } },

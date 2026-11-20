@@ -1,18 +1,26 @@
 'use client';
 
-import { useActionState } from 'react';
+import { useActionState, useEffect } from 'react';
 
 import { Alert } from '@/components/alert/alert';
 import { Button } from '@/components/button/button';
+import { ConfirmDialog } from '@/components/confirm-dialog/confirm-dialog';
 import { LocalDateTime } from '@/components/local-date-time/local-date-time';
 import { TextField } from '@/components/text-field/text-field';
 import { useNotice } from '@/components/toast/toast';
 
 import { cancelInvite, renewInvite } from './invitation-actions';
+import styles from './users.module.css';
 
-type Invite = { id: string; fullName: string; expiresAt: string };
+export type Invite = { id: string; fullName: string; expiresAt: string };
 
-function InviteRow({ invite }: { invite: Invite }) {
+function InviteRow({
+  invite,
+  onCanceled,
+}: {
+  invite: Invite;
+  onCanceled: () => void;
+}) {
   const [renewed, renew, renewing] = useActionState(renewInvite, null);
   const [canceled, cancel, canceling] = useActionState(cancelInvite, null);
   const notice = useNotice();
@@ -24,10 +32,14 @@ function InviteRow({ invite }: { invite: Invite }) {
     (renewed && !renewed.ok ? renewed.message : null) ??
     (canceled && !canceled.ok ? canceled.message : null);
 
+  useEffect(() => {
+    if (canceled?.ok) onCanceled();
+  }, [canceled, onCanceled]);
+
   if (canceled?.ok) return null;
 
   return (
-    <li className="admin-panel">
+    <li className={styles.invitation}>
       <strong>{invite.fullName}</strong>
       <p>
         Expira em <LocalDateTime value={invite.expiresAt} />
@@ -71,29 +83,42 @@ function InviteRow({ invite }: { invite: Invite }) {
               Gerar novo link
             </Button>
           </form>
-          <form action={cancel}>
-            <input type="hidden" name="id" value={invite.id} />
-            <Button
-              type="submit"
-              variant="outline"
-              loading={canceling}
-              loadingLabel="Cancelando…"
-            >
-              Cancelar
+          {canceling ? (
+            <Button variant="outline" loading loadingLabel="Cancelando…">
+              Cancelar convite
             </Button>
-          </form>
+          ) : (
+            <ConfirmDialog
+              label="Cancelar convite"
+              title="Cancelar convite"
+              description={`O link enviado para ${invite.fullName} deixa de funcionar.`}
+              confirmLabel="Cancelar convite"
+              fields={{ id: invite.id }}
+              action={cancel}
+            />
+          )}
         </div>
       )}
     </li>
   );
 }
 
-export function InvitationsList({ invites }: { invites: Invite[] }) {
+export function InvitationsList({
+  invites,
+  onCanceled,
+}: {
+  invites: Invite[];
+  onCanceled: (id: string) => void;
+}) {
   if (invites.length === 0) return <p>Nenhum convite pendente.</p>;
   return (
-    <ul className="admin-form">
+    <ul className={styles.invitationList}>
       {invites.map((invite) => (
-        <InviteRow key={invite.id} invite={invite} />
+        <InviteRow
+          key={invite.id}
+          invite={invite}
+          onCanceled={() => onCanceled(invite.id)}
+        />
       ))}
     </ul>
   );

@@ -11,6 +11,11 @@ describe('Icon', () => {
     'lock',
     'google',
     'left',
+    'right',
+    'search',
+    'filter',
+    'sort',
+    'mail',
   ] as const)(
     'renders the %s icon hidden from assistive technology',
     (name) => {

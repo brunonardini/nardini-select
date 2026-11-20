@@ -302,6 +302,14 @@ Below 700px, the signature is centered between the menu and account buttons. Bot
 
 The account popover groups the viewer’s name and access state with the actions available to the viewer. “Perfil” and “Sair” are matching full-width rows with 14px Montserrat at weight 650, 21px outline icons and no underline. See [Admin navigation and browser preferences](docs/designs/admin-navigation.md).
 
+### Admin Listings
+
+Admin listings size themselves from the main column with container queries, not from the viewport. Horizontal padding is 16px, 24px from 460px of main width and 32px from 760px (12px on viewports under 360px). Page titles use Karvest at 27/30/34/36px at the same tiers plus 1000px.
+
+The toolbar holds a 44px search field and 44px Café outline pill buttons with 18px icons. Below 460px of main width, search takes its own row. Filter and sort panels are Base UI popovers with a Café border. Person cards are Off-white with an Argila border and no shadow, in one, two or three columns at the same thresholds. The name links to the record; role, state and last access sit below an Argila rule. Loading uses one non-interactive Areia placeholder card per slot. The paginator pairs “Por página” with the range (“1–6 de 24”), “Página X de Y” and 44px square arrows that turn Argila when disabled.
+
+`StatusText` (`components/status-text/`) writes an account state next to a decorative 8px dot: a filled Café dot for Ativo, filled Terracota for Pendente, a Terracota ring for Termos desatualizados, an Argila ring for Desabilitado and a filled Argila dot for Anonimizado. The text always carries the meaning. A counted disclosure (Areia surface, mail icon, Off-white count pill and a chevron that turns down when open) holds secondary lists such as pending invitations; it fades its content in without animating height. See [Admin user listing](docs/designs/admin-users.md).
+
 ### Brand Marks
 
 Use the files exported from the official artwork; never rebuild, redraw, recolor, crop or distort them. The dots of the “i” in Nardini are part of the drawing and must not be redrawn or rounded.

@@ -21,6 +21,7 @@ export function InviteDialog() {
   return (
     <Dialog
       label="Convidar usuário"
+      variant="primary"
       title="Convidar usuário"
       description="O link vale por 30 minutos e pode ser usado uma vez."
     >

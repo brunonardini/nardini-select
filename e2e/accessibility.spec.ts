@@ -196,6 +196,28 @@ test('admin management pages and dialogs have no detectable violations', async (
     await page.getByRole('button', { name: 'Convidar usuário' }).click();
     expect(await scan(page)).toEqual([]);
     await page.keyboard.press('Escape');
+    await expect(
+      page
+        .getByRole('region', { name: 'Resultados' })
+        .getByRole('link')
+        .first(),
+    ).toBeVisible();
+    await page.getByRole('button', { name: /Convites pendentes/ }).click();
+    expect(await scan(page)).toEqual([]);
+    for (const [name, title] of [
+      ['Filtros', 'Filtrar equipe'],
+      ['Ordenar', 'Ordenar equipe'],
+    ]) {
+      await page.getByRole('button', { name, exact: true }).click();
+      // Scan the settled popup, not its opacity fade.
+      await expect(page.getByRole('dialog', { name: title })).toHaveCSS(
+        'opacity',
+        '1',
+      );
+      expect(await scan(page)).toEqual([]);
+      await page.keyboard.press('Escape');
+      await expect(page.getByRole('dialog', { name: title })).toHaveCount(0);
+    }
 
     await page.goto(`/admin/usuarios/${disabled}`);
     for (const name of ['Habilitar', 'Excluir', 'Anonimizar']) {
@@ -209,6 +231,29 @@ test('admin management pages and dialogs have no detectable violations', async (
     await page.goto(`/admin/papeis/${ATENDIMENTO_ROLE_ID}`);
     expect(await scan(page)).toEqual([]);
     await page.goto('/admin/auditoria');
+    expect(await scan(page)).toEqual([]);
+  } finally {
+    await setRole(admin, ATENDIMENTO_ROLE_ID);
+  }
+});
+
+test('the user listing has no violations on a portrait tablet', async ({
+  page,
+}, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop', 'One tablet pass is enough.');
+  const admin = slotUser(testInfo.parallelIndex, 'approved');
+  await setTerms(admin, 'current');
+  await setRole(admin, ADMIN_ROLE_ID);
+  try {
+    await page.setViewportSize({ width: 834, height: 1194 });
+    await page.context().addCookies([await sessionCookie(admin)]);
+    await page.goto('/admin/usuarios');
+    await expect(
+      page
+        .getByRole('region', { name: 'Resultados' })
+        .getByRole('link')
+        .first(),
+    ).toBeVisible();
     expect(await scan(page)).toEqual([]);
   } finally {
     await setRole(admin, ATENDIMENTO_ROLE_ID);

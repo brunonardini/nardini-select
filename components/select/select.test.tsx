@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { SelectField } from './select';
 
@@ -28,5 +28,24 @@ describe('SelectField', () => {
     expect(screen.getByRole('combobox', { name: 'Papel' })).toHaveTextContent(
       'Estoque',
     );
+  });
+
+  it('reports a chosen value at once', async () => {
+    const onValueChange = vi.fn();
+    render(
+      <SelectField
+        label="Por página"
+        name="por_pagina"
+        defaultValue="6"
+        options={[
+          { value: '6', label: '6' },
+          { value: '12', label: '12' },
+        ]}
+        onValueChange={onValueChange}
+      />,
+    );
+    await userEvent.click(screen.getByRole('combobox', { name: 'Por página' }));
+    await userEvent.click(await screen.findByRole('option', { name: '12' }));
+    expect(onValueChange).toHaveBeenCalledWith('12');
   });
 });

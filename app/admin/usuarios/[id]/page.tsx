@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 
 import { LocalDateTime } from '@/components/local-date-time/local-date-time';
+import { StatusText } from '@/components/status-text/status-text';
 import { requirePage } from '@/lib/auth/io/guard';
 import { listRoles } from '@/lib/roles/io/roles';
 import {
@@ -47,7 +48,9 @@ export default async function UserPage({
       <dl className="admin-details">
         <div>
           <dt>Estado</dt>
-          <dd>{user.state}</dd>
+          <dd>
+            <StatusText state={user.state} />
+          </dd>
         </div>
         <div>
           <dt>Convidado em</dt>

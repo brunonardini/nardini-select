@@ -54,6 +54,7 @@ export const guardedRoutes: readonly GuardedRoute[] = [
   { file: 'app/admin/papeis/[id]/page.tsx', allow: active, adminOnly: true },
   { file: 'app/admin/papeis/actions.ts', allow: active, adminOnly: true },
   { file: 'app/admin/auditoria/page.tsx', allow: active, adminOnly: true },
+  { file: 'app/admin/api/usuarios/route.ts', allow: active, adminOnly: true },
   {
     file: 'app/admin/api/avatar/[userId]/route.ts',
     allow: pendingOrActive,

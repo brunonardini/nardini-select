@@ -10,6 +10,8 @@ type Props = {
   defaultValue: string;
   options: Option[];
   placeholder?: string;
+  /** Called with the chosen value, for choices that apply at once. */
+  onValueChange?: (value: string) => void;
 };
 
 /** Single-choice field that submits its value with the surrounding form. */
@@ -19,9 +21,17 @@ export function SelectField({
   defaultValue,
   options,
   placeholder = 'Selecione',
+  onValueChange,
 }: Props) {
   return (
-    <BaseSelect.Root name={name} defaultValue={defaultValue} items={options}>
+    <BaseSelect.Root
+      name={name}
+      defaultValue={defaultValue}
+      items={options}
+      onValueChange={(value) => {
+        if (typeof value === 'string') onValueChange?.(value);
+      }}
+    >
       <BaseSelect.Label className="text-field-label">{label}</BaseSelect.Label>
       <BaseSelect.Trigger className="select-trigger">
         <BaseSelect.Value placeholder={placeholder} />
