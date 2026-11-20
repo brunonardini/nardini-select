@@ -1,11 +1,11 @@
 ---
-name: create-mockups
+name: nardini-mockup-create
 description: Create or refine temporary, mobile-first UI proposals in tmp/mockups, with a shared review menu, responsive previews, state controls, and an implementation handoff. Use for visual exploration before production implementation.
 ---
 
 # Create mockups
 
-Build reviewable proposals using this project's identity. This skill creates temporary design studies; use `implement-mockup` to ship a selected proposal.
+Build reviewable proposals using this project's identity. This skill creates temporary design studies; use `nardini-mockup-implement` to ship a selected proposal.
 
 ## Scope and required input
 
@@ -49,6 +49,6 @@ Serve the temporary directory with an existing local server or a server stored b
 
 ## Handoff and verification
 
-- Write `PROPOSALS.md` beside the study using [references/proposals-handoff.md](references/proposals-handoff.md). It must describe **every** proposal precisely enough for `implement-mockup`, including responsive behavior and all proposed system/component changes. Keep it current after refinements. Never mark a proposal selected or approved without explicit user direction.
+- Write `PROPOSALS.md` beside the study using [references/proposals-handoff.md](references/proposals-handoff.md). It must describe **every** proposal precisely enough for `nardini-mockup-implement`, including responsive behavior and all proposed system/component changes. Keep it current after refinements. Never mark a proposal selected or approved without explicit user direction.
 - Inspect the rendered gallery and all three viewports for every proposal, including relevant states. Check overflow, image cropping, contrast, keyboard/focus, reduced motion and content growth. Verify catalog navigation, state controls, full-size links and return behavior. Store evidence and scripts only inside `tmp/mockups/`; don't run the production test suite for an isolated study.
 - Open the gallery for review. Report its URL, temporary directory, proposal count and any unverified limits. Do not implement or commit temporary mockup output.

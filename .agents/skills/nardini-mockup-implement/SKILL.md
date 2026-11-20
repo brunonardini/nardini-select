@@ -1,5 +1,5 @@
 ---
-name: implement-mockup
+name: nardini-mockup-implement
 description: Implement an explicitly selected temporary UI proposal in the project, starting with design-system and Storybook components, then page integration and durable documentation. Use when the user is ready to ship a chosen mockup.
 ---
 

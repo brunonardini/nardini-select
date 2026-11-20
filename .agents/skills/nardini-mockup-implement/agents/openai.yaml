@@ -1,4 +1,4 @@
 interface:
   display_name: 'Implement Mockup'
   short_description: 'Ship a selected proposal through Storybook'
-  default_prompt: 'Use $implement-mockup to implement my explicitly selected proposal.'
+  default_prompt: 'Use $nardini-mockup-implement to implement my explicitly selected proposal.'
