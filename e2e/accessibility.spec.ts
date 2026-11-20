@@ -5,6 +5,8 @@ import { INVITE_TOKENS } from '../db/seeds/tokens';
 
 import { sessionCookie, setRole, setTerms, slotUser } from './fixtures/auth';
 import { ADMIN_ROLE_ID, ATENDIMENTO_ROLE_ID } from '../db/seeds/ids';
+import { SESSION_COOKIE_NAME } from '../lib/auth/logic/session';
+import { withAdminFailure } from './fixtures/admin-failure';
 
 // WCAG 2.2 level A and AA, plus axe best practices.
 const tags = [
@@ -46,6 +48,50 @@ test('home page has no detectable accessibility violations', async ({
 }) => {
   expect(await scan(page)).toEqual([]);
 });
+
+for (const kind of ['database', 'generic'] as const) {
+  test(`admin ${kind} failure is safe, accessible and recoverable`, async ({
+    page,
+  }, testInfo) => {
+    await withAdminFailure(kind, 3400 + testInfo.workerIndex, async (url) => {
+      // Presence triggers viewer loading. The isolated process fails while
+      // opening its local test connection, before any session can be trusted.
+      await page.context().addCookies([
+        {
+          name: SESSION_COOKIE_NAME,
+          value: 'error-screen-test',
+          domain: 'localhost',
+          path: '/',
+          secure: true,
+          httpOnly: true,
+          sameSite: 'Lax',
+        },
+      ]);
+      await page.goto(url + '/admin');
+      await expect(
+        page.getByRole('heading', { name: 'Eu não sei o que aconteceu…' }),
+      ).toBeVisible();
+      await expect(
+        page.getByText(
+          kind === 'database'
+            ? 'Não conseguimos conectar ao banco de dados.'
+            : 'Não conseguimos carregar esta página.',
+        ),
+      ).toBeVisible();
+      await expect(
+        page.getByRole('navigation', { name: 'Administração' }),
+      ).toHaveCount(0);
+      await expect(page.locator('body')).not.toContainText('ECONNREFUSED');
+      expect(await scan(page)).toEqual([]);
+      await page.getByRole('link', { name: 'Tentar novamente' }).click();
+      await expect(
+        page.getByRole('heading', { name: 'Eu não sei o que aconteceu…' }),
+      ).toBeVisible();
+      await page.getByRole('link', { name: 'Voltar ao site' }).click();
+      await expect(page).toHaveURL(url + '/');
+    });
+  });
+}
 
 test('open mobile menu has no detectable accessibility violations', async ({
   page,

@@ -253,6 +253,30 @@ The component owns `role="alert"` and the hidden decorative icon; the component 
 
 Storybook covers left/right icon placement, primary on dark surfaces, secondary navigation, loading for all action variants, disabled and keyboard-focus states, and the alert's default, danger and constrained-container examples. Google, lock and directional icons belong to the existing `Icon` family. Use `name="left"` for return actions and `name="down"` for the home arrows; the back button consumes the shared left-arrow icon.
 
+### Error 500
+
+The shared `Error500` renders the approved silver-gray Weimaraner on a
+destroyed sofa, with the fixed Karvest title "Eu não sei o que aconteceu…".
+Its only content props are optional `description` (default: "Não conseguimos
+carregar esta página.") and `children` for recovery controls. Keep the image
+and title fixed. Explanations must be safe, never raw exception messages.
+
+The component centers within its parent's available space and owns no viewport
+height or application shell. It uses Off-white, Café, and the existing Button
+variants. Actions stretch and stack on narrow containers; at 600px of container
+width they become a centered wrapping row. Container queries preserve the
+mobile arrangement inside narrow desktop content areas. The photo uses
+`next/image`, a transparent WebP, and reserved geometry. No entrance motion.
+The approved error heading is 32px/1.12 on narrow containers and 36px/1.12 on
+wide containers. Supporting copy is 15px/1.7 and 16px/1.7 respectively. The
+illustration caps at 480px; the text/action group caps at 580px, with 22px side
+padding. These scoped sizes preserve the approved mobile-first mockup.
+
+Storybook documents full-screen, constrained, mobile, pending, keyboard focus,
+and custom-description states under **Components / Error 500**. The approved
+decision and integration details live in [docs/designs/error-500.md](docs/designs/error-500.md).
+Preserve `tmp/error-proposals/` unless the owner explicitly requests deletion.
+
 ### Navigation
 
 The off-white header holds the official horizontal logo on the left (210px, 180px at ≤1100px, 160px at ≤760px) and Café links on the right, with a Terracota underline on hover and a Café outlined contact pill that scrolls to `#contato`. At ≤760px, a 44px toggle (two strokes that become a cross) opens an Off-white menu with Café links (Base UI `NavigationMenu`, `components/site-header/`). The menu opens on press, announces expansion, closes on selection, on Escape, and on a click outside, and returns focus to the toggle.

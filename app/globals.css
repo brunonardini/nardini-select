@@ -1049,6 +1049,11 @@ button.button {
   }
 }
 
+.page-error {
+  display: flex;
+  min-height: 100svh;
+}
+
 /* Admin area. The public home keeps the rules above. */
 .admin {
   min-height: 100vh;

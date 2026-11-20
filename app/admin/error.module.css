@@ -1,0 +1,11 @@
+.embedded {
+  display: flex;
+  width: 100%;
+}
+:global(.admin-main):has(.embedded) {
+  flex: 1;
+  display: flex;
+  width: 100%;
+  max-width: none;
+  padding: 0;
+}
