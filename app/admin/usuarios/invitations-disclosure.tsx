@@ -9,6 +9,15 @@ import { Icon } from '@/components/icon/icon';
 import { InvitationsList, type Invite } from './invitations-list';
 import styles from './users.module.css';
 
+/** Drops one invite. A list that has not loaded yet stays unloaded. */
+export function invitationsAfterCancel(
+  current: Invite[] | null,
+  id: string,
+): Invite[] | null {
+  if (!current) return current;
+  return current.filter((invite) => invite.id !== id);
+}
+
 /** Pending invitations behind a counted disclosure. `null` means still loading. */
 export function InvitationsDisclosure({
   invites,
@@ -50,11 +59,7 @@ export function InvitationsDisclosure({
           <InvitationsList
             invites={shown}
             onCanceled={(id) =>
-              setShown((current) =>
-                current
-                  ? current.filter((invite) => invite.id !== id)
-                  : current,
-              )
+              setShown((current) => invitationsAfterCancel(current, id))
             }
           />
         ) : null}

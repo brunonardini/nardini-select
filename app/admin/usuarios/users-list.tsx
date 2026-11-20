@@ -30,7 +30,7 @@ type Props = {
   pageSizeInAddress: boolean;
 };
 
-function statusText(total: number | null): string {
+export function statusText(total: number | null): string {
   if (total === null) return '';
   if (total === 0) return 'Nenhum resultado';
   return total === 1 ? '1 pessoa encontrada' : `${total} pessoas encontradas`;

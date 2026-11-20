@@ -4,8 +4,11 @@ import { describe, expect, it, vi } from 'vitest';
 import { ToastProvider } from '@/components/toast/toast';
 
 import { InviteDialog } from './invite-dialog';
-import { cancelInvite } from './invitation-actions';
-import { InvitationsDisclosure } from './invitations-disclosure';
+import { cancelInvite, createInvite, renewInvite } from './invitation-actions';
+import {
+  invitationsAfterCancel,
+  InvitationsDisclosure,
+} from './invitations-disclosure';
 import { InvitationsList } from './invitations-list';
 
 vi.mock('./invitation-actions', () => ({
@@ -106,5 +109,123 @@ describe('invitation UI', () => {
     );
     await waitFor(() => expect(trigger).toHaveTextContent('0'));
     expect(screen.getByText('Nenhum convite pendente.')).toBeVisible();
+  });
+
+  it('keeps a missing list missing when a cancel arrives early', () => {
+    expect(invitationsAfterCancel(null, invite.id)).toBeNull();
+    expect(invitationsAfterCancel([invite], invite.id)).toEqual([]);
+  });
+
+  it('shows why the invite was not created', async () => {
+    const user = (await import('@testing-library/user-event')).default.setup();
+    vi.mocked(createInvite).mockResolvedValue({
+      ok: false,
+      message: 'Informe o nome completo.',
+    });
+    render(
+      <ToastProvider>
+        <InviteDialog />
+      </ToastProvider>,
+    );
+    await user.click(screen.getByRole('button', { name: 'Convidar usuário' }));
+    await user.type(
+      screen.getByRole('textbox', { name: 'Nome completo' }),
+      'Ana Silva',
+    );
+    await user.click(screen.getByRole('button', { name: 'Gerar link' }));
+    expect(await screen.findByText('Informe o nome completo.')).toBeVisible();
+  });
+
+  it('copies a new invite link and reports a clipboard failure', async () => {
+    const user = (await import('@testing-library/user-event')).default.setup();
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, 'clipboard', {
+      configurable: true,
+      value: { writeText },
+    });
+    vi.mocked(createInvite).mockResolvedValue({ ok: true, token: 'tok-1' });
+    render(
+      <ToastProvider>
+        <InviteDialog />
+      </ToastProvider>,
+    );
+    await user.click(screen.getByRole('button', { name: 'Convidar usuário' }));
+    await user.type(
+      screen.getByRole('textbox', { name: 'Nome completo' }),
+      'Ana Silva',
+    );
+    await user.click(screen.getByRole('button', { name: 'Gerar link' }));
+    const link = await screen.findByRole('textbox', {
+      name: 'Link do convite',
+    });
+    expect(link).toHaveValue(`${window.location.origin}/admin/convite/tok-1`);
+    await user.click(screen.getByRole('button', { name: 'Copiar link' }));
+    expect(await screen.findByText('Link copiado')).toBeVisible();
+    writeText.mockRejectedValueOnce(new Error('denied'));
+    await user.click(screen.getByRole('button', { name: 'Copiar link' }));
+    expect(await screen.findByText('Não foi possível copiar')).toBeVisible();
+  });
+
+  it('copies a renewed link and reports a clipboard failure', async () => {
+    const user = (await import('@testing-library/user-event')).default.setup();
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, 'clipboard', {
+      configurable: true,
+      value: { writeText },
+    });
+    vi.mocked(renewInvite).mockResolvedValue({ ok: true, token: 'tok-2' });
+    render(
+      <ToastProvider>
+        <InvitationsList invites={[invite]} onCanceled={vi.fn()} />
+      </ToastProvider>,
+    );
+    await user.click(screen.getByRole('button', { name: 'Gerar novo link' }));
+    expect(
+      await screen.findByRole('textbox', { name: 'Novo link' }),
+    ).toHaveValue(`${window.location.origin}/admin/convite/tok-2`);
+    await user.click(screen.getByRole('button', { name: 'Copiar link' }));
+    expect(await screen.findByText('Link copiado')).toBeVisible();
+    writeText.mockRejectedValueOnce(new Error('denied'));
+    await user.click(screen.getByRole('button', { name: 'Copiar link' }));
+    expect(await screen.findByText('Não foi possível copiar')).toBeVisible();
+  });
+
+  it('shows why a renewal failed', async () => {
+    const user = (await import('@testing-library/user-event')).default.setup();
+    vi.mocked(renewInvite).mockResolvedValue({
+      ok: false,
+      message: 'Este convite não pode ser alterado.',
+    });
+    render(
+      <ToastProvider>
+        <InvitationsList invites={[invite]} onCanceled={vi.fn()} />
+      </ToastProvider>,
+    );
+    await user.click(screen.getByRole('button', { name: 'Gerar novo link' }));
+    expect(
+      await screen.findByText('Este convite não pode ser alterado.'),
+    ).toBeVisible();
+  });
+
+  it('shows why a cancellation failed', async () => {
+    const user = (await import('@testing-library/user-event')).default.setup();
+    vi.mocked(cancelInvite).mockResolvedValue({
+      ok: false,
+      message: 'Este convite não pode ser alterado.',
+    });
+    render(
+      <ToastProvider>
+        <InvitationsList invites={[invite]} onCanceled={vi.fn()} />
+      </ToastProvider>,
+    );
+    await user.click(screen.getByRole('button', { name: 'Cancelar convite' }));
+    await user.click(
+      within(screen.getByRole('dialog')).getByRole('button', {
+        name: 'Cancelar convite',
+      }),
+    );
+    expect(
+      await screen.findByText('Este convite não pode ser alterado.'),
+    ).toBeVisible();
   });
 });

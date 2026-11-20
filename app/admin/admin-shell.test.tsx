@@ -1,4 +1,5 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
+import { renderToString } from 'react-dom/server';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 
 import { browserStorage } from '@/lib/browser-storage/io/browser-storage';
@@ -93,4 +94,15 @@ it('preserves the active section on a detail route', () => {
   expect(nav.getByRole('link', { name: 'Início' })).not.toHaveAttribute(
     'aria-current',
   );
+});
+
+it('renders the private shell expanded before the browser preference loads', () => {
+  router.pathname = '/admin';
+  const html = renderToString(
+    <AdminShell access="administrator" name="Ana" signOutAction={vi.fn()}>
+      Início
+    </AdminShell>,
+  );
+  expect(html).toContain('data-sidebar="expanded"');
+  expect(html).toContain('Início');
 });

@@ -1,4 +1,6 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
+import { hydrateRoot } from 'react-dom/client';
+import { renderToString } from 'react-dom/server';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
@@ -136,7 +138,19 @@ describe('useUserList', () => {
   });
 
   it('aborts a request that a newer one replaces', async () => {
-    fetchMock.mockImplementationOnce(() => new Promise<Response>(() => {}));
+    fetchMock.mockImplementationOnce((_input, init) => {
+      return new Promise<Response>((_resolve, reject) => {
+        const signal = init?.signal;
+        const abort = () =>
+          reject(new DOMException('The operation was aborted.', 'AbortError'));
+        if (!signal) return;
+        if (signal.aborted) {
+          abort();
+          return;
+        }
+        signal.addEventListener('abort', abort, { once: true });
+      });
+    });
     const { result } = renderHook(() => useUserList(DEFAULT_QUERY, false));
     await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
     act(() => result.current.goToPage(2));
@@ -229,6 +243,22 @@ describe('useUserList', () => {
         value: original,
       });
     }
+  });
+
+  it('skips the first fetch until the list has hydrated', async () => {
+    function Probe() {
+      const list = useUserList(DEFAULT_QUERY, false);
+      return <p>{list.status}</p>;
+    }
+    const html = renderToString(<Probe />);
+    const container = document.createElement('div');
+    document.body.append(container);
+    container.innerHTML = html;
+    fetchMock.mockClear();
+    const root = hydrateRoot(container, <Probe />);
+    await waitFor(() => expect(fetchMock).toHaveBeenCalled());
+    root.unmount();
+    container.remove();
   });
 
   it('cancels a pending search when it unmounts', async () => {

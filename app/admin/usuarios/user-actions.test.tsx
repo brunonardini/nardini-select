@@ -45,6 +45,36 @@ describe('UserActions', () => {
     ).not.toBeInTheDocument();
   });
 
+  it('shows the photo and a removed account without a stored name', () => {
+    render(
+      <UserActions
+        user={{
+          ...user,
+          displayName: null,
+          fullName: null,
+          photo: true,
+        }}
+        roles={[{ id: 'role', name: 'estoque' }]}
+        allow={{
+          fullName: true,
+          role: false,
+          disable: false,
+          enable: false,
+          remove: false,
+          anonymize: false,
+        }}
+      />,
+    );
+    expect(screen.getByText('Usuário removido')).toBeVisible();
+    expect(screen.getByRole('textbox', { name: 'Nome completo' })).toHaveValue(
+      '',
+    );
+    expect(document.querySelector('img')).toHaveAttribute(
+      'src',
+      `/admin/api/avatar/${user.id}`,
+    );
+  });
+
   it('offers disable, delete, and typed anonymizing when allowed', () => {
     render(
       <UserActions

@@ -1,6 +1,8 @@
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
+import { saveProfile } from './actions';
 import { ProfileForm } from './profile-form';
 
 vi.mock('./actions', () => ({ saveProfile: vi.fn() }));
@@ -40,5 +42,46 @@ describe('ProfileForm', () => {
     );
     expect(screen.getByRole('radio', { name: 'Foto do Google' })).toBeEnabled();
     expect(screen.getByRole('radio', { name: 'Foto do Google' })).toBeChecked();
+  });
+
+  it('uses the full name when the display name is empty', () => {
+    render(
+      <ProfileForm
+        userId="a1d10000-0000-4000-8000-000000000010"
+        displayName=""
+        fullName="Ana Silva"
+        email="ana@example.com"
+        photoSource="none"
+        hasGooglePhoto={false}
+      />,
+    );
+    expect(screen.getByText('AS')).toBeVisible();
+  });
+
+  it('shows the save error and then the confirmation', async () => {
+    const user = userEvent.setup();
+    vi.mocked(saveProfile).mockResolvedValueOnce({
+      ok: false,
+      reason: 'invalid',
+      message: 'Informe um nome.',
+    });
+    render(
+      <ProfileForm
+        userId="a1d10000-0000-4000-8000-000000000010"
+        displayName="Ana"
+        fullName="Ana Silva"
+        email="ana@example.com"
+        photoSource="none"
+        hasGooglePhoto={false}
+      />,
+    );
+    await user.click(screen.getByRole('button', { name: 'Salvar' }));
+    expect(await screen.findByText('Informe um nome.')).toBeVisible();
+    vi.mocked(saveProfile).mockResolvedValueOnce({ ok: true });
+    await user.click(screen.getByRole('button', { name: 'Salvar' }));
+    expect(
+      await screen.findByText('As alterações foram salvas.'),
+    ).toBeVisible();
+    expect(screen.queryByText('Informe um nome.')).not.toBeInTheDocument();
   });
 });

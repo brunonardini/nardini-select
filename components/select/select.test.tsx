@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
-import { SelectField } from './select';
+import { publishSelectedValue, SelectField } from './select';
 
 const options = [
   { value: 'none', label: 'Sem papel' },
@@ -46,6 +46,16 @@ describe('SelectField', () => {
     );
     await userEvent.click(screen.getByRole('combobox', { name: 'Por página' }));
     await userEvent.click(await screen.findByRole('option', { name: '12' }));
+    expect(onValueChange).toHaveBeenCalledWith('12');
+  });
+
+  it('ignores a cleared value and a missing listener', () => {
+    const onValueChange = vi.fn();
+    publishSelectedValue(null, onValueChange);
+    expect(onValueChange).not.toHaveBeenCalled();
+    publishSelectedValue('12');
+    publishSelectedValue('12', onValueChange);
+    expect(onValueChange).toHaveBeenCalledTimes(1);
     expect(onValueChange).toHaveBeenCalledWith('12');
   });
 });

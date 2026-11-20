@@ -6,6 +6,14 @@ import { Icon } from '@/components/icon/icon';
 
 type Option = { value: string; label: string };
 
+/** Publishes a chosen value. Base UI sends null when the selection is cleared. */
+export function publishSelectedValue(
+  value: unknown,
+  onValueChange?: (value: string) => void,
+) {
+  if (typeof value === 'string') onValueChange?.(value);
+}
+
 type Props = {
   label: string;
   name: string;
@@ -31,7 +39,7 @@ export function SelectField({
       defaultValue={defaultValue}
       items={options}
       onValueChange={(value) => {
-        if (typeof value === 'string') onValueChange?.(value);
+        publishSelectedValue(value, onValueChange);
       }}
     >
       <BaseSelect.Label className="text-field-label">{label}</BaseSelect.Label>

@@ -47,6 +47,49 @@ it('opens the staff drawer and closes it when the sidebar becomes available', as
   ).not.toBeInTheDocument();
 });
 
+it('closes the drawer when the current page is chosen', async () => {
+  const user = userEvent.setup();
+  render(
+    <AdminNavigation
+      pathname="/admin"
+      access="staff"
+      name="Ana Martins"
+      collapsed={false}
+      onToggle={vi.fn()}
+      signOutAction={vi.fn()}
+    >
+      <h1>Início</h1>
+    </AdminNavigation>,
+  );
+  await user.click(screen.getByRole('button', { name: 'Menu' }));
+  const dialog = await screen.findByRole('dialog', { name: 'Menu' });
+  await user.click(within(dialog).getByRole('link', { name: 'Início' }));
+  expect(
+    screen.queryByRole('dialog', { name: 'Menu' }),
+  ).not.toBeInTheDocument();
+});
+
+it('marks Perfil as the current page from the account menu', async () => {
+  const user = userEvent.setup();
+  render(
+    <AdminNavigation
+      pathname="/admin/perfil"
+      access="staff"
+      name="Ana Martins"
+      collapsed={false}
+      onToggle={vi.fn()}
+      signOutAction={vi.fn()}
+    >
+      <h1>Perfil</h1>
+    </AdminNavigation>,
+  );
+  await user.click(screen.getByRole('button', { name: /Conta de/ }));
+  const account = await screen.findByRole('dialog', { name: 'Ana Martins' });
+  expect(
+    within(account).getByRole('button', { name: 'Perfil' }),
+  ).toHaveAttribute('aria-current', 'page');
+});
+
 it('offers only sign-out while terms are outdated', async () => {
   const user = userEvent.setup();
   render(

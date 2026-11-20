@@ -2,13 +2,14 @@ import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import * as listQuery from '@/lib/users/logic/list-query';
 import {
   DEFAULT_QUERY,
   type UserCard,
   type UserPage,
 } from '@/lib/users/logic/list-query';
 
-import { UsersList } from './users-list';
+import { statusText, UsersList } from './users-list';
 
 const ROLE = '11111111-1111-4111-8111-111111111111';
 
@@ -228,5 +229,27 @@ describe('UsersList', () => {
     await waitFor(() =>
       expect(screen.getByRole('region', { name: 'Resultados' })).toHaveFocus(),
     );
+  });
+
+  it('says nothing while the total is unknown', () => {
+    expect(statusText(null)).toBe('');
+  });
+
+  it('ignores a page size outside the allowed set', async () => {
+    const user = userEvent.setup();
+    respondWith({ items: [card(1)], total: 1, page: 1, pageSize: 6 });
+    renderList();
+    await screen.findByRole('link', { name: 'Pessoa 1' });
+    const pageSizeFrom = vi
+      .spyOn(listQuery, 'pageSizeFrom')
+      .mockReturnValue(null);
+    try {
+      const calls = fetchMock.mock.calls.length;
+      await user.click(screen.getByRole('combobox', { name: 'Por página' }));
+      await user.click(await screen.findByRole('option', { name: '3' }));
+      expect(fetchMock.mock.calls.length).toBe(calls);
+    } finally {
+      pageSizeFrom.mockRestore();
+    }
   });
 });
