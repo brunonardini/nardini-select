@@ -34,12 +34,19 @@ Design and review **mobile first**, then extend that concept to a **portrait 11-
 
 The tablet dimensions are a reproducible CSS viewport, not a claim about physical screen size. Adapt navigation, density, type, imagery and content layout deliberately for tablet and desktop; do not just stretch the mobile design. Preview scaling must not change the inner viewport. Preserve full-size and responsive testing, normal scrolling, and uncropped important image subjects. Check narrow phones (320px) and short desktop windows when relevant.
 
+## Stable proposal numbering
+
+- Always number proposals with unique positive integers. A new study starts at 1 and continues through the requested count.
+- Show the number in every proposal button's visible label and accessible name, for example "Proposta 1" or "1. Novo dia". A descriptive name may accompany the number but never replace it.
+- Keep the same number for a proposal across revisions, mobile/tablet/desktop previews, URL parameters, full-size views, summaries and `PROPOSALS.md`. Reordering or renaming a proposal must not change its number. Assign added proposals the next unused number; do not reuse a removed proposal's number.
+- Treat user references such as "proposta 2" as that stable number within the current study, never as the proposal's current array position. If the study or number is ambiguous, ask before changing a different proposal.
+
 ## Review shell
 
 Keep review controls outside the proposed product interface. Reuse existing review-shell assets under `tmp/mockups/` where suitable.
 
 - **Black top menu on every study gallery:** a compact identifier at left and a labeled native select at the far right listing available mockups. Selecting an entry opens that study's gallery. Maintain a shared catalog under `tmp/mockups/` with stable study IDs, names and relative gallery URLs; reconcile it with existing study directories without inventing dead links. Keep the current study selected, including after browser Back.
-- **Compact proposal toolbar:** the study title sits to the left of the proposal buttons, on one row when space permits. Each button selects a proposal and exposes its selected state. Do not add the old brand/byline row or repeat a "Proposal 1" heading below it. Show the selected proposal's description instead.
+- **Compact proposal toolbar:** the study title sits to the left of the proposal buttons, on one row when space permits. Each button includes its stable proposal number, selects that proposal and exposes its selected state. Do not add the old brand/byline row or repeat a "Proposal 1" heading below it. Show the selected proposal's description instead.
 - **Configuration controls:** provide a labeled state selector and other controls required to evaluate the study (for example theme, user role or content length). Include relevant initial, loading, error, empty and success states; don't invent irrelevant ones. Reflect selected proposal, state and configuration in the URL so previews, reload and return links preserve them. Loading remains indefinite where no measurable progress exists; reduced motion follows project rules.
 - Show **mobile, tablet and desktop**, in that order, with viewport labels and working "Abrir em tamanho real" links. The gallery may wrap or stack; the preview frame retains its declared viewport.
 - **Full-size view:** show the same black review menu with a "Voltar ao mockup" button linking to the owning gallery, preserving proposal, state and configuration. Keep this bar outside the product layout and account for its height. Do not render review chrome inside embedded preview frames.
@@ -50,5 +57,5 @@ Serve the temporary directory with an existing local server or a server stored b
 ## Handoff and verification
 
 - Write `PROPOSALS.md` beside the study using [references/proposals-handoff.md](references/proposals-handoff.md). It must describe **every** proposal precisely enough for `nardini-mockup-implement`, including responsive behavior and all proposed system/component changes. Keep it current after refinements. Never mark a proposal selected or approved without explicit user direction.
-- Inspect the rendered gallery and all three viewports for every proposal, including relevant states. Check overflow, image cropping, contrast, keyboard/focus, reduced motion and content growth. Verify catalog navigation, state controls, full-size links and return behavior. Store evidence and scripts only inside `tmp/mockups/`; don't run the production test suite for an isolated study.
+- Inspect the rendered gallery and all three viewports for every proposal, including relevant states. Check overflow, image cropping, contrast, keyboard/focus, reduced motion and content growth. Verify proposal numbers match their buttons, URLs and handoff, along with catalog navigation, state controls, full-size links and return behavior. Store evidence and scripts only inside `tmp/mockups/`; don't run the production test suite for an isolated study.
 - Open the gallery for review. Report its URL, temporary directory, proposal count and any unverified limits. Do not implement or commit temporary mockup output.

@@ -6,9 +6,9 @@ Write `PROPOSALS.md` in the study directory. Fill this outline with actual decis
 
 Record a stable study ID, product surface and purpose, requested count, gallery URL, local serving instructions, source/reference assets, and a status such as draft or reviewed. Record an explicit user selection only when supplied, with its exact proposal ID and any subsequent amendments. A selection is not automatically the repository's required implementation approval.
 
-## Proposal <stable ID>: <name>
+## Proposal <stable number>: <name>
 
-Repeat for every proposal:
+Repeat for every proposal. Use the same stable number shown on its button and in its URL. Record a separate internal ID if needed, plus the mapping for any pre-existing URL IDs. Preserve numbers across refinements and reordering; do not renumber or reuse removed numbers:
 
 - **Intent and description:** what differs from the other proposals and what the visitor can do.
 - **Exact copy and hierarchy:** labels, headings, body copy, actions, links and error/recovery text.
