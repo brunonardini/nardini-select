@@ -116,8 +116,8 @@ The state of each person still comes only from `userStateLabel`, so the rule exi
 Storybook already has Button, Avatar, Icon, TextField, SelectField, Dialog, ConfirmDialog, LocalDateTime, Alert, EmptyState and ToastProvider, and the listing reuses them.
 
 - **New shared component:** `StatusText`, the written state with its decorative dot. It replaces the plain state text on the detail page as well, so it has two consumers. It lives in `components/status-text/` with tests and stories for the five states at 390 × 844, 834 × 1194 and 1440 × 900.
-- **Shared listing patterns:** `PageHeader`, `Card`, `CardGrid` and `Filter`, each with tests and stories. The listing uses them for the heading and invite action, the person card, the responsive grid and paginator, and the filter popover. `CardGrid` can also show a page-selection bar; this listing does not, because account changes stay on the detail route.
-- **Page-local code** in `app/admin/usuarios/`, with unit tests: the search field, the sort popover, the invitations disclosure (a Base UI Collapsible) and the list client.
+- **Shared listing patterns:** `PageHeader`, `Card`, `CardGrid`, `Toolbar` (`Toolbar.Content` and `Toolbar.Actions`), `Search`, `FiltersAction` and `OrderByAction`, each with tests and stories. The listing uses them for the heading and invite action, the person card, the responsive grid and paginator, and the search, filter and sort controls. `CardGrid` can also show a page-selection bar; this listing does not, because account changes stay on the detail route.
+- **Page-local code** in `app/admin/usuarios/`, with unit tests: the invitations disclosure (a Base UI Collapsible), the list client, and the fields the toolbar actions submit.
 
 ## Privacy
 

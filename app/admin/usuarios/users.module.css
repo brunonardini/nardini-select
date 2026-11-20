@@ -159,60 +159,6 @@
   font-family: var(--font);
 }
 
-.toolbar {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  min-width: 0;
-}
-.search {
-  grid-column: 1 / -1;
-  position: relative;
-  display: flex;
-  min-width: 0;
-}
-@container (min-width: 460px) {
-  .toolbar {
-    grid-template-columns: minmax(0, 28rem) auto auto;
-    justify-content: start;
-  }
-  .search {
-    grid-column: auto;
-  }
-}
-.search svg {
-  position: absolute;
-  top: 50%;
-  left: 12px;
-  width: 18px;
-  height: 18px;
-  transform: translateY(-50%);
-  pointer-events: none;
-}
-.searchInput {
-  width: 100%;
-  min-width: 0;
-  height: 44px;
-  padding: 0 12px 0 40px;
-  border: 1.5px solid var(--cafe);
-  border-radius: 8px;
-  background: var(--off-white);
-  color: var(--cafe);
-  font: inherit;
-  font-size: 0.875rem;
-}
-.searchInput::placeholder {
-  color: var(--cafe);
-  opacity: 0.75;
-}
-.searchInput:focus-visible {
-  outline: 2px solid var(--cafe);
-  outline-offset: 2px;
-}
-
 .empty {
   display: flex;
   flex-direction: column;

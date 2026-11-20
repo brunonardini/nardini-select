@@ -1,13 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import { expect, fn, userEvent, within } from 'storybook/test';
+import { expect, fn, within } from 'storybook/test';
 
 import { SelectField } from '@/components/select/select';
 
-import { Filter } from './filter';
+import { FiltersAction } from './FiltersAction';
 
 const meta = {
-  title: 'DataDisplay/Filter',
-  component: Filter,
+  title: 'Layout/Toolbar/Filters Action',
+  component: FiltersAction,
   args: {
     label: 'Filtros',
     title: 'Filtrar equipe',
@@ -44,16 +44,17 @@ const meta = {
     docs: {
       description: {
         component:
-          'Listing filter. The trigger opens a popover; Aplicar submits the fields together and Limpar drops them. The fields themselves belong to the listing.',
+          'Filter popover. Aplicar submits the fields together and Limpar drops them. The fields belong to the listing.',
       },
     },
   },
-} satisfies Meta<typeof Filter>;
+} satisfies Meta<typeof FiltersAction>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
+/** Trigger only. The panel stays closed. */
+export const Closed: Story = {
   play: async ({ canvasElement }) => {
     await expect(
       within(canvasElement).getByRole('button', { name: 'Filtros' }),
@@ -64,3 +65,20 @@ export const Default: Story = {
   },
 };
 
+/** Panel open, with the fields and both actions. */
+export const Open: Story = {
+  args: { defaultOpen: true },
+  play: async () => {
+    const body = within(document.body);
+    await expect(
+      body.getByRole('heading', { name: 'Filtrar equipe' }),
+    ).toBeVisible();
+    await expect(body.getByRole('combobox', { name: 'Estado' })).toBeVisible();
+    await expect(
+      body.getByRole('button', { name: 'Aplicar filtros' }),
+    ).toBeVisible();
+    await expect(
+      body.getByRole('button', { name: 'Limpar filtros' }),
+    ).toBeVisible();
+  },
+};
