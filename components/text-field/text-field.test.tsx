@@ -32,4 +32,19 @@ describe('TextField', () => {
     await userEvent.type(screen.getByRole('textbox'), 'Ana');
     expect(screen.getByRole('textbox')).toHaveValue('Ana');
   });
+
+  it('keeps a leading icon decorative and the search input labeled', () => {
+    render(
+      <TextField
+        label="Buscar"
+        type="search"
+        leadingIcon={<svg data-testid="search-icon" />}
+      />,
+    );
+    expect(screen.getByRole('searchbox', { name: 'Buscar' })).toBeVisible();
+    expect(screen.getByTestId('search-icon').parentElement).toHaveAttribute(
+      'aria-hidden',
+      'true',
+    );
+  });
 });

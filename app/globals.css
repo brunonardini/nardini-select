@@ -1197,6 +1197,27 @@ button.button {
   outline: 2px solid var(--cafe);
   outline-offset: 4px;
 }
+.text-field-control {
+  border-radius: 8px;
+}
+.text-field-input {
+  position: relative;
+}
+.text-field-leading-icon {
+  position: absolute;
+  inset-inline-start: 14px;
+  top: 50%;
+  display: flex;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+.text-field-leading-icon svg {
+  width: 18px;
+  height: 18px;
+}
+.text-field-input:has(.text-field-leading-icon) .text-field-control {
+  padding-inline-start: 42px;
+}
 .text-field-description {
   color: var(--cafe);
 }
@@ -1204,14 +1225,23 @@ button.button {
   color: var(--error-text);
 }
 .select-trigger {
+  display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  gap: 8px;
+  border-radius: 8px;
+}
+.select-chevron {
+  width: 16px;
+  height: 16px;
+  flex: none;
 }
 .select-positioner {
   z-index: 40;
 }
 .select-popup {
+  border-radius: 8px;
   min-width: var(--anchor-width);
   max-height: min(20rem, var(--available-height));
   overflow: auto;

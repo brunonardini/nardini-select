@@ -61,7 +61,8 @@
 /* Invitations disclosure */
 .invitations {
   border: 1.5px solid var(--argila);
-  background: var(--areia);
+  border-radius: 8px;
+  background: #f0e5d8;
 }
 .disclosureTrigger {
   display: flex;
@@ -92,7 +93,8 @@
   width: 36px;
   height: 36px;
   flex: none;
-  background: var(--off-white);
+  border-radius: 8px;
+  background: var(--areia);
 }
 .mailIcon svg {
   width: 20px;
@@ -162,7 +164,7 @@
   font-variant-numeric: tabular-nums;
 }
 .invitations .badge {
-  background: var(--off-white);
+  background: var(--areia);
 }
 
 /* Team */
@@ -223,6 +225,7 @@
   height: 44px;
   padding: 0 12px 0 40px;
   border: 1.5px solid var(--cafe);
+  border-radius: 8px;
   background: var(--off-white);
   color: var(--cafe);
   font: inherit;
@@ -344,6 +347,7 @@
   min-width: 0;
   padding: 14px;
   border: 1px solid var(--argila);
+  border-radius: 10px;
   background: var(--off-white);
   overflow-wrap: anywhere;
 }
@@ -387,6 +391,7 @@
   font-size: 0.875rem;
 }
 .skeleton {
+  border-radius: 10px;
   min-height: 168px;
   background:
     linear-gradient(var(--areia), var(--areia)) 14px 14px / 36px 36px no-repeat,

@@ -2,6 +2,8 @@
 
 import { Select as BaseSelect } from '@base-ui/react/select';
 
+import { Icon } from '@/components/icon/icon';
+
 type Option = { value: string; label: string };
 
 type Props = {
@@ -35,6 +37,7 @@ export function SelectField({
       <BaseSelect.Label className="text-field-label">{label}</BaseSelect.Label>
       <BaseSelect.Trigger className="select-trigger">
         <BaseSelect.Value placeholder={placeholder} />
+        <Icon name="chevron" className="select-chevron" />
       </BaseSelect.Trigger>
       <BaseSelect.Portal>
         <BaseSelect.Positioner className="select-positioner" sideOffset={4}>

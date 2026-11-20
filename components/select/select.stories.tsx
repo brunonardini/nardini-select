@@ -9,7 +9,7 @@ const options = [
 ];
 
 const meta = {
-  title: 'Components/Select',
+  title: 'Form/Select',
   component: SelectField,
   args: {
     label: 'Papel',

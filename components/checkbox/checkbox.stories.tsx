@@ -4,7 +4,7 @@ import { expect, fn, userEvent, within } from 'storybook/test';
 import { Checkbox } from './checkbox';
 
 const meta = {
-  title: 'Components/Checkbox',
+  title: 'Form/Checkbox',
   component: Checkbox,
   args: {
     label: 'Li e aceito os termos de uso',
