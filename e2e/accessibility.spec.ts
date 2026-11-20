@@ -3,7 +3,8 @@ import { expect, test, type Page } from '@playwright/test';
 
 import { INVITE_TOKENS } from '../db/seeds/tokens';
 
-import { sessionCookie, setTerms, slotUser } from './fixtures/auth';
+import { sessionCookie, setRole, setTerms, slotUser } from './fixtures/auth';
+import { ADMIN_ROLE_ID, ATENDIMENTO_ROLE_ID } from '../db/seeds/ids';
 
 // WCAG 2.2 level A and AA, plus axe best practices.
 const tags = [
@@ -97,4 +98,37 @@ test('admin sign-in, invite, terms, and home have no detectable violations', asy
     .addCookies([await sessionCookie(slotUser(slot, 'no-role'))]);
   await page.goto('/admin');
   expect(await scan(page)).toEqual([]);
+});
+
+test('admin management pages and dialogs have no detectable violations', async ({
+  page,
+}, testInfo) => {
+  const slot = testInfo.parallelIndex;
+  const admin = slotUser(slot, 'approved');
+  const disabled = slotUser(slot, 'disabled');
+  await setTerms(admin, 'current');
+  await setRole(admin, ADMIN_ROLE_ID);
+  try {
+    await page.context().addCookies([await sessionCookie(admin)]);
+    await page.goto('/admin/usuarios');
+    await page.getByRole('button', { name: 'Convidar usuário' }).click();
+    expect(await scan(page)).toEqual([]);
+    await page.keyboard.press('Escape');
+
+    await page.goto(`/admin/usuarios/${disabled}`);
+    for (const name of ['Habilitar', 'Excluir', 'Anonimizar']) {
+      await page.getByRole('button', { name }).click();
+      expect(await scan(page)).toEqual([]);
+      await page.keyboard.press('Escape');
+    }
+
+    await page.goto('/admin/papeis');
+    expect(await scan(page)).toEqual([]);
+    await page.goto(`/admin/papeis/${ATENDIMENTO_ROLE_ID}`);
+    expect(await scan(page)).toEqual([]);
+    await page.goto('/admin/auditoria');
+    expect(await scan(page)).toEqual([]);
+  } finally {
+    await setRole(admin, ATENDIMENTO_ROLE_ID);
+  }
 });

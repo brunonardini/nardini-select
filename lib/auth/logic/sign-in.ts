@@ -1,5 +1,20 @@
 import { trustedGooglePhoto } from './photo';
 
+/**
+ * Better Auth answers a social sign-in with JSON plus a Location header.
+ * A browser form only leaves the page for an absolute http(s) redirect.
+ */
+export function socialSignInLocation(location: string | null): string | null {
+  if (!location) return null;
+  try {
+    const url = new URL(location);
+    if (url.protocol !== 'https:' && url.protocol !== 'http:') return null;
+    return url.toString();
+  } catch {
+    return null;
+  }
+}
+
 export type SignInDecision =
   | { ok: false; error: 'usuario_desabilitado' }
   | { ok: true; photoUrl: string | null };

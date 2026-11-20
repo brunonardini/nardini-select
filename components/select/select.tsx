@@ -1,0 +1,48 @@
+'use client';
+
+import { Select as BaseSelect } from '@base-ui/react/select';
+
+type Option = { value: string; label: string };
+
+type Props = {
+  label: string;
+  name: string;
+  defaultValue: string;
+  options: Option[];
+  placeholder?: string;
+};
+
+/** Single-choice field that submits its value with the surrounding form. */
+export function SelectField({
+  label,
+  name,
+  defaultValue,
+  options,
+  placeholder = 'Selecione',
+}: Props) {
+  return (
+    <BaseSelect.Root name={name} defaultValue={defaultValue} items={options}>
+      <BaseSelect.Label className="text-field-label">{label}</BaseSelect.Label>
+      <BaseSelect.Trigger className="select-trigger">
+        <BaseSelect.Value placeholder={placeholder} />
+      </BaseSelect.Trigger>
+      <BaseSelect.Portal>
+        <BaseSelect.Positioner className="select-positioner" sideOffset={4}>
+          <BaseSelect.Popup className="select-popup">
+            <BaseSelect.List>
+              {options.map((option) => (
+                <BaseSelect.Item
+                  key={option.value}
+                  value={option.value}
+                  className="select-item"
+                >
+                  <BaseSelect.ItemText>{option.label}</BaseSelect.ItemText>
+                </BaseSelect.Item>
+              ))}
+            </BaseSelect.List>
+          </BaseSelect.Popup>
+        </BaseSelect.Positioner>
+      </BaseSelect.Portal>
+    </BaseSelect.Root>
+  );
+}

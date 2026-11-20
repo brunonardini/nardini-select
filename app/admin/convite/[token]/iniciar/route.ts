@@ -1,4 +1,5 @@
 import { allowsMutationOrigin } from '@/lib/auth/logic/access';
+import { socialSignInLocation } from '@/lib/auth/logic/sign-in';
 import {
   inviteCookieHeader,
   sealInviteCookie,
@@ -51,7 +52,7 @@ export async function POST(
   if (!secret) throw new Error('BETTER_AUTH_SECRET is not set.');
 
   const auth = await getAuth();
-  const response = await auth.api.signInSocial({
+  const started = await auth.api.signInSocial({
     body: {
       provider: 'google',
       callbackURL: '/admin',
@@ -60,7 +61,15 @@ export async function POST(
     headers: request.headers,
     asResponse: true,
   });
-  response.headers.append(
+  const location = socialSignInLocation(started.headers.get('location'));
+  if (!location) return back(request, token, 'erro');
+
+  const headers = new Headers();
+  headers.set('location', location);
+  for (const cookie of started.headers.getSetCookie()) {
+    headers.append('set-cookie', cookie);
+  }
+  headers.append(
     'set-cookie',
     inviteCookieHeader(
       sealInviteCookie(
@@ -73,5 +82,5 @@ export async function POST(
       ),
     ),
   );
-  return response;
+  return new Response(null, { status: 303, headers });
 }

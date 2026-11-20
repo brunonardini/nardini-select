@@ -14,7 +14,14 @@ describe('InviteForm', () => {
       screen.getByRole('checkbox', { name: 'Li e aceito os termos de uso' }),
     );
     expect(button).toBeEnabled();
-    expect(screen.getByRole('link', { name: 'Termos de uso' })).toHaveAttribute(
+    for (const link of [
+      screen.getByRole('link', { name: /Termos de uso/ }),
+      screen.getByRole('link', { name: /aviso de privacidade/ }),
+    ]) {
+      expect(link).toHaveAttribute('target', '_blank');
+      expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+    }
+    expect(screen.getByRole('link', { name: /Termos de uso/ })).toHaveAttribute(
       'href',
       '/admin/termos',
     );

@@ -47,6 +47,9 @@ test('sign-in uses the approved layout and an indeterminate loading state', asyn
   const back = page.getByRole('link', { name: 'Voltar ao site' });
   if (mobile) await expect(back).toBeHidden();
   else await expect(back).toBeVisible();
+  await expect(
+    page.getByRole('link', { name: 'Nardini Select — Admin' }),
+  ).toHaveAttribute('href', '/admin');
   const photo = page.locator('picture img');
   await expect(photo).toBeVisible();
   expect(
@@ -76,6 +79,12 @@ test('pending and active sessions see their own home', async ({
   await page.context().clearCookies();
   await page.context().addCookies([await sessionCookie(active)]);
   await page.goto('/admin');
+  await expect(
+    page.getByRole('heading', { name: /^Olá, worker-/ }),
+  ).toBeVisible();
+  await page.goto('/admin/perfil');
+  await page.getByRole('link', { name: 'Nardini Select' }).click();
+  await expect(page).toHaveURL(/\/admin$/);
   await expect(
     page.getByRole('heading', { name: /^Olá, worker-/ }),
   ).toBeVisible();
@@ -189,6 +198,25 @@ test('the valid invite stays closed until the terms are accepted', async ({
   );
   expect(refused.url()).toContain('erro=termos_obrigatorios');
   await expect(refused).toBeOK();
+
+  const started = await request.post(
+    `/admin/convite/${INVITE_TOKENS.valid}/iniciar`,
+    {
+      form: { aceite: 'on' },
+      headers: { origin: 'http://localhost:3200' },
+      maxRedirects: 0,
+    },
+  );
+  expect(started.status()).toBe(303);
+  expect(started.headers().location).toMatch(
+    /^https:\/\/accounts\.google\.com\//,
+  );
+  const cookies = started
+    .headersArray()
+    .filter((header) => header.name.toLowerCase() === 'set-cookie')
+    .map((header) => header.value);
+  expect(cookies.some((value) => value.startsWith('invite='))).toBe(true);
+  expect(cookies.length).toBeGreaterThan(1);
 });
 
 test('admin responses send the frame and referrer headers', async ({

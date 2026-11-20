@@ -26,7 +26,7 @@ export default defineConfig({
         'db/**',
         'app/**/page.tsx',
         'app/**/layout.tsx',
-        'app/**/actions.ts',
+        'app/**/*actions.ts',
         'app/**/route.ts',
         'proxy.ts',
       ],
@@ -68,6 +68,16 @@ export default defineConfig({
       },
       {
         extends: true,
+        // Pre-bundle Base UI entries the new stories import, so Vite does
+        // not reload the browser tests the first time it sees them.
+        optimizeDeps: {
+          include: [
+            '@base-ui/react/dialog',
+            '@base-ui/react/field',
+            '@base-ui/react/select',
+            '@base-ui/react/toast',
+          ],
+        },
         plugins: [
           // Runs every story as a test in Chromium, with the a11y checks.
           storybookTest({

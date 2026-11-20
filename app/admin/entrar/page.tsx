@@ -51,7 +51,7 @@ export default async function SignInPage({
       <div className={styles.header}>
         <Link
           className={styles.brand}
-          href="/"
+          href="/admin"
           aria-label="Nardini Select — Admin"
         >
           <Image

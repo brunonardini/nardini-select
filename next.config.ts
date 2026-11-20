@@ -17,6 +17,8 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  // `forbidden()` answers a signed-in non-admin with 403.
+  experimental: { authInterrupts: true },
   async headers() {
     return ['/admin', '/admin/:path*', '/api/auth/:path*'].map((source) => ({
       source,
