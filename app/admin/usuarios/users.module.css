@@ -1,0 +1,168 @@
+/* The listing sizes itself from the main column, not the viewport. */
+:global(.admin-main):has(> .page) {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+.page {
+  container-type: inline-size;
+  min-width: 0;
+}
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 24px 16px 56px;
+}
+@media (max-width: 359px) {
+  .body {
+    padding-inline: 12px;
+  }
+}
+@container (min-width: 460px) {
+  .body {
+    padding: 32px 24px 64px;
+  }
+}
+@container (min-width: 760px) {
+  .body {
+    padding: 40px 32px 72px;
+  }
+}
+
+/* Invitations disclosure */
+.invitations {
+  border: 1.5px solid var(--argila);
+  border-radius: 8px;
+  background: #f0e5d8;
+}
+.disclosureTrigger {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 56px;
+  padding: 8px 14px 8px 10px;
+  border: 0;
+  background: none;
+  color: var(--cafe);
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  text-align: left;
+}
+.disclosureTrigger:focus-visible {
+  outline: 2px solid var(--cafe);
+  outline-offset: 2px;
+}
+.disclosureTrigger[data-disabled] {
+  cursor: progress;
+}
+.mailIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex: none;
+  border-radius: 8px;
+  background: var(--areia);
+}
+.mailIcon svg {
+  width: 20px;
+  height: 20px;
+}
+.disclosureLabel {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+.disclosureChevron {
+  width: 20px;
+  height: 20px;
+  flex: none;
+  transform: rotate(-90deg);
+}
+.disclosureTrigger[data-panel-open] .disclosureChevron {
+  transform: rotate(0deg);
+}
+.disclosurePanel {
+  padding: 4px 14px 16px;
+  transition: opacity 0.15s ease;
+}
+.disclosurePanel[data-starting-style],
+.disclosurePanel[data-ending-style] {
+  opacity: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .disclosurePanel {
+    transition: none;
+  }
+}
+.invitationList {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.invitation {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px;
+  border: 1px solid var(--argila);
+  background: var(--off-white);
+}
+.invitation p {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 26px;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: var(--off-white);
+  color: var(--cafe);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.invitations .badge {
+  background: var(--areia);
+}
+
+/* Team */
+.team {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+.teamHeading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  font-size: 24px;
+}
+.teamHeading .badge {
+  background: var(--areia);
+  font-family: var(--font);
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 24px 0;
+}

@@ -1,0 +1,33 @@
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--cafe);
+}
+.marker {
+  width: 8px;
+  height: 8px;
+  flex: none;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+}
+.active {
+  color: var(--cafe);
+  background: var(--cafe);
+}
+.pending {
+  color: var(--terracota);
+  background: var(--terracota);
+}
+.outdated {
+  color: var(--terracota);
+}
+.disabled {
+  color: var(--argila);
+}
+.anonymized {
+  color: var(--argila);
+  background: var(--argila);
+}

@@ -12,9 +12,8 @@ const terms = ['terms_outdated'] as const;
 const allStates = ['terms_outdated', 'pending', 'active'] as const;
 
 /**
- * B2 route table. Rows whose files do not exist yet belong to later
- * milestones. The test requires every admin page, action, and route that
- * does exist to be listed here or in `publicAdminFiles`.
+ * B2 route table. Every admin page, action, and route is listed here
+ * or in `publicAdminFiles`.
  */
 export const guardedRoutes: readonly GuardedRoute[] = [
   { file: 'app/admin/page.tsx', allow: pendingOrActive, adminOnly: false },
@@ -55,6 +54,7 @@ export const guardedRoutes: readonly GuardedRoute[] = [
   { file: 'app/admin/papeis/[id]/page.tsx', allow: active, adminOnly: true },
   { file: 'app/admin/papeis/actions.ts', allow: active, adminOnly: true },
   { file: 'app/admin/auditoria/page.tsx', allow: active, adminOnly: true },
+  { file: 'app/admin/api/usuarios/route.ts', allow: active, adminOnly: true },
   {
     file: 'app/admin/api/avatar/[userId]/route.ts',
     allow: pendingOrActive,

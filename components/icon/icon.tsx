@@ -4,9 +4,68 @@ export function Icon({
   name,
   ...props
 }: SVGProps<SVGSVGElement> & {
-  name: 'down' | 'pin' | 'whatsapp' | 'instagram' | 'lock' | 'google' | 'left';
+  name:
+    | 'down'
+    | 'pin'
+    | 'whatsapp'
+    | 'instagram'
+    | 'lock'
+    | 'google'
+    | 'left'
+    | 'home'
+    | 'users'
+    | 'roles'
+    | 'history'
+    | 'menu'
+    | 'close'
+    | 'collapse'
+    | 'chevron'
+    | 'profile'
+    | 'sign-out'
+    | 'search'
+    | 'filter'
+    | 'sort'
+    | 'mail'
+    | 'right';
 }) {
   const paths = {
+    home: <path d="m3 10 9-7 9 7v10h-6v-6H9v6H3z" />,
+    users: (
+      <>
+        <circle cx="9" cy="8" r="3" />
+        <path d="M2 20v-2a7 7 0 0 1 14 0v2M16 5a3 3 0 0 1 0 6m2 3a5 5 0 0 1 4 5" />
+      </>
+    ),
+    roles: (
+      <path d="m12 3 8 3v5c0 5-4 8-8 11-4-3-8-6-8-11V6zM8.5 12l2.5 2.5 4.5-5" />
+    ),
+    history: <path d="M4 7V3m0 4h4M4 7a9 9 0 1 1-1 8m9-8v5l4 2" />,
+    menu: <path d="M3 6h18M3 12h18M3 18h18" />,
+    close: <path d="m5 5 14 14M19 5 5 19" />,
+    collapse: <path d="m14 6-6 6 6 6m5-12-6 6 6 6" />,
+    chevron: <path d="m7 10 5 5 5-5" />,
+    right: <path d="M4 12h16M13 5l7 7-7 7" />,
+    search: (
+      <>
+        <circle cx="11" cy="11" r="6.5" />
+        <path d="m16 16 4.5 4.5" />
+      </>
+    ),
+    filter: <path d="M4 7h10m4 0h2M4 17h2m4 0h10M16 5v4M8 15v4" />,
+    sort: <path d="M8 4v16m0 0-3-3m3 3 3-3M16 20V4m0 0-3 3m3-3 3 3" />,
+    mail: (
+      <>
+        <rect x="3" y="5.5" width="18" height="13" rx="1.5" />
+        <path d="m3.5 7 8.5 6.5L20.5 7" />
+      </>
+    ),
+    profile: (
+      <>
+        <circle cx="12" cy="8" r="3.5" />
+        <path d="M4 21a8 8 0 0 1 16 0" />
+      </>
+    ),
+    'sign-out': <path d="M11 4H4v16h7m-1-8h11m-4-4 4 4-4 4" />,
     left: <path d="M20 12H4M11 5l-7 7 7 7" />,
     google: (
       <path

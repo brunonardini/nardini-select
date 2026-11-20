@@ -412,30 +412,6 @@ jobs:
           paths:
             - .
 
-# One preview at a time. A newer pipeline skips an older one still queued.
-job-groups:
-  preview:
-    jobs:
-      - preview-approval:
-          type: approval
-          filters:
-            branches:
-              ignore: main
-      - preview-migrate:
-          context: nardini-select-preview-db
-          requires:
-            - preview-approval
-          filters:
-            branches:
-              ignore: main
-      - preview-deploy:
-          context: nardini-select-preview-deploy
-          requires:
-            - preview-migrate
-          filters:
-            branches:
-              ignore: main
-
 workflows:
   validate:
     jobs:
@@ -491,21 +467,22 @@ workflows:
           filters:
             branches:
               only: main
-      - preview:
-          # Not a required status check. Approve preview-approval to reset
-          # nardini_stg and deploy this branch to the staging alias.
-          serial-group: preview
+  preview:
+    when:
+      not:
+        equal: [main, << pipeline.git.branch >>]
+    jobs:
+      - preview-approval:
+          type: approval
+      - setup:
+          name: preview-setup
           requires:
-            - lint
-            - prettier
-            - knip
-            - typecheck
-            - unit-tests
-            - build
-            - storybook
-            - db-check
-            - e2e-desktop
-            - e2e-mobile
-          filters:
-            branches:
-              ignore: main
+            - preview-approval
+      - preview-migrate:
+          context: nardini-select-preview-db
+          requires:
+            - preview-setup
+      - preview-deploy:
+          context: nardini-select-preview-deploy
+          requires:
+            - preview-migrate

@@ -3,7 +3,7 @@ import { expect, userEvent, within } from 'storybook/test';
 import { SiteHeader } from './site-header';
 
 const meta = {
-  title: 'Components/SiteHeader',
+  title: 'Layout/SiteHeader',
   component: SiteHeader,
   parameters: {
     layout: 'fullscreen',

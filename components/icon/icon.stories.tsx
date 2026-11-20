@@ -1,6 +1,29 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { Icon } from './icon';
 
+export const AdminNavigationIcons = {
+  render: () => (
+    <div style={{ display: 'flex', gap: 20 }}>
+      {(
+        [
+          'home',
+          'users',
+          'roles',
+          'history',
+          'menu',
+          'close',
+          'collapse',
+          'chevron',
+          'profile',
+          'sign-out',
+        ] as const
+      ).map((name) => (
+        <Icon key={name} name={name} width={24} height={24} />
+      ))}
+    </div>
+  ),
+};
+
 const meta = {
   title: 'Components/Icon',
   component: Icon,
@@ -31,13 +54,28 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** The two directional icons, using the same size and stroke. */
+/** The directional icons, using the same size and stroke. */
 export const Arrows: Story = {
   argTypes: { name: { control: false } },
   render: (args) => (
     <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
       <Icon {...args} name="left" />
+      <Icon {...args} name="right" />
       <Icon {...args} name="down" />
+    </div>
+  ),
+};
+
+/** Listing controls: search, filters, sort, invitations and the next-page arrow. */
+export const ListIcons: Story = {
+  argTypes: { name: { control: false } },
+  render: (args) => (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
+      {(['search', 'filter', 'sort', 'mail', 'left', 'right'] as const).map(
+        (name) => (
+          <Icon key={name} {...args} name={name} />
+        ),
+      )}
     </div>
   ),
 };

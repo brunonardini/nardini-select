@@ -176,7 +176,7 @@ The owner approved a pink/red error treatment for the admin login. `Alert varian
 
 ## Typography
 
-**Two families, split by role.** _Karvest ExtraBold_ sets the headings (h1, h2 and h3), plus the approved separate Admin word: the hero heading, section headings, and pillar and contact subtitles. _Montserrat_ (400 and 800) sets everything else: body copy, buttons, labels, the header, and the About motto. No other weights or families. The separate Admin word beside the official logo is the only approved non-heading Karvest role; it is not a modification of the logo.
+**Two families, split by role.** _Karvest ExtraBold_ sets the headings (h1, h2 and h3), plus the approved separate Admin word: the hero heading, section headings, and pillar and contact subtitles. _Montserrat_ 400 and 800 set body copy, buttons, labels, the header, and the About motto. The Admin account action rows use Montserrat 650 through the scoped variable font `--font-admin-action`. The separate Admin word beside the official logo is the only approved non-heading Karvest role; it is not a modification of the logo.
 
 **Web fonts.** Karvest is self-hosted: `app/fonts/` keeps every Karvest weight as `.woff2`, and `app/fonts.ts` loads only `Karvest-ExtraBold.woff2` with `next/font/local`, exposed as `--font-display`. Montserrat loads from Google with `next/font/google`, exposed as `--font-brand`. `app/globals.css` sets h1, h2 and h3 to `--font-title`, which reads `--font-display` first. Other Karvest weights are added to `app/fonts.ts` when a design needs them. The OTF and TTF sources stay outside Git.
 
@@ -249,13 +249,68 @@ Paws pulse forever with a 1.2s cycle and 0/0.15/0.3s stagger. This expresses act
 
 Use `components/alert/Alert` with a short `title` and a safe description/recovery instruction in `children`. Omitting `variant` or setting `variant="default"` uses the neutral Off-white background, Cafe text, Argila border and Areia icon circle. Set `variant="danger"` for errors, including the login feedback. Its approved pink surface has a 1px boundary, 3px red top rule, 8px corners, 15×14px padding and 11px icon gap. A 20px decorative lock sits in a 34px tinted circle. Montserrat sets the 13px/800 title and 12px/400 body at 1.65 line height. There are no shadows or entrance animations.
 
-The component owns `role="alert"` and the hidden decorative icon; the component fills 100% of the available width, while the parent owns max-width and outer spacing. The login content column constrains the alert; the shared component has no width cap. Long content wraps without horizontal overflow. Login titles distinguish "Acesso negado" from a failed attempt, retain recovery guidance and re-enable the Google action after a provider/network failure. All three proposals converged to this same alert and loading treatment; the discarded variants are not part of the system.
+The component owns `role="alert"` and the hidden decorative icon; the component fills 100% of the available width, while the parent owns max-width and outer spacing. The login content column constrains the alert; the shared component has no width cap. Long content wraps without horizontal overflow. Login titles distinguish "Acesso negado" from a failed attempt, retain recovery guidance and re-enable the Google action after a provider/network failure.
 
 Storybook covers left/right icon placement, primary on dark surfaces, secondary navigation, loading for all action variants, disabled and keyboard-focus states, and the alert's default, danger and constrained-container examples. Google, lock and directional icons belong to the existing `Icon` family. Use `name="left"` for return actions and `name="down"` for the home arrows; the back button consumes the shared left-arrow icon.
+
+### Error 500
+
+The shared `Error500` renders the approved silver-gray Weimaraner on a
+destroyed sofa, with the fixed Karvest title "Eu não sei o que aconteceu…".
+Its only content props are optional `description` (default: "Não conseguimos
+carregar esta página.") and `children` for recovery controls. Keep the image
+and title fixed. Explanations must be safe, never raw exception messages.
+
+The component centers within its parent's available space and owns no viewport
+height or application shell. It uses Off-white, Café, and the existing Button
+variants. Actions stretch and stack on narrow containers; at 600px of container
+width they become a centered wrapping row. Container queries preserve the
+mobile arrangement inside narrow desktop content areas. The photo uses
+`next/image`, a transparent WebP, and reserved geometry. No entrance motion.
+The approved error heading is 32px/1.12 on narrow containers and 36px/1.12 on
+wide containers. Supporting copy is 15px/1.7 and 16px/1.7 respectively. The
+illustration caps at 480px; the text/action group caps at 580px, with 22px side
+padding. These scoped sizes define the approved mobile-first composition.
+
+Storybook documents full-screen, constrained, mobile, pending, keyboard focus,
+and custom-description states under **Components / Error 500**. The approved
+decision and integration details live in [docs/designs/error-500.md](docs/designs/error-500.md).
+
+### Error 404
+
+`Error404` uses the approved silver-gray Weimaraner searching beneath a rug
+and the fixed Karvest title "Procurei em todo canto.". Its optional description
+defaults to "Até debaixo do tapete. Mas esta página não foi encontrada.";
+`children` supplies recovery actions. The image and title stay fixed. Layout,
+container breakpoint, typography and spacing follow Error 500 above. Use the
+optimized transparent WebP through `next/image` and keep the image decorative.
+
+The root `app/not-found.tsx` renders this component for unmatched URLs and
+`notFound()` cases, with "Voltar ao início" and "Voltar". Next.js owns status
+and noindex behavior. Storybook documents the component under **Error 404**;
+[the approved design](docs/designs/error-404.md) records the route behavior.
 
 ### Navigation
 
 The off-white header holds the official horizontal logo on the left (210px, 180px at ≤1100px, 160px at ≤760px) and Café links on the right, with a Terracota underline on hover and a Café outlined contact pill that scrolls to `#contato`. At ≤760px, a 44px toggle (two strokes that become a cross) opens an Off-white menu with Café links (Base UI `NavigationMenu`, `components/site-header/`). The menu opens on press, announces expansion, closes on selection, on Escape, and on a click outside, and returns focus to the toggle.
+
+### Private Admin Navigation
+
+The Admin signature combines the official dog-and-N symbol with “Admin” in Karvest ExtraBold on Off-white. The word matches the height and placement of the original Nardini wordmark, including the flat-top i dot.
+
+Below 700px, the signature is centered between the menu and account buttons. Both have 44px touch targets and visible 36px circles. The menu icon is 18px. The menu opens a Café modal drawer from the left. From 700px, the Café sidebar is 190–270px wide and collapses to 72px. The compact sidebar shows the destination icons with accessible names. Off-white fill and Café text mark the current section. The browser remembers the sidebar width as a display preference.
+
+The account popover groups the viewer’s name and access state with the actions available to the viewer. “Perfil” and “Sair” are matching full-width rows with 14px Montserrat at weight 650, 21px outline icons and no underline. See [Admin navigation and browser preferences](docs/designs/admin-navigation.md).
+
+### Admin Listings
+
+Admin listings size themselves from the main column with container queries, not from the viewport. Horizontal padding is 16px, 24px from 460px of main width and 32px from 760px (12px on viewports under 360px). Page titles use Karvest at 27/30/34/36px at the same tiers plus 1000px.
+
+The toolbar is full width: `Toolbar.Content` takes the remaining space, the 44px `Search` fills that space, and `Toolbar.Actions` stays as wide as its 44px Café outline pills with 18px icons. Below 460px of main width, the content takes its own row and the actions wrap below. Filter and sort panels are Base UI popovers with a Café border. Person cards are Off-white with an Argila border and no shadow, in one, two or three columns at the same thresholds. The name links to the record; role, state and last access sit below an Argila rule. Loading uses one non-interactive Areia placeholder card per slot. The paginator pairs “Por página” with the range (“1–6 de 24”), “Página X de Y” and 44px arrows with the same 8px radius as Select that turn Argila when disabled.
+
+The shared pieces are `PageHeader` (the heading, with an optional action on the right), `Card` (one record, with an optional selection checkbox), `CardGrid` (the responsive list, an optional page-selection bar and the paginator), `Toolbar` (`Toolbar.Content` and `Toolbar.Actions`), `Search`, `FiltersAction` (commit or clear a set of fields) and `OrderByAction` (apply a sort). Storybook documents them under **Page Header**, **Card**, **Card Grid**, **Toolbar**, **Search**, **Filters Action** and **Order By Action**. The user listing uses the title with the invite action, the person card, the grid and the paginator, and the toolbar. It leaves the selection bar off: account changes stay on the detail page.
+
+`StatusText` (`components/status-text/`) writes an account state next to a decorative 8px dot: a filled Café dot for Ativo, filled Terracota for Pendente, a Terracota ring for Termos desatualizados, an Argila ring for Desabilitado and a filled Argila dot for Anonimizado. The text always carries the meaning. A counted disclosure (Areia surface, mail icon, Off-white count pill and a chevron that turns down when open) holds secondary lists such as pending invitations; it fades its content in without animating height. See [Admin user listing](docs/designs/admin-users.md).
 
 ### Brand Marks
 

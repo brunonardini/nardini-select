@@ -1,7 +1,4 @@
 /* This route owns its full-viewport shell; other admin pages keep their layout. */
-:global(.admin):has(.page) > :global(.admin-header) {
-  display: none;
-}
 :global(.admin-main):has(.page) {
   width: 100%;
   margin: 0;

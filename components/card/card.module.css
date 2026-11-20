@@ -1,0 +1,72 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid var(--argila);
+  border-radius: 10px;
+  background: var(--off-white);
+  overflow-wrap: anywhere;
+}
+.card[data-selected] {
+  border-color: var(--cafe);
+}
+.top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.name {
+  min-width: 0;
+  font-size: 0.9375rem;
+  font-weight: 800;
+  color: var(--cafe);
+  text-decoration: none;
+}
+a.name:hover {
+  text-decoration: underline;
+}
+a.name:focus-visible {
+  outline: 2px solid var(--cafe);
+  outline-offset: 2px;
+}
+.select {
+  margin-left: auto;
+  flex: none;
+  min-width: 44px;
+  min-height: 44px;
+  justify-content: center;
+}
+.description {
+  margin: 0;
+  font-size: 0.875rem;
+}
+.facts {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding-top: 10px;
+  border-top: 1px solid var(--argila);
+}
+.facts div {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 12px;
+  font-size: 0.875rem;
+}
+.skeleton {
+  border-radius: 10px;
+  min-height: 168px;
+  background:
+    linear-gradient(var(--areia), var(--areia)) 14px 14px / 36px 36px no-repeat,
+    linear-gradient(var(--areia), var(--areia)) 62px 24px / 45% 14px no-repeat,
+    linear-gradient(var(--areia), var(--areia)) 14px 66px / 70% 12px no-repeat,
+    linear-gradient(var(--areia), var(--areia)) 14px 108px / 40% 12px no-repeat,
+    linear-gradient(var(--areia), var(--areia)) 14px 134px / 55% 12px no-repeat,
+    var(--off-white);
+  border: 1px solid var(--argila);
+}

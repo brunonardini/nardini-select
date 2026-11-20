@@ -3,7 +3,10 @@ import { expect, test, type Page } from '@playwright/test';
 
 import { INVITE_TOKENS } from '../db/seeds/tokens';
 
-import { sessionCookie, setTerms, slotUser } from './fixtures/auth';
+import { sessionCookie, setRole, setTerms, slotUser } from './fixtures/auth';
+import { ADMIN_ROLE_ID, ATENDIMENTO_ROLE_ID } from '../db/seeds/ids';
+import { SESSION_COOKIE_NAME } from '../lib/auth/logic/session';
+import { withAdminFailure } from './fixtures/admin-failure';
 
 // WCAG 2.2 level A and AA, plus axe best practices.
 const tags = [
@@ -45,6 +48,74 @@ test('home page has no detectable accessibility violations', async ({
 }) => {
   expect(await scan(page)).toEqual([]);
 });
+
+test('default 404 is accessible, noindex and provides home and back recovery', async ({
+  page,
+}) => {
+  const response = await page.goto('/pagina-inexistente-error-404');
+  expect(response?.status()).toBe(404);
+  await expect(
+    page.getByRole('heading', { name: 'Procurei em todo canto.' }),
+  ).toBeVisible();
+  await expect(
+    page.getByText(
+      'Até debaixo do tapete. Mas esta página não foi encontrada.',
+    ),
+  ).toBeVisible();
+  await expect(
+    page.locator('meta[name="robots"][content*="noindex"]'),
+  ).toHaveCount(1);
+  expect(await scan(page)).toEqual([]);
+  await page.getByRole('button', { name: 'Voltar', exact: true }).click();
+  await expect(page).toHaveURL('/');
+  await page.goto('/pagina-inexistente-error-404');
+  await page.getByRole('link', { name: 'Voltar ao início' }).click();
+  await expect(page).toHaveURL('/');
+});
+
+for (const kind of ['database', 'generic'] as const) {
+  test(`admin ${kind} failure is safe, accessible and recoverable`, async ({
+    page,
+  }, testInfo) => {
+    await withAdminFailure(kind, 3400 + testInfo.workerIndex, async (url) => {
+      // Presence triggers viewer loading. The isolated process fails while
+      // opening its local test connection, before any session can be trusted.
+      await page.context().addCookies([
+        {
+          name: SESSION_COOKIE_NAME,
+          value: 'error-screen-test',
+          domain: 'localhost',
+          path: '/',
+          secure: true,
+          httpOnly: true,
+          sameSite: 'Lax',
+        },
+      ]);
+      await page.goto(url + '/admin');
+      await expect(
+        page.getByRole('heading', { name: 'Eu não sei o que aconteceu…' }),
+      ).toBeVisible();
+      await expect(
+        page.getByText(
+          kind === 'database'
+            ? 'Não conseguimos conectar ao banco de dados.'
+            : 'Não conseguimos carregar esta página.',
+        ),
+      ).toBeVisible();
+      await expect(
+        page.getByRole('navigation', { name: 'Administração' }),
+      ).toHaveCount(0);
+      await expect(page.locator('body')).not.toContainText('ECONNREFUSED');
+      expect(await scan(page)).toEqual([]);
+      await page.getByRole('link', { name: 'Tentar novamente' }).click();
+      await expect(
+        page.getByRole('heading', { name: 'Eu não sei o que aconteceu…' }),
+      ).toBeVisible();
+      await page.getByRole('link', { name: 'Voltar ao site' }).click();
+      await expect(page).toHaveURL(url + '/');
+    });
+  });
+}
 
 test('open mobile menu has no detectable accessibility violations', async ({
   page,
@@ -97,4 +168,94 @@ test('admin sign-in, invite, terms, and home have no detectable violations', asy
     .addCookies([await sessionCookie(slotUser(slot, 'no-role'))]);
   await page.goto('/admin');
   expect(await scan(page)).toEqual([]);
+});
+
+test('admin management pages and dialogs have no detectable violations', async ({
+  page,
+}, testInfo) => {
+  const slot = testInfo.parallelIndex;
+  const admin = slotUser(slot, 'approved');
+  const disabled = slotUser(slot, 'disabled');
+  await setTerms(admin, 'current');
+  await setRole(admin, ADMIN_ROLE_ID);
+  try {
+    await page.context().addCookies([await sessionCookie(admin)]);
+    await page.goto('/admin/usuarios');
+    const drawer = page.getByRole('button', { name: 'Menu', exact: true });
+    if (await drawer.isVisible()) {
+      await drawer.click();
+      await expect(page.getByRole('dialog', { name: 'Menu' })).toBeVisible();
+    } else {
+      await page.getByRole('button', { name: 'Recolher menu lateral' }).click();
+    }
+    expect(await scan(page)).toEqual([]);
+    await page.keyboard.press('Escape');
+    await page.getByRole('button', { name: /Conta de/ }).click();
+    expect(await scan(page)).toEqual([]);
+    await page.keyboard.press('Escape');
+    await page.getByRole('button', { name: 'Convidar usuário' }).click();
+    expect(await scan(page)).toEqual([]);
+    await page.keyboard.press('Escape');
+    await expect(
+      page
+        .getByRole('region', { name: 'Resultados' })
+        .getByRole('link')
+        .first(),
+    ).toBeVisible();
+    await page.getByRole('button', { name: /Convites pendentes/ }).click();
+    expect(await scan(page)).toEqual([]);
+    for (const [name, title] of [
+      ['Filtros', 'Filtrar equipe'],
+      ['Ordenar', 'Ordenar equipe'],
+    ]) {
+      await page.getByRole('button', { name, exact: true }).click();
+      // Scan the settled popup, not its opacity fade.
+      await expect(page.getByRole('dialog', { name: title })).toHaveCSS(
+        'opacity',
+        '1',
+      );
+      expect(await scan(page)).toEqual([]);
+      await page.keyboard.press('Escape');
+      await expect(page.getByRole('dialog', { name: title })).toHaveCount(0);
+    }
+
+    await page.goto(`/admin/usuarios/${disabled}`);
+    for (const name of ['Habilitar', 'Excluir', 'Anonimizar']) {
+      await page.getByRole('button', { name }).click();
+      expect(await scan(page)).toEqual([]);
+      await page.keyboard.press('Escape');
+    }
+
+    await page.goto('/admin/papeis');
+    expect(await scan(page)).toEqual([]);
+    await page.goto(`/admin/papeis/${ATENDIMENTO_ROLE_ID}`);
+    expect(await scan(page)).toEqual([]);
+    await page.goto('/admin/auditoria');
+    expect(await scan(page)).toEqual([]);
+  } finally {
+    await setRole(admin, ATENDIMENTO_ROLE_ID);
+  }
+});
+
+test('the user listing has no violations on a portrait tablet', async ({
+  page,
+}, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop', 'One tablet pass is enough.');
+  const admin = slotUser(testInfo.parallelIndex, 'approved');
+  await setTerms(admin, 'current');
+  await setRole(admin, ADMIN_ROLE_ID);
+  try {
+    await page.setViewportSize({ width: 834, height: 1194 });
+    await page.context().addCookies([await sessionCookie(admin)]);
+    await page.goto('/admin/usuarios');
+    await expect(
+      page
+        .getByRole('region', { name: 'Resultados' })
+        .getByRole('link')
+        .first(),
+    ).toBeVisible();
+    expect(await scan(page)).toEqual([]);
+  } finally {
+    await setRole(admin, ATENDIMENTO_ROLE_ID);
+  }
 });

@@ -1,0 +1,132 @@
+.grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+.selection {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border: 1px solid var(--argila);
+  border-radius: 10px;
+  background: var(--off-white);
+}
+.count {
+  margin: 0;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.clear {
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1.5px solid var(--cafe);
+  border-radius: 999px;
+  background: var(--off-white);
+  color: var(--cafe);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.clear:focus-visible {
+  outline: 2px solid var(--cafe);
+  outline-offset: 2px;
+}
+@media (hover: hover) and (pointer: fine) {
+  .clear:hover {
+    background: var(--areia);
+  }
+}
+.results {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+.results:focus-visible {
+  outline: 2px solid var(--cafe);
+  outline-offset: 4px;
+}
+.results[aria-busy='true'] .cards {
+  opacity: 0.6;
+  transition: opacity 0.15s ease;
+}
+.cards {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+@container (min-width: 460px) {
+  .cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@container (min-width: 760px) {
+  .cards {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.paginator {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 16px;
+  font-size: 0.8125rem;
+}
+.pageSize {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.pageSize :global(.select-trigger) {
+  min-height: 44px;
+  width: 5rem;
+  padding: 8px 12px;
+}
+.pageSize :global(.text-field-label) {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.pageNav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.pageButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1.5px solid var(--cafe);
+  border-radius: 8px;
+  background: var(--off-white);
+  color: var(--cafe);
+}
+.pageButton svg {
+  width: 18px;
+  height: 18px;
+}
+.pageButton:disabled {
+  border-color: var(--argila);
+  color: var(--argila);
+  cursor: not-allowed;
+}
+.pageButton:focus-visible {
+  outline: 2px solid var(--cafe);
+  outline-offset: 2px;
+}
+.pageLabel {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}

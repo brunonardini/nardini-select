@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { decideSignIn } from './sign-in';
+import { decideSignIn, socialSignInLocation } from './sign-in';
 
 function errorCode(decision: { ok: boolean; error?: string }): string {
   if (!('error' in decision) || decision.ok || !decision.error) {
@@ -66,5 +66,21 @@ describe('decideSignIn', () => {
         nextImage: 'https://evil.example/a',
       }),
     ).toEqual({ ok: true, photoUrl: null });
+  });
+});
+
+describe('socialSignInLocation', () => {
+  it('keeps an absolute http(s) provider URL', () => {
+    expect(
+      socialSignInLocation(
+        'https://accounts.google.com/o/oauth2/v2/auth?response_type=code',
+      ),
+    ).toBe('https://accounts.google.com/o/oauth2/v2/auth?response_type=code');
+  });
+
+  it('drops values a browser must not navigate to', () => {
+    expect(socialSignInLocation(null)).toBeNull();
+    expect(socialSignInLocation('/admin')).toBeNull();
+    expect(socialSignInLocation('javascript:alert(1)')).toBeNull();
   });
 });

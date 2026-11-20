@@ -22,9 +22,16 @@ export function InviteForm({ token }: { token: string }) {
         onCheckedChange={setAccepted}
       />
       <p className="admin-links">
-        <a href="/admin/termos">Termos de uso</a>
+        <a href="/admin/termos" target="_blank" rel="noopener noreferrer">
+          Termos de uso
+          <span className="sr-only"> em uma nova aba</span>
+        </a>
         {' e '}
-        <a href="/admin/privacidade">aviso de privacidade</a>.
+        <a href="/admin/privacidade" target="_blank" rel="noopener noreferrer">
+          aviso de privacidade
+          <span className="sr-only"> em uma nova aba</span>
+        </a>
+        .
       </p>
       <Button type="submit" disabled={!accepted}>
         Entrar com Google

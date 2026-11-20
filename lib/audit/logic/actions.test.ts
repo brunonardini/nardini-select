@@ -6,7 +6,7 @@ import {
   storedActorType,
   type AuditAction,
 } from './actions';
-import { renderAudit } from './render';
+import { renderAudit, renderKnownAudit, shownPerson } from './render';
 
 const USER = 'a1d00000-0000-4000-8000-000000000010';
 const ROLE = 'a1d00000-0000-4000-8000-000000000002';
@@ -89,6 +89,13 @@ describe('renderAudit', () => {
         { user: 'Ana' },
       ),
     ).toBe("mudou o papel de Ana de 'estoque' para 'atendimento'");
+    expect(
+      renderAudit(
+        'user.role_changed',
+        { from_role_name: null, to_role_name: '  ' },
+        { user: 'Ana' },
+      ),
+    ).toBe("mudou o papel de Ana de 'sem papel' para 'sem papel'");
     expect(renderAudit('user.disabled', {}, { user: 'Ana' })).toBe(
       'desabilitou Ana',
     );
@@ -113,5 +120,20 @@ describe('renderAudit', () => {
       "excluiu o papel 'loja'",
     );
     expect(renderAudit('role.deleted', {}, {})).toBe("excluiu o papel ''");
+    expect(renderKnownAudit('seed.fixed', {}, {})).toBe('registrou um evento');
+    expect(renderKnownAudit('user.deleted', {}, {})).toBe('excluiu um usuário');
+    expect(
+      shownPerson({ displayName: ' Ana ', fullName: null, anonymizedAt: null }),
+    ).toBe('Ana');
+    expect(
+      shownPerson({ displayName: ' ', fullName: 'Silva', anonymizedAt: null }),
+    ).toBe('Silva');
+    expect(
+      shownPerson({ displayName: null, fullName: ' ', anonymizedAt: null }),
+    ).toBe('Usuário removido');
+    expect(
+      shownPerson({ displayName: 'Ana', fullName: null, anonymizedAt: 'x' }),
+    ).toBe('Usuário removido');
+    expect(shownPerson(null)).toBe('Usuário removido');
   });
 });

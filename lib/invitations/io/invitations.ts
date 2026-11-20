@@ -10,7 +10,7 @@ import {
   hashInvitationToken,
   isInvitationToken,
 } from '@/lib/auth/logic/invitation-token';
-import { getDatabase } from '@/lib/db/io/client';
+import { getDatabase, transaction } from '@/lib/db/io/client';
 import {
   invitationExpiresAt,
   invitationName,
@@ -146,7 +146,14 @@ export async function renewInvitation(
   return insertInvitation(ctx, trx, row.full_name, input.now);
 }
 
-export async function listPendingInvitations(
+export async function listOpenInvitations(
+  ctx: AuthorizedContext,
+  now = new Date(),
+): Promise<InvitationView[]> {
+  return transaction((trx) => listPendingInvitations(ctx, trx, now));
+}
+
+async function listPendingInvitations(
   _ctx: AuthorizedContext,
   trx: Transaction<DB>,
   now: Date,

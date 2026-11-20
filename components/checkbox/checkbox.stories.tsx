@@ -4,7 +4,7 @@ import { expect, fn, userEvent, within } from 'storybook/test';
 import { Checkbox } from './checkbox';
 
 const meta = {
-  title: 'Components/Checkbox',
+  title: 'Form/Checkbox',
   component: Checkbox,
   args: {
     label: 'Li e aceito os termos de uso',
@@ -46,6 +46,29 @@ export const Disabled: Story = {
     await expect(checkbox).toHaveAttribute('aria-disabled', 'true');
     await userEvent.click(checkbox);
     await expect(args.onCheckedChange).not.toHaveBeenCalled();
+  },
+};
+
+/** Mixed state for a page whose cards are only partly selected. */
+export const Indeterminate: Story = {
+  args: { indeterminate: true, label: 'Selecionar página' },
+  play: async ({ canvasElement }) => {
+    await expect(within(canvasElement).getByRole('checkbox')).toHaveAttribute(
+      'aria-checked',
+      'mixed',
+    );
+  },
+};
+
+/** The label stays the accessible name when the card shows only the box. */
+export const HiddenLabel: Story = {
+  args: { labelHidden: true, label: 'Selecionar Ana Souza' },
+  play: async ({ canvasElement }) => {
+    await expect(
+      within(canvasElement).getByRole('checkbox', {
+        name: 'Selecionar Ana Souza',
+      }),
+    ).toBeInTheDocument();
   },
 };
 

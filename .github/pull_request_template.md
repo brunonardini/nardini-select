@@ -57,7 +57,9 @@ footer in this description isn't part of the commit.
 - [ ] `prefers-reduced-motion` drops movement but keeps fades; hover motion is gated behind `@media (hover: hover) and (pointer: fine)`
 - [ ] Images use `next/image` and fonts use `next/font`
 - [ ] Primary/secondary/outline buttons, left/right icons, shared loading and alerts match `DESIGN.md` and their Storybook states; semantic error colors stay reserved for feedback
+- [ ] Error 404/500 keep their approved images/titles, safe descriptions and caller-owned recovery actions; actions adapt to the container width
 - [ ] `"use client"` only where there is interactivity
+- [ ] Browser preferences use the shared browser storage module for all `localStorage` access
 
 **Server and data**
 
@@ -79,13 +81,14 @@ footer in this description isn't part of the commit.
 **Configuration and docs**
 
 - [ ] On `main`, CircleCI migrates production only after lint, type checking, unit tests, and `db-check`, then releases, then deploys. PRs run the full validation suite
-- [ ] Preview stays a manual hold after validation, then resets and seeds `nardini_stg`, then deploys the `staging` alias. Those jobs are not required checks
+- [ ] Preview is its own workflow on branches other than `main`: `preview-setup`, then a manual hold, then a reset and seed of `nardini_stg`, then the `staging` alias. It does not wait for `validate`, and those jobs are not required checks
 - [ ] App variables are set in Netlify for Production and Deploy Previews, pipeline-only variables in CircleCI, and both are documented in `docs/deployment.md` (never set `SENTRY_RELEASE` in Netlify)
 - [ ] The three `Sentry.init` calls are still in sync
 - [ ] Upgrading `@playwright/test` also updates the Playwright image tag in `.circleci/config.yml`
 - [ ] Changing the Node.js version updates `.nvmrc`, `engines` in `package.json`, and the `cimg/node` image in `.circleci/config.yml` together
 - [ ] The affected docs reflect the change, and the README stays focused on the project overview, local setup, checks, and links
 - [ ] Docs, code comments, and this PR are in English; only website and business content is in Portuguese
+- [ ] Project mockup skills stay versioned; generated studies stay under `tmp/mockups/`, with no temporary-study references in shipped code or durable product docs
 - [ ] This template still matches the project rules and configuration
 
 ## Screenshots

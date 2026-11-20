@@ -26,7 +26,8 @@ export type ButtonProps = (LinkProps | ActionProps) & {
 const isLink = (props: LinkProps | ActionProps): props is LinkProps =>
   typeof props.href === 'string';
 
-function PawLoading() {
+/** The indeterminate three-paw treatment, for controls that wait on data. */
+export function PawLoading() {
   return (
     <span className="button-paws" aria-hidden="true">
       {[0, 1, 2].map((paw) => (
