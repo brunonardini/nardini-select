@@ -171,6 +171,7 @@ Database:
 Code:
 - Business rules live in `lib/**/logic/` as pure functions with 100% unit coverage. Inputs are passed in: no I/O, clock, or randomness.
 - Code that touches Postgres, Better Auth, Google, Sentry, cookies, or the clock lives in `lib/**/io/`.
+- Route every application use of `localStorage` through [the browser storage module](lib/browser-storage/README.md). It falls back to memory for the current browser document when persistent storage is unavailable.
 
 Access:
 - Every private entry point is listed in the guard route table. The guard reads the role on each request.

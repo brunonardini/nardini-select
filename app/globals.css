@@ -1060,41 +1060,11 @@ button.button {
   display: flex;
   flex-direction: column;
 }
-.admin-header {
-  min-height: 72px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  padding: 16px var(--gutter);
-  border-bottom: 1px solid var(--areia);
-}
-.admin-brand {
-  font-weight: 800;
-  text-decoration: none;
-}
-.admin-account {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 20px;
-}
-.admin-nav {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-}
-.admin-nav a {
-  font-weight: 700;
-  text-decoration: none;
-}
-.admin-account a {
-  font-weight: 700;
-}
 .admin-main {
   width: min(960px, 100%);
   margin: 0 auto;
   padding: 48px var(--gutter) 80px;
+  overflow-wrap: anywhere;
 }
 .admin-panel h1,
 .empty-state h1 {

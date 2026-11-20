@@ -83,7 +83,7 @@ test('pending and active sessions see their own home', async ({
     page.getByRole('heading', { name: /^Olá, worker-/ }),
   ).toBeVisible();
   await page.goto('/admin/perfil');
-  await page.getByRole('link', { name: 'Nardini Select' }).click();
+  await page.getByRole('link', { name: 'Nardini Select Admin' }).click();
   await expect(page).toHaveURL(/\/admin$/);
   await expect(
     page.getByRole('heading', { name: /^Olá, worker-/ }),
@@ -144,7 +144,8 @@ test('signing out in one tab ends the session in the other', async ({
   const pageB = await second.newPage();
   await pageA.goto('/admin');
   await pageB.goto('/admin');
-  await pageA.getByRole('banner').getByRole('button', { name: 'Sair' }).click();
+  await pageA.getByRole('button', { name: /Conta de/ }).click();
+  await pageA.getByRole('dialog').getByRole('button', { name: 'Sair' }).click();
   await expect(pageA).toHaveURL(/\/admin\/entrar$/);
   await pageB.evaluate(() => window.dispatchEvent(new Event('focus')));
   await expect(pageB).toHaveURL(/\/admin\/entrar$/);

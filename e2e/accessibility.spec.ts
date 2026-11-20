@@ -181,6 +181,18 @@ test('admin management pages and dialogs have no detectable violations', async (
   try {
     await page.context().addCookies([await sessionCookie(admin)]);
     await page.goto('/admin/usuarios');
+    const drawer = page.getByRole('button', { name: 'Menu', exact: true });
+    if (await drawer.isVisible()) {
+      await drawer.click();
+      await expect(page.getByRole('dialog', { name: 'Menu' })).toBeVisible();
+    } else {
+      await page.getByRole('button', { name: 'Recolher menu lateral' }).click();
+    }
+    expect(await scan(page)).toEqual([]);
+    await page.keyboard.press('Escape');
+    await page.getByRole('button', { name: /Conta de/ }).click();
+    expect(await scan(page)).toEqual([]);
+    await page.keyboard.press('Escape');
     await page.getByRole('button', { name: 'Convidar usuário' }).click();
     expect(await scan(page)).toEqual([]);
     await page.keyboard.press('Escape');

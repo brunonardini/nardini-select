@@ -10,6 +10,15 @@ export const brandFont = Montserrat({
   display: 'swap',
 });
 
+// The account action rows use the approved intermediate weight (650).
+export const adminActionFont = Montserrat({
+  subsets: ['latin'],
+  weight: 'variable',
+  variable: '--font-admin-action',
+  display: 'swap',
+  preload: false,
+});
+
 // Karvest ExtraBold (official web export, see DESIGN.md) sets headings and
 // the separate Admin word. Other weights stay in app/fonts/ until needed.
 export const displayFont = localFont({

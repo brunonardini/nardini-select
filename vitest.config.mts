@@ -74,6 +74,7 @@ export default defineConfig({
           include: [
             '@base-ui/react/dialog',
             '@base-ui/react/field',
+            '@base-ui/react/popover',
             '@base-ui/react/select',
             '@base-ui/react/toast',
           ],

@@ -22,7 +22,9 @@ describe('SelectField', () => {
       </form>,
     );
     await userEvent.click(screen.getByRole('combobox', { name: 'Papel' }));
-    await userEvent.click(screen.getByRole('option', { name: 'Estoque' }));
+    await userEvent.click(
+      await screen.findByRole('option', { name: 'Estoque' }),
+    );
     expect(screen.getByRole('combobox', { name: 'Papel' })).toHaveTextContent(
       'Estoque',
     );

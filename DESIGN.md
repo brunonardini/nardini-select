@@ -176,7 +176,7 @@ The owner approved a pink/red error treatment for the admin login. `Alert varian
 
 ## Typography
 
-**Two families, split by role.** _Karvest ExtraBold_ sets the headings (h1, h2 and h3), plus the approved separate Admin word: the hero heading, section headings, and pillar and contact subtitles. _Montserrat_ (400 and 800) sets everything else: body copy, buttons, labels, the header, and the About motto. No other weights or families. The separate Admin word beside the official logo is the only approved non-heading Karvest role; it is not a modification of the logo.
+**Two families, split by role.** _Karvest ExtraBold_ sets the headings (h1, h2 and h3), plus the approved separate Admin word: the hero heading, section headings, and pillar and contact subtitles. _Montserrat_ 400 and 800 set body copy, buttons, labels, the header, and the About motto. The Admin account action rows use Montserrat 650 through the scoped variable font `--font-admin-action`. The separate Admin word beside the official logo is the only approved non-heading Karvest role; it is not a modification of the logo.
 
 **Web fonts.** Karvest is self-hosted: `app/fonts/` keeps every Karvest weight as `.woff2`, and `app/fonts.ts` loads only `Karvest-ExtraBold.woff2` with `next/font/local`, exposed as `--font-display`. Montserrat loads from Google with `next/font/google`, exposed as `--font-brand`. `app/globals.css` sets h1, h2 and h3 to `--font-title`, which reads `--font-display` first. Other Karvest weights are added to `app/fonts.ts` when a design needs them. The OTF and TTF sources stay outside Git.
 
@@ -293,6 +293,14 @@ and noindex behavior. Storybook documents the component under **Error 404**;
 ### Navigation
 
 The off-white header holds the official horizontal logo on the left (210px, 180px at ≤1100px, 160px at ≤760px) and Café links on the right, with a Terracota underline on hover and a Café outlined contact pill that scrolls to `#contato`. At ≤760px, a 44px toggle (two strokes that become a cross) opens an Off-white menu with Café links (Base UI `NavigationMenu`, `components/site-header/`). The menu opens on press, announces expansion, closes on selection, on Escape, and on a click outside, and returns focus to the toggle.
+
+### Private Admin Navigation
+
+The Admin signature combines the official dog-and-N symbol with “Admin” in Karvest ExtraBold on Off-white. The word matches the height and placement of the original Nardini wordmark, including the flat-top i dot.
+
+Below 700px, the signature is centered between the menu and account buttons. Both have 44px touch targets and visible 36px circles. The menu icon is 18px. The menu opens a Café modal drawer from the left. From 700px, the Café sidebar is 190–270px wide and collapses to 72px. The compact sidebar shows the destination icons with accessible names. Off-white fill and Café text mark the current section. The browser remembers the sidebar width as a display preference.
+
+The account popover groups the viewer’s name and access state with the actions available to the viewer. “Perfil” and “Sair” are matching full-width rows with 14px Montserrat at weight 650, 21px outline icons and no underline. See [Admin navigation and browser preferences](docs/designs/admin-navigation.md).
 
 ### Brand Marks
 

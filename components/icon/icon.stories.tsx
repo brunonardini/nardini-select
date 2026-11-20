@@ -1,6 +1,29 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { Icon } from './icon';
 
+export const AdminNavigationIcons = {
+  render: () => (
+    <div style={{ display: 'flex', gap: 20 }}>
+      {(
+        [
+          'home',
+          'users',
+          'roles',
+          'history',
+          'menu',
+          'close',
+          'collapse',
+          'chevron',
+          'profile',
+          'sign-out',
+        ] as const
+      ).map((name) => (
+        <Icon key={name} name={name} width={24} height={24} />
+      ))}
+    </div>
+  ),
+};
+
 const meta = {
   title: 'Components/Icon',
   component: Icon,

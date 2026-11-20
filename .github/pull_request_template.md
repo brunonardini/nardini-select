@@ -59,6 +59,7 @@ footer in this description isn't part of the commit.
 - [ ] Primary/secondary/outline buttons, left/right icons, shared loading and alerts match `DESIGN.md` and their Storybook states; semantic error colors stay reserved for feedback
 - [ ] Error 404/500 keep their approved images/titles, safe descriptions and caller-owned recovery actions; actions adapt to the container width
 - [ ] `"use client"` only where there is interactivity
+- [ ] Browser preferences use the shared browser storage module for all `localStorage` access
 
 **Server and data**
 
