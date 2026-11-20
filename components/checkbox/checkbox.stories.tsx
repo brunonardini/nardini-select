@@ -49,6 +49,29 @@ export const Disabled: Story = {
   },
 };
 
+/** Mixed state for a page whose cards are only partly selected. */
+export const Indeterminate: Story = {
+  args: { indeterminate: true, label: 'Selecionar página' },
+  play: async ({ canvasElement }) => {
+    await expect(within(canvasElement).getByRole('checkbox')).toHaveAttribute(
+      'aria-checked',
+      'mixed',
+    );
+  },
+};
+
+/** The label stays the accessible name when the card shows only the box. */
+export const HiddenLabel: Story = {
+  args: { labelHidden: true, label: 'Selecionar Ana Souza' },
+  play: async ({ canvasElement }) => {
+    await expect(
+      within(canvasElement).getByRole('checkbox', {
+        name: 'Selecionar Ana Souza',
+      }),
+    ).toBeInTheDocument();
+  },
+};
+
 export const Focused: Story = {
   play: async ({ canvasElement }) => {
     await userEvent.tab();

@@ -4,7 +4,7 @@ import { expect, within } from 'storybook/test';
 import { EmptyState } from './empty-state';
 
 const meta = {
-  title: 'Components/EmptyState',
+  title: 'Layout/EmptyState',
   component: EmptyState,
   args: { title: 'Cadastro em aprovação' },
   parameters: {

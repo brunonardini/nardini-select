@@ -1125,8 +1125,13 @@ button.button {
   height: 0.7rem;
   background: transparent;
 }
-.checkbox-control[data-checked] .checkbox-indicator {
+.checkbox-control[data-checked] .checkbox-indicator,
+.checkbox-control[data-indeterminate] .checkbox-indicator {
   background: var(--cafe);
+}
+.checkbox-control[data-indeterminate] .checkbox-indicator {
+  width: 0.7rem;
+  height: 2px;
 }
 .checkbox-control[data-disabled] {
   opacity: 0.5;

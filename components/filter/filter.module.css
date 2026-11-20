@@ -1,0 +1,67 @@
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 16px;
+  border: 1.5px solid var(--cafe);
+  border-radius: 999px;
+  background: var(--off-white);
+  color: var(--cafe);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.trigger svg {
+  width: 18px;
+  height: 18px;
+}
+.trigger:focus-visible {
+  outline: 2px solid var(--cafe);
+  outline-offset: 2px;
+}
+.trigger[data-popup-open] {
+  background: var(--areia);
+}
+@media (hover: hover) and (pointer: fine) {
+  .trigger:hover {
+    background: var(--areia);
+  }
+}
+.popup {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: min(20rem, calc(100vw - 24px));
+  padding: 16px;
+  border: 1.5px solid var(--cafe);
+  background: var(--off-white);
+  color: var(--cafe);
+  transition: opacity 0.15s ease;
+}
+.popup[data-starting-style],
+.popup[data-ending-style] {
+  opacity: 0;
+}
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.positioner {
+  z-index: 40;
+}
+.title {
+  margin: 0;
+  font-family: var(--font);
+  font-size: 1rem;
+  font-weight: 800;
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}

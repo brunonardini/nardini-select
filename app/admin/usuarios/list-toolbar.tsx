@@ -1,9 +1,12 @@
 'use client';
 
-import { Popover } from '@base-ui/react/popover';
-import { useState, type FormEvent, type ReactNode } from 'react';
-
 import { Button } from '@/components/button/button';
+import {
+  Filter,
+  PopoverActions,
+  PopoverForm,
+  ToolbarPopover,
+} from '@/components/filter/filter';
 import { Icon } from '@/components/icon/icon';
 import { SelectField } from '@/components/select/select';
 import {
@@ -27,44 +30,8 @@ type Props = {
   onChange: (changes: Partial<Omit<UserListQuery, 'search' | 'page'>>) => void;
 };
 
-function ToolPopover({
-  label,
-  icon,
-  title,
-  children,
-}: {
-  label: string;
-  icon: 'filter' | 'sort';
-  title: string;
-  children: (close: () => void) => ReactNode;
-}) {
-  const [open, setOpen] = useState(false);
-  return (
-    <Popover.Root open={open} onOpenChange={setOpen}>
-      <Popover.Trigger className={styles.toolButton}>
-        <Icon name={icon} />
-        {label}
-      </Popover.Trigger>
-      <Popover.Portal>
-        <Popover.Positioner
-          className={styles.positioner}
-          align="start"
-          sideOffset={8}
-          collisionPadding={12}
-        >
-          <Popover.Popup className={styles.popup}>
-            <Popover.Title className={styles.popupTitle}>{title}</Popover.Title>
-            {children(() => setOpen(false))}
-          </Popover.Popup>
-        </Popover.Positioner>
-      </Popover.Portal>
-    </Popover.Root>
-  );
-}
-
-function formValues(event: FormEvent<HTMLFormElement>) {
-  event.preventDefault();
-  return Object.fromEntries(new FormData(event.currentTarget));
+function valuesOf(data: FormData) {
+  return Object.fromEntries(data);
 }
 
 export function ListToolbar({
@@ -98,50 +65,38 @@ export function ListToolbar({
           onChange={(event) => onSearch(event.target.value)}
         />
       </label>
-      <ToolPopover label="Filtros" icon="filter" title="Filtrar equipe">
+      <Filter
+        label="Filtros"
+        title="Filtrar equipe"
+        submitLabel="Aplicar filtros"
+        clearLabel="Limpar filtros"
+        onSubmit={(data) => {
+          const parsed = parseUserListQuery(valuesOf(data));
+          onChange({ state: parsed.state, role: parsed.role });
+        }}
+        onClear={() => onChange({ state: null, role: null })}
+      >
+        <SelectField
+          label="Estado"
+          name="estado"
+          defaultValue={query.state ?? ANY}
+          options={stateOptions}
+        />
+        <SelectField
+          label="Papel"
+          name="papel"
+          defaultValue={query.role ?? ANY}
+          options={roleOptions}
+        />
+      </Filter>
+      <ToolbarPopover label="Ordenar" icon="sort" title="Ordenar equipe">
         {(close) => (
-          <form
-            className={styles.popupForm}
+          <PopoverForm
             onSubmit={(event) => {
-              const parsed = parseUserListQuery(formValues(event));
-              onChange({ state: parsed.state, role: parsed.role });
-              close();
-            }}
-          >
-            <SelectField
-              label="Estado"
-              name="estado"
-              defaultValue={query.state ?? ANY}
-              options={stateOptions}
-            />
-            <SelectField
-              label="Papel"
-              name="papel"
-              defaultValue={query.role ?? ANY}
-              options={roleOptions}
-            />
-            <div className={styles.popupActions}>
-              <Button type="submit">Aplicar filtros</Button>
-              <Button
-                type="button"
-                variant="secondary"
-                onClick={() => {
-                  onChange({ state: null, role: null });
-                  close();
-                }}
-              >
-                Limpar filtros
-              </Button>
-            </div>
-          </form>
-        )}
-      </ToolPopover>
-      <ToolPopover label="Ordenar" icon="sort" title="Ordenar equipe">
-        {(close) => (
-          <form
-            className={styles.popupForm}
-            onSubmit={(event) => {
-              const parsed = parseUserListQuery(formValues(event));
+              event.preventDefault();
+              const parsed = parseUserListQuery(
+                valuesOf(new FormData(event.currentTarget)),
+              );
               onChange({ sort: parsed.sort, direction: parsed.direction });
               close();
             }}
@@ -165,12 +120,12 @@ export function ListToolbar({
                 { value: 'desc', label: 'Decrescente' },
               ]}
             />
-            <div className={styles.popupActions}>
+            <PopoverActions>
               <Button type="submit">Aplicar ordem</Button>
-            </div>
-          </form>
+            </PopoverActions>
+          </PopoverForm>
         )}
-      </ToolPopover>
+      </ToolbarPopover>
     </div>
   );
 }

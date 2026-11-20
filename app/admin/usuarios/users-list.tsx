@@ -4,12 +4,17 @@ import { useEffect, useRef } from 'react';
 
 import { Alert } from '@/components/alert/alert';
 import { Button } from '@/components/button/button';
-import type { UserListQuery } from '@/lib/users/logic/list-query';
+import { CardPlaceholder } from '@/components/card/card';
+import { CardGrid, CardGridList } from '@/components/card-grid/card-grid';
+import {
+  PAGE_SIZES,
+  pageSizeFrom,
+  type UserListQuery,
+} from '@/lib/users/logic/list-query';
 
 import { ListToolbar } from './list-toolbar';
-import { Paginator } from './paginator';
 import { useUserList } from './use-user-list';
-import { UserCard, UserCardPlaceholder } from './user-card';
+import { UserCard } from './user-card';
 import styles from './users.module.css';
 
 type Props = {
@@ -63,13 +68,25 @@ export function UsersList({ roles, initialQuery, pageSizeInAddress }: Props) {
       <p className="sr-only" role="status">
         {list.status === 'ready' ? statusText(total) : ''}
       </p>
-      <div
-        ref={results}
-        className={styles.results}
-        tabIndex={-1}
-        aria-label="Resultados"
-        role="region"
-        aria-busy={list.status === 'loading'}
+      <CardGrid
+        resultsRef={results}
+        busy={list.status === 'loading'}
+        pagination={{
+          page,
+          pageSize: list.query.pageSize,
+          pageSizes: PAGE_SIZES,
+          total,
+          onPage: (next) => {
+            list.goToPage(next);
+            focusResults();
+          },
+          onPageSize: (size) => {
+            const parsed = pageSizeFrom(String(size));
+            if (!parsed) return;
+            list.setPageSize(parsed);
+            focusResults();
+          },
+        }}
       >
         {list.status === 'error' ? (
           <div className={styles.empty}>
@@ -84,11 +101,11 @@ export function UsersList({ roles, initialQuery, pageSizeInAddress }: Props) {
             </Button>
           </div>
         ) : list.result === null ? (
-          <ul className={styles.cards} aria-hidden="true">
+          <CardGridList hidden>
             {Array.from({ length: list.query.pageSize }, (_, index) => (
-              <UserCardPlaceholder key={index} />
+              <CardPlaceholder key={index} />
             ))}
-          </ul>
+          </CardGridList>
         ) : list.result.items.length === 0 ? (
           <div className={styles.empty}>
             <p>
@@ -99,26 +116,13 @@ export function UsersList({ roles, initialQuery, pageSizeInAddress }: Props) {
             </Button>
           </div>
         ) : (
-          <ul className={styles.cards}>
+          <CardGridList>
             {list.result.items.map((user) => (
               <UserCard key={user.id} user={user} />
             ))}
-          </ul>
+          </CardGridList>
         )}
-      </div>
-      <Paginator
-        page={page}
-        pageSize={list.query.pageSize}
-        total={total}
-        onPage={(next) => {
-          list.goToPage(next);
-          focusResults();
-        }}
-        onPageSize={(size) => {
-          list.setPageSize(size);
-          focusResults();
-        }}
-      />
+      </CardGrid>
     </section>
   );
 }

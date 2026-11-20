@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 
+import { PageHeader } from '@/components/page-header/page-header';
 import { requirePage, type AuthorizedContext } from '@/lib/auth/io/guard';
 import { listOpenInvitations } from '@/lib/invitations/io/invitations';
 import { listRoles } from '@/lib/roles/io/roles';
@@ -43,10 +44,7 @@ export default async function UsersPage({
   return (
     <div className={styles.page}>
       <div className={styles.body}>
-        <header className={styles.header}>
-          <h1>Usuários</h1>
-          <InviteDialog />
-        </header>
+        <PageHeader title="Usuários" action={<InviteDialog />} />
         <Suspense fallback={<InvitationsDisclosure invites={null} />}>
           <Invitations ctx={ctx} />
         </Suspense>

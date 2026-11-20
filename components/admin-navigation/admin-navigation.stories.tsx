@@ -5,7 +5,7 @@ import { expect, fn, waitFor, within } from 'storybook/test';
 import { AdminNavigation } from './admin-navigation';
 
 const meta = {
-  title: 'Components/Admin Navigation',
+  title: 'Layout/Admin Navigation',
   component: AdminNavigation,
   args: {
     pathname: '/admin/usuarios/124',

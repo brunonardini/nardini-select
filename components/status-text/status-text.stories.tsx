@@ -4,7 +4,7 @@ import { expect } from 'storybook/test';
 import { StatusText } from './status-text';
 
 const meta = {
-  title: 'Components/StatusText',
+  title: 'DataDisplay/StatusText',
   component: StatusText,
   args: { state: 'Ativo' },
 } satisfies Meta<typeof StatusText>;
