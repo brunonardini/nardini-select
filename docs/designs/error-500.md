@@ -1,8 +1,7 @@
 # Shared Error 500 screen
 
-Status: sofa proposal approved for implementation by the owner on 2026-11-20.
-The owner reviewed mobile and desktop HTML mockups and explicitly requested
-this component, its API, Storybook documentation, and admin integration.
+Status: approved for implementation by the owner on 2026-11-20. This records
+the shared error component, its API, Storybook documentation and admin integration.
 
 ## Approved experience and API
 
@@ -52,11 +51,3 @@ container on desktop, pending/disabled actions, and keyboard focus. Tests cover
 the fixed content, default/custom description, action callbacks and database
 classification. Browser checks cover full-screen and embedded presentation,
 recovery, generic/database messages, and WCAG 2.2 A/AA plus best practices.
-
-## Preserved design material
-
-Keep `tmp/error-proposals/` and all its mockups and source images. The owner
-explicitly prohibited deleting this mockup unless they explicitly request it.
-The original comparison and prompt provenance remain local and gitignored;
-production assets are copies. Do not clean up or overwrite these source images
-as part of implementation, optimization, or future maintenance.

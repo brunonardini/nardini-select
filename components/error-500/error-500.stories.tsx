@@ -12,7 +12,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Fixed sofa photograph and title. Customize only description (default: “Não conseguimos carregar esta página.”) and children for recovery controls. The parent provides available height; the component centers within it. Actions stack in narrow containers and become a wrapping row at 600px of container width, even when embedded in a wide desktop page. Never pass raw exception messages. Preserve tmp/error-proposals/ unless the owner explicitly requests deletion.',
+          'Fixed sofa photograph and title. Customize only description (default: “Não conseguimos carregar esta página.”) and children for recovery controls. The parent provides available height; the component centers within it. Actions stack in narrow containers and become a wrapping row at 600px of container width, even when embedded in a wide desktop page. Never pass raw exception messages.',
       },
     },
   },

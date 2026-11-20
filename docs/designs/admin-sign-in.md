@@ -1,10 +1,10 @@
 # Admin sign-in visual update
 
-Status: approved for implementation by the owner in the design review chat on 2026-11-19. This document records the reviewed prototype and the owner's instruction to implement it on the current branch. It extends the sign-in surface of backoffice-access.md; authentication and authorization architecture stay unchanged.
+Status: approved for implementation by the owner in the design review chat on 2026-11-19. This document records the approved sign-in appearance and behavior. It extends the sign-in surface of backoffice-access.md; authentication and authorization architecture stay unchanged.
 
 ## Approved experience
 
-The mobile layout is based on the reviewed Novo dia proposal: the original horizontal logo and a separate Admin word in Karvest, with Ad in Cafe and min in Terracota, separated by an Argila rule. A silver-gray Weimaraner in a sunrise mountain landscape fills the background. A dark Cafe transition protects mobile copy and controls; desktop uses a light transition and a left-hand content column. Keep the original logo file unchanged.
+The mobile layout uses the original horizontal logo and a separate Admin word in Karvest, with Ad in Cafe and min in Terracota, separated by an Argila rule. A silver-gray Weimaraner in a sunrise mountain landscape fills the background. A dark Cafe transition protects mobile copy and controls; desktop uses a light transition and a left-hand content column. Keep the original logo file unchanged.
 
 Copy is Portuguese: title "Por trás de cada escolha." and subtitle "Seu espaço para cuidar da operação e levar nossa curadoria a mais cães." The single action is "Entrar com Google". A lock accompanies "Acesso restrito para funcionários". The back-to-site link appears only on desktop. There is no footer, "Nardini Select · Admin" label or closing brand motto.
 
@@ -20,7 +20,7 @@ The user explicitly approved two scoped brand exceptions: Karvest for the Admin 
 
 ## Review and validation
 
-The owner reviewed mobile/desktop prototypes and chose the title, Admin treatment, indefinite paw loading and pink alert over successive rounds. The Impeccable audit found two implementation follow-ups: keyboard-focus contrast and the heavy PNG. This implementation addresses both. The current audit notes are in .dev/docs/login-proposals/impeccable-audit.md (local-only).
+The approved mobile and desktop experience includes the title, Admin treatment, indefinite paw loading and pink alert. The implementation addresses keyboard-focus contrast and image optimization.
 
 Add unit tests for pending sign-in, duplicate submissions and failed-request recovery. Update E2E text assertions and scan initial, denied and pending states with the project's axe rules. Validate the layout at narrow mobile, regular mobile, intermediate and desktop widths. Run format, lint, Knip, type checking, unit tests and E2E checks. Record actual results and any remaining limits; do not claim physical-device or production performance measurements.
 

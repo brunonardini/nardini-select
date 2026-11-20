@@ -12,7 +12,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Approved rug photograph and fixed title “Procurei em todo canto.”. Optional description defaults to “Até debaixo do tapete. Mas esta página não foi encontrada.”. Pass recovery controls through children. The parent supplies available height; this component centers within it. Actions stack in narrow containers and become a wrapping row from 600px of container width. app/not-found.tsx uses this as the default not-found UI. Preserve tmp/error-404-proposals/ and its source images.',
+          'Approved rug photograph and fixed title “Procurei em todo canto.”. Optional description defaults to “Até debaixo do tapete. Mas esta página não foi encontrada.”. Pass recovery controls through children. The parent supplies available height; this component centers within it. Actions stack in narrow containers and become a wrapping row from 600px of container width. app/not-found.tsx uses this as the default not-found UI.',
       },
     },
   },

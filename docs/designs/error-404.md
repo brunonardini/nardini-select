@@ -1,8 +1,7 @@
 # Shared Error 404 screen
 
-Status: rug proposal selected and approved for implementation by the owner on
-2026-11-20. This records the reviewed mobile and desktop mockup and the explicit
-request to make it the default 404 page and document it in Storybook.
+Status: approved for implementation by the owner on 2026-11-20. This records
+the shared error screen, its default 404 routing and its Storybook documentation.
 
 ## Approved composition and component
 
@@ -16,8 +15,7 @@ Keep the approved centered composition, Off-white/Café palette, Karvest
 ExtraBold and Montserrat. The component takes its height from its parent.
 Actions stack in narrow containers and form a centered wrapping row from 600px
 of container width. Use the same documented dimensions and spacing as Error500.
-The decorative transparent WebP is a copy of the mockup asset, rendered with
-Next Image and reserved dimensions; preserve the mockup and original photo.
+The decorative transparent WebP renders with Next Image and reserved dimensions.
 
 ## Default routing and recovery
 
@@ -44,7 +42,3 @@ copy/actions, and both back-navigation paths. Production E2E verifies an
 unmatched route returns 404, shows the selected photo/title, is noindex,
 passes the project's axe rules on desktop and mobile, and provides working
 home/back recovery.
-
-Keep tmp/error-404-proposals/ and tmp/error-proposals/ intact. They are local,
-gitignored design references; the owner has prohibited deleting mockups unless
-explicitly requested.

@@ -249,7 +249,7 @@ Paws pulse forever with a 1.2s cycle and 0/0.15/0.3s stagger. This expresses act
 
 Use `components/alert/Alert` with a short `title` and a safe description/recovery instruction in `children`. Omitting `variant` or setting `variant="default"` uses the neutral Off-white background, Cafe text, Argila border and Areia icon circle. Set `variant="danger"` for errors, including the login feedback. Its approved pink surface has a 1px boundary, 3px red top rule, 8px corners, 15×14px padding and 11px icon gap. A 20px decorative lock sits in a 34px tinted circle. Montserrat sets the 13px/800 title and 12px/400 body at 1.65 line height. There are no shadows or entrance animations.
 
-The component owns `role="alert"` and the hidden decorative icon; the component fills 100% of the available width, while the parent owns max-width and outer spacing. The login content column constrains the alert; the shared component has no width cap. Long content wraps without horizontal overflow. Login titles distinguish "Acesso negado" from a failed attempt, retain recovery guidance and re-enable the Google action after a provider/network failure. All three proposals converged to this same alert and loading treatment; the discarded variants are not part of the system.
+The component owns `role="alert"` and the hidden decorative icon; the component fills 100% of the available width, while the parent owns max-width and outer spacing. The login content column constrains the alert; the shared component has no width cap. Long content wraps without horizontal overflow. Login titles distinguish "Acesso negado" from a failed attempt, retain recovery guidance and re-enable the Google action after a provider/network failure.
 
 Storybook covers left/right icon placement, primary on dark surfaces, secondary navigation, loading for all action variants, disabled and keyboard-focus states, and the alert's default, danger and constrained-container examples. Google, lock and directional icons belong to the existing `Icon` family. Use `name="left"` for return actions and `name="down"` for the home arrows; the back button consumes the shared left-arrow icon.
 
@@ -270,12 +270,11 @@ mobile arrangement inside narrow desktop content areas. The photo uses
 The approved error heading is 32px/1.12 on narrow containers and 36px/1.12 on
 wide containers. Supporting copy is 15px/1.7 and 16px/1.7 respectively. The
 illustration caps at 480px; the text/action group caps at 580px, with 22px side
-padding. These scoped sizes preserve the approved mobile-first mockup.
+padding. These scoped sizes define the approved mobile-first composition.
 
 Storybook documents full-screen, constrained, mobile, pending, keyboard focus,
 and custom-description states under **Components / Error 500**. The approved
 decision and integration details live in [docs/designs/error-500.md](docs/designs/error-500.md).
-Preserve `tmp/error-proposals/` unless the owner explicitly requests deletion.
 
 ### Error 404
 
@@ -290,7 +289,6 @@ The root `app/not-found.tsx` renders this component for unmatched URLs and
 `notFound()` cases, with "Voltar ao início" and "Voltar". Next.js owns status
 and noindex behavior. Storybook documents the component under **Error 404**;
 [the approved design](docs/designs/error-404.md) records the route behavior.
-Preserve `tmp/error-404-proposals/` and the prior error mockup.
 
 ### Navigation
 

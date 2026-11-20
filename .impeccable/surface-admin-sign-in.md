@@ -4,7 +4,7 @@ Visitor mode: Operate. Audience: authorized Nardini Select staff managing the e-
 
 ## Approved composition
 
-The owner selected the Novo dia mobile proposal and a lighter desktop expansion. The official horizontal logo stays unchanged. A separate Admin word uses Karvest: Ad in Cafe, min in Terracota, same visual height as Nardini, separated by an Argila rule. The experimental custom n was rejected; use the normal letterform.
+The approved layout uses a photographic mobile composition and a lighter desktop expansion. The official horizontal logo stays unchanged. A separate Admin word uses Karvest: Ad in Cafe, min in Terracota, same visual height as Nardini, separated by an Argila rule. Use the normal Admin letterforms.
 
 A silver-gray Weimaraner in a sunrise mountain landscape fills the background. At <=700px the image covers the viewport with a dark Cafe bottom fade. At >=701px an Off-white fade protects a 400px left content column; the image occupies the right 80%. Keep the full dog head visible. Mobile logo width is 160px (132px below 360px), desktop 210px. Admin is 36px (30px narrow mobile), desktop 48px, with optical vertical alignment.
 
