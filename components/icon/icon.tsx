@@ -44,7 +44,7 @@ export function Icon({
     close: <path d="m5 5 14 14M19 5 5 19" />,
     collapse: <path d="m14 6-6 6 6 6m5-12-6 6 6 6" />,
     chevron: <path d="m7 10 5 5 5-5" />,
-    right: <path d="m10 7 5 5-5 5" />,
+    right: <path d="M4 12h16M13 5l7 7-7 7" />,
     search: (
       <>
         <circle cx="11" cy="11" r="6.5" />

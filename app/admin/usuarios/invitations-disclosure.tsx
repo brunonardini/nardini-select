@@ -43,7 +43,7 @@ export function InvitationsDisclosure({
             )}
           </span>
         </span>
-        <Icon className={styles.disclosureChevron} name="right" />
+        <Icon className={styles.disclosureChevron} name="chevron" />
       </Collapsible.Trigger>
       <Collapsible.Panel className={styles.disclosurePanel}>
         {shown ? (

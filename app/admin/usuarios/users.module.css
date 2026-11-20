@@ -84,9 +84,10 @@
   width: 20px;
   height: 20px;
   flex: none;
+  transform: rotate(-90deg);
 }
 .disclosureTrigger[data-panel-open] .disclosureChevron {
-  transform: rotate(90deg);
+  transform: rotate(0deg);
 }
 .disclosurePanel {
   padding: 4px 14px 16px;

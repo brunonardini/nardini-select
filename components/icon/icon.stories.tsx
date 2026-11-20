@@ -54,12 +54,13 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** The two directional icons, using the same size and stroke. */
+/** The directional icons, using the same size and stroke. */
 export const Arrows: Story = {
   argTypes: { name: { control: false } },
   render: (args) => (
     <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
       <Icon {...args} name="left" />
+      <Icon {...args} name="right" />
       <Icon {...args} name="down" />
     </div>
   ),
