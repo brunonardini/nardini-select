@@ -3,6 +3,7 @@
   "entry": [
     "scripts/*.cjs",
     "db/provision/*.ts",
+    "db/maintenance/*.ts",
     "lib/db/io/client.ts",
     "lib/invitations/io/invitations.ts"
   ],

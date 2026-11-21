@@ -350,6 +350,16 @@ jobs:
       - store_artifacts:
           path: reports/preview-migrate.txt
 
+  retain:
+    executor: node
+    steps:
+      - attach_setup
+      - run:
+          name: Delete expired audit events and invitations
+          # AUDIT_MAINTAINER_URL comes from the job context: the direct
+          # endpoint as audit_maintainer. The script prints the two row counts.
+          command: npm run db:retain
+
   preview-deploy:
     executor: node
     environment:
@@ -414,6 +424,10 @@ jobs:
 
 workflows:
   validate:
+    # A retention run is a schedule pipeline. It must not migrate or deploy.
+    when:
+      not:
+        equal: [schedule, << pipeline.event.name >>]
     jobs:
       - setup
       - lint:
@@ -469,8 +483,11 @@ workflows:
               only: main
   preview:
     when:
-      not:
-        equal: [main, << pipeline.git.branch >>]
+      and:
+        - not:
+            equal: [main, << pipeline.git.branch >>]
+        - not:
+            equal: [schedule, << pipeline.event.name >>]
     jobs:
       - preview-approval:
           type: approval
@@ -486,3 +503,42 @@ workflows:
           context: nardini-select-preview-deploy
           requires:
             - preview-migrate
+  # Monday and Friday, 06:00 UTC. Does not run on pushes.
+  retention:
+    triggers:
+      - schedule:
+          cron: "0 6 * * 1,5"
+          filters:
+            branches:
+              only:
+                - main
+    jobs:
+      - setup
+      - retain:
+          name: retain-production
+          context: nardini-select-prod-retention
+          requires:
+            - setup
+      - retain:
+          name: retain-preview
+          context: nardini-select-preview-retention
+          requires:
+            - setup
+  # GitHub App projects ignore the schedule above. A project schedule
+  # trigger still arrives as a pipeline whose event name is schedule.
+  retention-event:
+    when:
+      equal: [schedule, << pipeline.event.name >>]
+    jobs:
+      - setup:
+          name: retention-setup
+      - retain:
+          name: retain-production-event
+          context: nardini-select-prod-retention
+          requires:
+            - retention-setup
+      - retain:
+          name: retain-preview-event
+          context: nardini-select-preview-retention
+          requires:
+            - retention-setup

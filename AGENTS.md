@@ -35,6 +35,7 @@ Run `nvm use` at the start of every terminal session, before any `node`, `npm`, 
 | Schema types | `npm run db:codegen` |
 | SQL lint | `npm run db:lint` |
 | Grants | `npm run db:grants` |
+| Retention | `npm run db:retain` (deletes expired audit events and invitations as `audit_maintainer`) |
 
 Testing:
 - Unit and component tests: Vitest + React Testing Library, next to the code as `app/**/*.test.ts(x)`, `components/**/*.test.ts(x)`, `lib/**/*.test.ts(x)`, and `db/**/*.test.ts(x)` (the `unit` project in `vitest.config.mts`, jsdom). Query by role and accessible name. Async Server Components can't be unit tested; cover them with E2E.
