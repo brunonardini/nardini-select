@@ -41,7 +41,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Sort popover. Aplicar submits the fields together. The fields belong to the listing.',
+          'Sort dialog. Aplicar submits the fields together. The fields belong to the listing.',
       },
     },
   },

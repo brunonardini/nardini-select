@@ -1,13 +1,16 @@
 'use client';
 
 import { Dialog as BaseDialog } from '@base-ui/react/dialog';
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 
 type Props = {
   label: string;
   title: string;
-  description: string;
-  children: ReactNode;
+  description?: string;
+  children: ReactNode | ((close: () => void) => ReactNode);
+  defaultOpen?: boolean;
+  leadingIcon?: ReactNode;
+  triggerClassName?: string;
   variant?: 'primary' | 'secondary' | 'outline';
 };
 
@@ -18,20 +21,31 @@ export function Dialog({
   description,
   children,
   variant = 'outline',
+  defaultOpen = false,
+  leadingIcon,
+  triggerClassName,
 }: Props) {
+  const [open, setOpen] = useState(defaultOpen);
   return (
-    <BaseDialog.Root>
-      <BaseDialog.Trigger className={`button button-${variant}`}>
+    <BaseDialog.Root open={open} onOpenChange={setOpen}>
+      <BaseDialog.Trigger
+        className={triggerClassName ?? `button button-${variant}`}
+      >
+        {leadingIcon}
         {label}
       </BaseDialog.Trigger>
       <BaseDialog.Portal>
         <BaseDialog.Backdrop className="dialog-backdrop" />
         <BaseDialog.Popup className="dialog-popup">
           <BaseDialog.Title className="dialog-title">{title}</BaseDialog.Title>
-          <BaseDialog.Description className="dialog-description">
-            {description}
-          </BaseDialog.Description>
-          {children}
+          {description ? (
+            <BaseDialog.Description className="dialog-description">
+              {description}
+            </BaseDialog.Description>
+          ) : null}
+          {typeof children === 'function'
+            ? children(() => setOpen(false))
+            : children}
         </BaseDialog.Popup>
       </BaseDialog.Portal>
     </BaseDialog.Root>

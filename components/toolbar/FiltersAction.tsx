@@ -4,10 +4,10 @@ import type { ReactNode } from 'react';
 
 import { Button } from '@/components/button/button';
 
-import { ActionPopover, closeOnSubmit } from './action-popover';
+import { ActionDialog, closeOnSubmit } from './action-dialog';
 import styles from './toolbar.module.css';
 
-/** Filter popover. Fields are submitted together, or cleared at once. */
+/** Filter dialog. Fields are submitted together, or cleared at once. */
 export function FiltersAction({
   label,
   title,
@@ -28,7 +28,7 @@ export function FiltersAction({
   children: ReactNode;
 }) {
   return (
-    <ActionPopover
+    <ActionDialog
       label={label}
       icon="filter"
       title={title}
@@ -38,7 +38,6 @@ export function FiltersAction({
         <form className={styles.form} onSubmit={closeOnSubmit(onSubmit, close)}>
           {children}
           <div className={styles.formActions}>
-            <Button type="submit">{submitLabel}</Button>
             <Button
               type="button"
               variant="secondary"
@@ -49,9 +48,10 @@ export function FiltersAction({
             >
               {clearLabel}
             </Button>
+            <Button type="submit">{submitLabel}</Button>
           </div>
         </form>
       )}
-    </ActionPopover>
+    </ActionDialog>
   );
 }

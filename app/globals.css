@@ -1296,6 +1296,9 @@ button.button {
   opacity: 0;
 }
 .dialog-popup {
+  border-radius: 12px;
+  max-height: calc(100dvh - 32px);
+  overflow: auto;
   position: fixed;
   top: 50%;
   left: 50%;
@@ -1325,6 +1328,7 @@ button.button {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
+  justify-content: flex-end;
 }
 .avatar {
   width: 48px;
