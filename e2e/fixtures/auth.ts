@@ -8,9 +8,10 @@ import {
   workerUserId,
 } from '../../db/seeds/ids';
 import { createTestSession } from '../../lib/auth/io/test-session';
+import { TERMS_VERSION } from '../../lib/legal/versions';
 import { withDatabaseName } from '../database-env';
 
-const CURRENT = '2026-11-18';
+const CURRENT = TERMS_VERSION;
 const ACCEPTED_AT = '2026-06-01T12:00:00.000Z';
 
 export function slotUser(slot: number, state: SeedUserState): string {

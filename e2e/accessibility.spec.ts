@@ -134,6 +134,11 @@ test('admin sign-in, invite, terms, and home have no detectable violations', asy
   page,
 }, testInfo) => {
   const slot = testInfo.parallelIndex;
+  await page.goto('/admin/termos');
+  expect(await scan(page)).toEqual([]);
+  await page.goto('/admin/privacidade');
+  expect(await scan(page)).toEqual([]);
+
   await page.goto('/admin/entrar');
   expect(await scan(page)).toEqual([]);
 

@@ -1,8 +1,36 @@
 import { expect, test } from '@playwright/test';
 
 import { INVITE_TOKENS } from '../db/seeds/tokens';
+import { PRIVACY_NOTICE_VERSION, TERMS_VERSION } from '../lib/legal/versions';
 
 import { sessionCookie, setTerms, slotUser } from './fixtures/auth';
+
+test('terms and the privacy notice publish the current version', async ({
+  page,
+}) => {
+  await page.goto('/admin/termos');
+  await expect(
+    page.getByRole('heading', { name: 'Termos de uso' }),
+  ).toBeVisible();
+  await expect(
+    page.getByText(`Versão ${TERMS_VERSION}`, { exact: false }),
+  ).toBeVisible();
+  await expect(page.getByText(/provisório/i)).toHaveCount(0);
+  await page
+    .getByRole('link', { name: 'aviso de privacidade' })
+    .first()
+    .click();
+  await expect(page).toHaveURL(/\/admin\/privacidade$/);
+  await expect(
+    page.getByRole('heading', { name: 'Aviso de privacidade' }),
+  ).toBeVisible();
+  await expect(
+    page.getByText(`Versão ${PRIVACY_NOTICE_VERSION}`, { exact: false }),
+  ).toBeVisible();
+  await expect(page.getByText('Estados Unidos')).toBeVisible();
+  await expect(page.getByText(/6 meses e 4 dias/)).toBeVisible();
+  await expect(page.getByText(/provisório/i)).toHaveCount(0);
+});
 
 test('an unsigned request to the admin home goes to sign-in', async ({
   page,
