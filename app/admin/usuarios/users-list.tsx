@@ -162,6 +162,8 @@ function TeamToolbar({
     { value: NO_ROLE, label: 'Sem papel' },
     ...roles.map((role) => ({ value: role.id, label: role.name })),
   ];
+  const filterCount =
+    Number(query.state !== null) + Number(query.role !== null);
 
   return (
     <Toolbar>
@@ -174,7 +176,7 @@ function TeamToolbar({
       </Toolbar.Content>
       <Toolbar.Actions>
         <FiltersAction
-          label="Filtros"
+          label={filterCount ? `Filtros (${filterCount})` : 'Filtros'}
           title="Filtrar equipe"
           submitLabel="Aplicar filtros"
           clearLabel="Limpar filtros"

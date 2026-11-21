@@ -39,7 +39,9 @@ describe('FiltersAction', () => {
     renderFilters();
     const trigger = screen.getByRole('button', { name: 'Filtros' });
     await user.click(trigger);
-    expect(screen.getByRole('dialog', { name: 'Filtrar equipe' })).toBeVisible();
+    expect(
+      screen.getByRole('dialog', { name: 'Filtrar equipe' }),
+    ).toBeVisible();
     await user.keyboard('{Escape}');
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     expect(trigger).toHaveFocus();

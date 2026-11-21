@@ -203,10 +203,16 @@ describe('UsersList', () => {
     await user.click(await screen.findByRole('option', { name: 'Sem papel' }));
     await user.click(screen.getByRole('button', { name: 'Aplicar filtros' }));
     await waitFor(() => expect(lastBody().papel).toBe('sem-papel'));
-    await user.click(screen.getByRole('button', { name: 'Filtros' }));
+    await user.click(screen.getByRole('button', { name: 'Filtros (1)' }));
+    await user.click(screen.getByRole('combobox', { name: 'Estado' }));
+    await user.click(await screen.findByRole('option', { name: 'Ativo' }));
+    await user.click(screen.getByRole('button', { name: 'Aplicar filtros' }));
+    await waitFor(() => expect(lastBody().estado).toBe('ativo'));
+    await user.click(screen.getByRole('button', { name: 'Filtros (2)' }));
     await user.click(
       await screen.findByRole('button', { name: 'Limpar filtros' }),
     );
+    expect(screen.getByRole('button', { name: 'Filtros' })).toBeVisible();
     await waitFor(() => expect(lastBody().papel).toBeUndefined());
   });
 
