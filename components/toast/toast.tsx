@@ -96,32 +96,31 @@ function NoticeProvider({ children }: { children: ReactNode }) {
   }, [addToast, closeToast, updateToast]);
 
   const mountPortal = useCallback((anchor: HTMLSpanElement | null) => {
-    if (!anchor) return;
+    if (!anchor) {
+      portalRef.current?.remove();
+      portalRef.current = null;
+      return;
+    }
     const container = anchor.ownerDocument.createElement('div');
     portalRef.current = container;
     (host.current ?? anchor.ownerDocument.body).append(container);
     setPortal(container);
-    return () => {
-      container.remove();
-      portalRef.current = null;
-    };
   }, []);
 
   const attachHost = useCallback((element: HTMLDivElement | null) => {
-    if (element && !host.current) {
+    const captureOpener = element !== null && host.current === null;
+    if (captureOpener) {
       const active = document.activeElement;
       if (active instanceof HTMLElement) opener.current = active;
     }
     host.current = element;
     if (!portalRef.current) return;
     (element ?? document.body).append(portalRef.current);
-    queueRef.current?.pause(
-      'hover',
-      viewport.current?.matches(':hover') ?? false,
-    );
+    const node = viewport.current;
+    queueRef.current?.pause('hover', node !== null && node.matches(':hover'));
     queueRef.current?.pause(
       'focus',
-      viewport.current?.contains(document.activeElement) ?? false,
+      node !== null && node.contains(document.activeElement),
     );
   }, []);
   const add = useCallback<NoticeContext['add']>((notice, origin) => {

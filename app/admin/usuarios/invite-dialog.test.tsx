@@ -358,6 +358,36 @@ describe('invitation UI', () => {
     ).toBeVisible();
   });
 
+  it('reports a renewal and a cancellation that both failed', async () => {
+    const user = (await import('@testing-library/user-event')).default.setup();
+    vi.mocked(renewInvite).mockResolvedValue({
+      ok: false,
+      message: 'Este convite não pode ser alterado.',
+    });
+    vi.mocked(cancelInvite).mockResolvedValue({
+      ok: false,
+      message: 'Este convite não pode ser alterado.',
+    });
+    render(
+      <ToastProvider>
+        <InvitationsList invites={[invite]} onCanceled={vi.fn()} />
+      </ToastProvider>,
+    );
+    await user.click(screen.getByRole('button', { name: 'Gerar novo link' }));
+    expect(
+      await screen.findByText('Não foi possível gerar um novo link'),
+    ).toBeVisible();
+    await user.click(screen.getByRole('button', { name: 'Cancelar convite' }));
+    await user.click(
+      within(screen.getByRole('dialog')).getByRole('button', {
+        name: 'Cancelar convite',
+      }),
+    );
+    expect(
+      await screen.findByText('Não foi possível alterar o convite'),
+    ).toBeVisible();
+  });
+
   it('shows why a cancellation failed', async () => {
     const user = (await import('@testing-library/user-event')).default.setup();
     vi.mocked(cancelInvite).mockResolvedValue({

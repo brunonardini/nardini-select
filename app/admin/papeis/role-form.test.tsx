@@ -39,6 +39,23 @@ describe('RoleForm', () => {
     expect(screen.getByRole('alert')).toHaveClass('alert-warning');
   });
 
+  it('explains that the role name is already in use', async () => {
+    vi.mocked(saveNewRole).mockResolvedValue({
+      ok: false,
+      reason: 'taken',
+      message: 'Já existe um papel com esse nome.',
+    });
+    const user = userEvent.setup();
+    render(<RoleCreateForm />);
+    await user.type(screen.getByRole('textbox', { name: 'Nome' }), 'Caixa');
+    await user.click(screen.getByRole('button', { name: 'Criar papel' }));
+    expect(
+      await screen.findByText(
+        'Já existe um papel com esse nome. Escolha outro.',
+      ),
+    ).toBeVisible();
+  });
+
   it('keeps the form when the role is created', async () => {
     vi.mocked(saveNewRole).mockResolvedValue({ ok: true });
     const user = userEvent.setup();
@@ -65,6 +82,38 @@ describe('RoleForm', () => {
     expect(alert).toHaveTextContent(
       'Já existe um papel com esse nome. Escolha outro.',
     );
+  });
+
+  it('shows an operational failure when the role cannot be renamed', async () => {
+    vi.mocked(saveRoleName).mockResolvedValue({
+      ok: false,
+      reason: 'missing',
+      message: 'Papel não encontrado.',
+    });
+    const user = userEvent.setup();
+    render(<RoleRenameForm id="role" name="estoque" />);
+    await user.click(screen.getByRole('button', { name: 'Salvar' }));
+    const alert = await screen.findByRole('alert');
+    expect(alert).toHaveClass('alert-danger');
+    expect(alert).toHaveTextContent('Papel não renomeado');
+    expect(alert).toHaveTextContent('Papel não encontrado.');
+    expect(alert.querySelector('svg circle')).toBeInTheDocument();
+  });
+
+  it('keeps the access icon when a system role cannot be renamed', async () => {
+    vi.mocked(saveRoleName).mockResolvedValue({
+      ok: false,
+      reason: 'system',
+      message: 'O papel admin não pode ser alterado.',
+    });
+    const user = userEvent.setup();
+    render(<RoleRenameForm id="role" name="admin" />);
+    await user.click(screen.getByRole('button', { name: 'Salvar' }));
+    const alert = await screen.findByRole('alert');
+    expect(alert).toHaveClass('alert-danger');
+    expect(alert).toHaveTextContent('O papel admin não pode ser alterado.');
+    expect(alert.querySelector('svg rect')).toBeInTheDocument();
+    expect(alert.querySelector('svg circle')).not.toBeInTheDocument();
   });
 
   it('confirms a saved name', async () => {

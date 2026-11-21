@@ -12,6 +12,7 @@ type Props = {
   leadingIcon?: ReactNode;
   triggerClassName?: string;
   variant?: 'primary' | 'secondary' | 'outline';
+  viewportOverlay?: ReactNode;
 };
 
 /** Modal dialog. The trigger label is the accessible name of the button. */
@@ -24,8 +25,22 @@ export function Dialog({
   defaultOpen = false,
   leadingIcon,
   triggerClassName,
+  viewportOverlay,
 }: Props) {
   const [open, setOpen] = useState(defaultOpen);
+  const content = (
+    <>
+      <BaseDialog.Title className="dialog-title">{title}</BaseDialog.Title>
+      {description ? (
+        <BaseDialog.Description className="dialog-description">
+          {description}
+        </BaseDialog.Description>
+      ) : null}
+      {typeof children === 'function'
+        ? children(() => setOpen(false))
+        : children}
+    </>
+  );
   return (
     <BaseDialog.Root open={open} onOpenChange={setOpen}>
       <BaseDialog.Trigger
@@ -36,16 +51,17 @@ export function Dialog({
       </BaseDialog.Trigger>
       <BaseDialog.Portal>
         <BaseDialog.Backdrop className="dialog-backdrop" />
-        <BaseDialog.Popup className="dialog-popup">
-          <BaseDialog.Title className="dialog-title">{title}</BaseDialog.Title>
-          {description ? (
-            <BaseDialog.Description className="dialog-description">
-              {description}
-            </BaseDialog.Description>
-          ) : null}
-          {typeof children === 'function'
-            ? children(() => setOpen(false))
-            : children}
+        <BaseDialog.Popup
+          className={viewportOverlay ? 'dialog-popup-viewport' : 'dialog-popup'}
+        >
+          {viewportOverlay ? (
+            <>
+              <div className="dialog-popup">{content}</div>
+              {viewportOverlay}
+            </>
+          ) : (
+            content
+          )}
         </BaseDialog.Popup>
       </BaseDialog.Portal>
     </BaseDialog.Root>

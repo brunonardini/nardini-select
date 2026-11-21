@@ -87,6 +87,23 @@ describe('notice queue', () => {
     );
   });
 
+  it('ignores a second removal after the notice has already left', async () => {
+    const { queue, deliver } = setup();
+    for (const item of [notice('1'), notice('2'), notice('3'), notice('4')]) {
+      queue.add(item, null);
+    }
+    const removal = deliver.mock.calls[0]?.[0].onRemove;
+    removal?.();
+    removal?.();
+    await Promise.resolve();
+    expect(deliver.mock.calls.map(([item]) => item.notice.title)).toEqual([
+      '1',
+      '2',
+      '3',
+      '4',
+    ]);
+  });
+
   it('keeps timers paused until hover, focus and hidden-document pauses clear', async () => {
     const { queue, dismiss } = setup();
     queue.add(notice('1'), null);
