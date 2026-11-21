@@ -46,6 +46,7 @@ All widths below refer to the width of the main content area (the column next to
 - Opening the disclosure shows the pending invitations in place, above the team. Each invitation shows the name, “Expira em” followed by the local time, and the existing “Gerar novo link” and “Cancelar convite” actions. Cancelling asks for confirmation.
 - The disclosure is shown even when there are no pending invitations. Its count is 0, and when opened it reads “Nenhum convite pendente.”
 - The disclosure opens and closes without a height animation. Its content fades in, and the fade is skipped under `prefers-reduced-motion`.
+- Copying a generated or renewed link publishes the same success toast. A clipboard failure stays visible as a danger toast and explains how to copy manually. See [Admin toast feedback](admin-toast.md).
 
 ### Search, filters and sorting
 

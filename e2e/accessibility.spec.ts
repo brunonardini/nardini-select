@@ -209,6 +209,18 @@ test('admin management pages and dialogs have no detectable violations', async (
     await page.keyboard.press('Escape');
     await page.getByRole('button', { name: 'Convidar usuário' }).click();
     expect(await scan(page)).toEqual([]);
+    await page
+      .getByRole('textbox', { name: 'Nome completo' })
+      .fill('Convidado para teste');
+    await page.getByRole('button', { name: 'Gerar link' }).click();
+    await page.evaluate(() => {
+      Object.defineProperty(navigator, 'clipboard', { value: undefined });
+    });
+    await page.getByRole('button', { name: 'Copiar link' }).click();
+    await expect(
+      page.getByRole('dialog', { name: 'Não foi possível copiar' }),
+    ).toHaveCSS('opacity', '1');
+    expect(await scan(page)).toEqual([]);
     await page.keyboard.press('Escape');
     await expect(
       page

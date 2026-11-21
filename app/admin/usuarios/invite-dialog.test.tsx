@@ -187,39 +187,56 @@ describe('invitation UI', () => {
     );
   });
 
-  it('copies a new invite link and reports a clipboard failure', async () => {
-    const user = (await import('@testing-library/user-event')).default.setup();
-    const writeText = vi.fn().mockResolvedValue(undefined);
-    Object.defineProperty(navigator, 'clipboard', {
-      configurable: true,
-      value: { writeText },
-    });
-    vi.mocked(createInvite).mockResolvedValue({
-      ok: true,
-      token: 'tok-1',
-      invite: createdInvite,
-    });
-    render(
-      <ToastProvider>
-        <InviteDialog />
-      </ToastProvider>,
-    );
-    await user.click(screen.getByRole('button', { name: 'Convidar usuário' }));
-    await user.type(
-      screen.getByRole('textbox', { name: 'Nome completo' }),
-      'Ana Silva',
-    );
-    await user.click(screen.getByRole('button', { name: 'Gerar link' }));
-    const link = await screen.findByRole('textbox', {
-      name: 'Link do convite',
-    });
-    expect(link).toHaveValue(`${window.location.origin}/admin/convite/tok-1`);
-    await user.click(screen.getByRole('button', { name: 'Copiar link' }));
-    expect(await screen.findByText('Link copiado')).toBeVisible();
-    writeText.mockRejectedValueOnce(new Error('denied'));
-    await user.click(screen.getByRole('button', { name: 'Copiar link' }));
-    expect(await screen.findByText('Não foi possível copiar')).toBeVisible();
-  });
+  it.each(['rejected', 'unavailable'])(
+    'copies a new invite link and reports a %s clipboard',
+    async (failure) => {
+      const user = (
+        await import('@testing-library/user-event')
+      ).default.setup();
+      const writeText = vi.fn().mockResolvedValue(undefined);
+      Object.defineProperty(navigator, 'clipboard', {
+        configurable: true,
+        value: { writeText },
+      });
+      vi.mocked(createInvite).mockResolvedValue({
+        ok: true,
+        token: 'tok-1',
+        invite: createdInvite,
+      });
+      render(
+        <ToastProvider>
+          <InviteDialog />
+        </ToastProvider>,
+      );
+      await user.click(
+        screen.getByRole('button', { name: 'Convidar usuário' }),
+      );
+      await user.type(
+        screen.getByRole('textbox', { name: 'Nome completo' }),
+        'Ana Silva',
+      );
+      await user.click(screen.getByRole('button', { name: 'Gerar link' }));
+      const link = await screen.findByRole('textbox', {
+        name: 'Link do convite',
+      });
+      expect(link).toHaveValue(`${window.location.origin}/admin/convite/tok-1`);
+      await user.click(screen.getByRole('button', { name: 'Copiar link' }));
+      expect(
+        await screen.findByRole('dialog', { name: 'Link copiado' }),
+      ).toHaveAttribute('data-variant', 'success');
+      if (failure === 'rejected')
+        writeText.mockRejectedValueOnce(new Error('denied'));
+      else
+        Object.defineProperty(navigator, 'clipboard', {
+          configurable: true,
+          value: undefined,
+        });
+      await user.click(screen.getByRole('button', { name: 'Copiar link' }));
+      expect(
+        await screen.findByRole('dialog', { name: 'Não foi possível copiar' }),
+      ).toHaveAttribute('data-variant', 'danger');
+    },
+  );
 
   it('adds a created invite to the list and drops it after cancel', async () => {
     const user = (await import('@testing-library/user-event')).default.setup();
@@ -285,29 +302,44 @@ describe('invitation UI', () => {
     expect(screen.getByText('Ana Silva')).toBeVisible();
   });
 
-  it('copies a renewed link and reports a clipboard failure', async () => {
-    const user = (await import('@testing-library/user-event')).default.setup();
-    const writeText = vi.fn().mockResolvedValue(undefined);
-    Object.defineProperty(navigator, 'clipboard', {
-      configurable: true,
-      value: { writeText },
-    });
-    vi.mocked(renewInvite).mockResolvedValue({ ok: true, token: 'tok-2' });
-    render(
-      <ToastProvider>
-        <InvitationsList invites={[invite]} onCanceled={vi.fn()} />
-      </ToastProvider>,
-    );
-    await user.click(screen.getByRole('button', { name: 'Gerar novo link' }));
-    expect(
-      await screen.findByRole('textbox', { name: 'Novo link' }),
-    ).toHaveValue(`${window.location.origin}/admin/convite/tok-2`);
-    await user.click(screen.getByRole('button', { name: 'Copiar link' }));
-    expect(await screen.findByText('Link copiado')).toBeVisible();
-    writeText.mockRejectedValueOnce(new Error('denied'));
-    await user.click(screen.getByRole('button', { name: 'Copiar link' }));
-    expect(await screen.findByText('Não foi possível copiar')).toBeVisible();
-  });
+  it.each(['rejected', 'unavailable'])(
+    'copies a renewed link and reports a %s clipboard',
+    async (failure) => {
+      const user = (
+        await import('@testing-library/user-event')
+      ).default.setup();
+      const writeText = vi.fn().mockResolvedValue(undefined);
+      Object.defineProperty(navigator, 'clipboard', {
+        configurable: true,
+        value: { writeText },
+      });
+      vi.mocked(renewInvite).mockResolvedValue({ ok: true, token: 'tok-2' });
+      render(
+        <ToastProvider>
+          <InvitationsList invites={[invite]} onCanceled={vi.fn()} />
+        </ToastProvider>,
+      );
+      await user.click(screen.getByRole('button', { name: 'Gerar novo link' }));
+      expect(
+        await screen.findByRole('textbox', { name: 'Novo link' }),
+      ).toHaveValue(`${window.location.origin}/admin/convite/tok-2`);
+      await user.click(screen.getByRole('button', { name: 'Copiar link' }));
+      expect(
+        await screen.findByRole('dialog', { name: 'Link copiado' }),
+      ).toHaveAttribute('data-variant', 'success');
+      if (failure === 'rejected')
+        writeText.mockRejectedValueOnce(new Error('denied'));
+      else
+        Object.defineProperty(navigator, 'clipboard', {
+          configurable: true,
+          value: undefined,
+        });
+      await user.click(screen.getByRole('button', { name: 'Copiar link' }));
+      expect(
+        await screen.findByRole('dialog', { name: 'Não foi possível copiar' }),
+      ).toHaveAttribute('data-variant', 'danger');
+    },
+  );
 
   it('shows why a renewal failed', async () => {
     const user = (await import('@testing-library/user-event')).default.setup();

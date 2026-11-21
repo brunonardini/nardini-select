@@ -8,9 +8,9 @@ import { Card } from '@/components/card/card';
 import { ConfirmDialog } from '@/components/confirm-dialog/confirm-dialog';
 import { LocalDateTime } from '@/components/local-date-time/local-date-time';
 import { TextField } from '@/components/text-field/text-field';
-import { useNotice } from '@/components/toast/toast';
 
 import { cancelInvite, renewInvite } from './invitation-actions';
+import { useCopyInviteLink } from './use-copy-invite-link';
 import styles from './users.module.css';
 
 export type Invite = { id: string; fullName: string; expiresAt: string };
@@ -24,7 +24,7 @@ function InviteRow({
 }) {
   const [renewed, renew, renewing] = useActionState(renewInvite, null);
   const [canceled, cancel, canceling] = useActionState(cancelInvite, null);
-  const notice = useNotice();
+  const copyInviteLink = useCopyInviteLink();
   const link =
     renewed?.ok === true && typeof window !== 'undefined'
       ? `${window.location.origin}/admin/convite/${renewed.token}`
@@ -66,16 +66,7 @@ function InviteRow({
           <Button
             type="button"
             variant="secondary"
-            onClick={() => {
-              void navigator.clipboard.writeText(link).then(
-                () => notice('Link copiado', 'Esse link expira em 30 minutos.'),
-                () =>
-                  notice(
-                    'Não foi possível copiar',
-                    'Selecione o link e copie manualmente.',
-                  ),
-              );
-            }}
+            onClick={(event) => void copyInviteLink(link, event.currentTarget)}
           >
             Copiar link
           </Button>

@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 
@@ -9,7 +9,13 @@ function Notify() {
   return (
     <button
       type="button"
-      onClick={() => notice('Link copiado', 'Válido por 30 minutos.')}
+      onClick={() =>
+        notice({
+          variant: 'success',
+          title: 'Link copiado',
+          description: 'Envie o link à pessoa convidada.',
+        })
+      }
     >
       Avisar
     </button>
@@ -25,7 +31,13 @@ describe('Toast', () => {
     );
     await userEvent.click(screen.getByRole('button', { name: 'Avisar' }));
     expect(screen.getByText('Link copiado')).toBeVisible();
-    await userEvent.click(screen.getByText('Fechar'));
-    expect(screen.queryByText('Link copiado')).not.toBeInTheDocument();
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Fechar: Link copiado' }),
+    );
+    await waitFor(() =>
+      expect(
+        screen.queryByRole('dialog', { name: 'Link copiado' }),
+      ).not.toBeInTheDocument(),
+    );
   });
 });

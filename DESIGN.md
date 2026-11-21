@@ -185,7 +185,7 @@ This is why buttons are Café, not Terracota, and why focus rings are Café on l
 
 ### Semantic feedback
 
-Alert variants pair a lightly tinted surface and icon circle with a darker title, icon and top rule. The description has its own foreground color.
+Alert and Toast share the semantic feedback colors. A lightly tinted surface and icon circle pair with a darker title, icon and top rule. The description has its own foreground color.
 
 | Variant   | Surface   | Border    | Description | Title and icon | Top rule  | Icon circle |
 | --------- | --------- | --------- | ----------- | -------------- | --------- | ----------- |
@@ -286,6 +286,16 @@ Use `info` for informational updates and `success` for completed actions. Both u
 The alert fills the available width and wraps long content. Its parent sets any max-width and outer spacing. The login content column constrains the alert. Login titles distinguish "Acesso negado" from a failed attempt, retain recovery guidance and re-enable the Google action after a provider or network failure.
 
 Storybook covers all five alert variants and shows how a parent can constrain an alert. The button stories cover left and right icon placement, primary on dark surfaces, secondary navigation, loading for all action variants, and disabled and keyboard-focus states. The alert icons, Google mark and directional arrows use the shared `Icon` component.
+
+### Toast
+
+Toast reports an outcome beside the current task. It uses the shared feedback colors and one of three variants. Success uses a check and expires after 4 seconds. Warning uses a triangle and expires after 8 seconds. Danger uses a circled exclamation and stays until dismissed.
+
+Show up to three cards, oldest first, and queue additional notices in arrival order. Repeats with the same variant and title increment a counter on the first card. Their timer keeps its remaining duration. Pause the visible timers on mouse hover, keyboard focus within the stack, and while the document is hidden.
+
+Use an 8px radius, a 3px top rule, a 34px icon circle and a 44px close target. Montserrat sets the 13px bold title and the 12px description. Use a 12px inset on phones. From 650px, anchor a 350px viewport to the bottom right with a 19px inset. From 1000px, use 374px and a 25px inset. Respect safe areas and allow the stack to scroll in short viewports.
+
+Cards enter with an 180ms fade and a 7px upward translation. Reduced motion keeps a short fade. Close or expiry removes the card immediately. Success and warning announcements are polite. Danger announcements are assertive. The invitation dialog hosts the same toast viewport within its modal focus boundary.
 
 ### Error 500
 
