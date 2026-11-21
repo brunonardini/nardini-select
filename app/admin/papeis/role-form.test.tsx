@@ -28,7 +28,7 @@ describe('RoleForm', () => {
   it('shows why a role was not created', async () => {
     vi.mocked(saveNewRole).mockResolvedValue({
       ok: false,
-      reason: 'invalid',
+      reason: 'invalid_name',
       message: 'Informe o nome.',
     });
     const user = userEvent.setup();
@@ -36,6 +36,7 @@ describe('RoleForm', () => {
     await user.type(screen.getByRole('textbox', { name: 'Nome' }), 'Caixa');
     await user.click(screen.getByRole('button', { name: 'Criar papel' }));
     expect(await screen.findByText('Informe o nome.')).toBeVisible();
+    expect(screen.getByRole('alert')).toHaveClass('alert-warning');
   });
 
   it('keeps the form when the role is created', async () => {
@@ -53,13 +54,17 @@ describe('RoleForm', () => {
   it('shows why a role was not renamed', async () => {
     vi.mocked(saveRoleName).mockResolvedValue({
       ok: false,
-      reason: 'invalid',
-      message: 'Esse nome já existe.',
+      reason: 'taken',
+      message: 'Já existe um papel com esse nome.',
     });
     const user = userEvent.setup();
     render(<RoleRenameForm id="role" name="estoque" />);
     await user.click(screen.getByRole('button', { name: 'Salvar' }));
-    expect(await screen.findByText('Esse nome já existe.')).toBeVisible();
+    const alert = await screen.findByRole('alert');
+    expect(alert).toHaveClass('alert-warning');
+    expect(alert).toHaveTextContent(
+      'Já existe um papel com esse nome. Escolha outro.',
+    );
   });
 
   it('confirms a saved name', async () => {
@@ -67,6 +72,8 @@ describe('RoleForm', () => {
     const user = userEvent.setup();
     render(<RoleRenameForm id="role" name="estoque" />);
     await user.click(screen.getByRole('button', { name: 'Salvar' }));
-    expect(await screen.findByText('O nome foi salvo.')).toBeVisible();
+    expect(await screen.findByRole('status')).toHaveTextContent(
+      'O novo nome foi salvo.',
+    );
   });
 });

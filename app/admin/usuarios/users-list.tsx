@@ -99,9 +99,10 @@ export function UsersList({ roles, initialQuery, pageSizeInAddress }: Props) {
           <div className={styles.empty}>
             <Alert
               variant="danger"
+              icon="error"
               title="Não foi possível carregar os usuários"
             >
-              Verifique a conexão e tente de novo.
+              Use o botão Tentar novamente para carregar a lista.
             </Alert>
             <Button type="button" variant="secondary" onClick={list.retry}>
               Tentar novamente

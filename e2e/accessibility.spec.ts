@@ -145,6 +145,12 @@ test('admin sign-in, invite, terms, and home have no detectable violations', asy
   await page.goto('/admin/entrar?erro=acesso_negado');
   expect(await scan(page)).toEqual([]);
 
+  await page.goto('/admin/entrar?erro=email_nao_verificado');
+  expect(await scan(page)).toEqual([]);
+
+  await page.goto('/admin/entrar?erro=erro');
+  expect(await scan(page)).toEqual([]);
+
   await page.route('**/api/auth/sign-in/social', () => Promise.resolve());
   await page.getByRole('button', { name: 'Entrar com Google' }).click();
   await expect(
@@ -159,6 +165,9 @@ test('admin sign-in, invite, terms, and home have no detectable violations', asy
   await setTerms(approved, 'none');
   await page.context().addCookies([await sessionCookie(approved)]);
   await page.goto('/admin/termos/aceitar');
+  expect(await scan(page)).toEqual([]);
+  await page.getByRole('button', { name: 'Continuar' }).click();
+  await expect(page.getByText('Aceite os termos para continuar')).toBeVisible();
   expect(await scan(page)).toEqual([]);
 
   await setTerms(approved, 'current');

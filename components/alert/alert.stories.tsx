@@ -4,20 +4,23 @@ import { expect, within } from 'storybook/test';
 import { Alert } from './alert';
 
 const meta = {
-  title: 'Components/Alert',
+  title: 'Feedback/Alert',
   component: Alert,
   args: {
     title: 'Aviso',
     children: 'Confira as informações antes de continuar.',
   },
   argTypes: {
-    variant: { control: 'inline-radio', options: ['default', 'danger'] },
+    variant: {
+      control: 'inline-radio',
+      options: ['default', 'info', 'success', 'warning', 'danger'],
+    },
   },
   parameters: {
     docs: {
       description: {
         component:
-          'Fluid feedback occupying 100% of the parent width. Omitted variant and variant="default" use the neutral Off-white surface. variant="danger" uses the approved pink/red error treatment. The parent owns any max-width and outer spacing; the login content column constrains its danger alert. Uses role="alert", a decorative lock, a summary and recovery guidance.',
+          'Fluid feedback with a short title, supporting text and a decorative icon. The parent controls max-width and outer spacing. Info and success use role="status". Default, warning and danger use role="alert".',
       },
     },
   },
@@ -36,12 +39,42 @@ export const Default: Story = {
     );
   },
 };
+export const Info: Story = {
+  args: {
+    variant: 'info',
+    title: 'Convite pendente',
+    children:
+      'A pessoa convidada pode acessar o painel após aceitar o convite.',
+  },
+};
+export const Success: Story = {
+  args: {
+    variant: 'success',
+    title: 'Perfil atualizado',
+    children: 'As alterações foram salvas.',
+  },
+};
+export const Warning: Story = {
+  args: {
+    variant: 'warning',
+    title: 'Seu convite expira em breve',
+    children: 'Aceite o convite para acessar o painel.',
+  },
+};
 export const Danger: Story = {
   args: {
     variant: 'danger',
     title: 'Acesso negado',
     children:
       'Esta conta não tem acesso. Use outra conta Google ou peça um convite ao administrador.',
+  },
+};
+export const OperationalError: Story = {
+  args: {
+    variant: 'danger',
+    icon: 'error',
+    title: 'Não foi possível carregar os usuários',
+    children: 'Use o botão Tentar novamente para carregar a lista.',
   },
 };
 /** The component is fluid; only this surrounding example sets a 400px limit. */

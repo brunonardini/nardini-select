@@ -3,8 +3,8 @@ import Link from 'next/link';
 
 import { Button } from '@/components/button/button';
 import { Icon } from '@/components/icon/icon';
-import { SIGN_IN_ERRORS, signInErrorText } from '@/lib/auth/logic/errors';
 
+import { signInFeedback } from './feedback';
 import { SignInButton } from './sign-in-button';
 import styles from './sign-in.module.css';
 
@@ -14,8 +14,7 @@ export default async function SignInPage({
   searchParams: Promise<{ erro?: string; error?: string }>;
 }) {
   const params = await searchParams;
-  const message = signInErrorText(params.erro ?? params.error);
-  const denied = message === SIGN_IN_ERRORS.acesso_negado;
+  const error = params.erro ?? params.error;
   const image = {
     alt: '',
     loading: 'eager' as const,
@@ -83,14 +82,7 @@ export default async function SignInPage({
           Seu espaço para cuidar da operação e levar nossa curadoria a mais
           cães.
         </p>
-        <SignInButton
-          initialMessage={
-            denied
-              ? 'Esta conta não tem acesso. Use outra conta Google ou peça um convite ao administrador.'
-              : message
-          }
-          initialTitle={denied ? 'Acesso negado' : 'Não foi possível entrar'}
-        />
+        <SignInButton initialFeedback={error ? signInFeedback(error) : null} />
         <p className={styles.restriction}>
           <Icon name="lock" />
           Acesso restrito para funcionários

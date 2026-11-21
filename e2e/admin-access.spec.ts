@@ -1,7 +1,6 @@
 import { expect, test } from '@playwright/test';
 
 import { INVITE_TOKENS } from '../db/seeds/tokens';
-import { SIGN_IN_ERRORS } from '../lib/auth/logic/errors';
 import { PRIVACY_NOTICE_VERSION, TERMS_VERSION } from '../lib/legal/versions';
 
 import { sessionCookie, setTerms, slotUser } from './fixtures/auth';
@@ -69,11 +68,11 @@ test('a known sign-in error is shown and an unknown one stays generic', async ({
 }) => {
   await page.goto('/admin/entrar?erro=acesso_negado');
   await expect(page.getByRole('main').getByRole('alert')).toContainText(
-    'Esta conta não tem acesso. Use outra conta Google ou peça um convite ao administrador.',
+    'Use outra conta Google ou peça um convite a um administrador.',
   );
   await page.goto('/admin/entrar?error=something_else');
   await expect(page.getByRole('main').getByRole('alert')).toContainText(
-    'Não foi possível entrar. Tente de novo.',
+    'Tente entrar com o Google novamente.',
   );
 });
 
@@ -159,13 +158,15 @@ test('the first acceptance opens the profile and a later one goes home', async (
   await setTerms(userId, 'none');
   await page.context().addCookies([await sessionCookie(userId)]);
   await page.goto('/admin/termos/aceitar');
-  await expect(page.getByRole('alert')).toHaveCount(0);
+  const alerts = page.getByRole('main').getByRole('alert');
+  await expect(alerts).toHaveCount(0);
   await page.getByRole('button', { name: 'Continuar' }).click();
   await expect(page).toHaveURL(/erro=termos_obrigatorios/);
-  const feedback = page
-    .getByRole('alert')
-    .filter({ hasText: SIGN_IN_ERRORS.termos_obrigatorios });
-  await expect(feedback).toContainText('Não foi possível continuar');
+  const feedback = alerts.filter({
+    hasText: 'Aceite os termos para continuar',
+  });
+  await expect(feedback).toHaveClass(/alert-warning/);
+  await expect(feedback).toContainText('Marque a caixa de aceite');
   const terms = page.getByRole('link', { name: /Termos de uso/ });
   const notice = page.getByRole('link', { name: /aviso de privacidade/ });
   await expect(terms).toHaveAttribute('href', '/admin/termos');

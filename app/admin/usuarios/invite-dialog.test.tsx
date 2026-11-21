@@ -180,7 +180,11 @@ describe('invitation UI', () => {
       'Ana Silva',
     );
     await user.click(screen.getByRole('button', { name: 'Gerar link' }));
-    expect(await screen.findByText('Informe o nome completo.')).toBeVisible();
+    const alert = await screen.findByRole('alert');
+    expect(alert).toHaveClass('alert-warning');
+    expect(alert).toHaveTextContent(
+      'Informe o nome completo para gerar o link.',
+    );
   });
 
   it('copies a new invite link and reports a clipboard failure', async () => {
@@ -318,7 +322,7 @@ describe('invitation UI', () => {
     );
     await user.click(screen.getByRole('button', { name: 'Gerar novo link' }));
     expect(
-      await screen.findByText('Este convite não pode ser alterado.'),
+      await screen.findByText('Não foi possível gerar um novo link'),
     ).toBeVisible();
   });
 
@@ -340,7 +344,7 @@ describe('invitation UI', () => {
       }),
     );
     expect(
-      await screen.findByText('Este convite não pode ser alterado.'),
+      await screen.findByText('Não foi possível cancelar o convite'),
     ).toBeVisible();
   });
 });

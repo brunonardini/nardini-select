@@ -13,8 +13,10 @@ export function RoleCreateForm() {
   return (
     <form className="admin-form" action={action}>
       {state && !state.ok ? (
-        <Alert variant="danger" title="Papel não criado">
-          {state.message}
+        <Alert variant="warning" title="Revise o nome do papel">
+          {state.reason === 'taken'
+            ? 'Já existe um papel com esse nome. Escolha outro.'
+            : state.message}
         </Alert>
       ) : null}
       <TextField label="Nome" name="name" required maxLength={40} />
@@ -27,16 +29,27 @@ export function RoleCreateForm() {
 
 export function RoleRenameForm({ id, name }: { id: string; name: string }) {
   const [state, action, pending] = useActionState(saveRoleName, null);
+  const error = state && !state.ok ? state : null;
+  const nameError =
+    error?.reason === 'invalid_name' || error?.reason === 'taken';
   return (
     <form className="admin-form" action={action}>
       <input type="hidden" name="id" value={id} />
-      {state && !state.ok ? (
-        <Alert variant="danger" title="Papel não renomeado">
-          {state.message}
+      {error ? (
+        <Alert
+          variant={nameError ? 'warning' : 'danger'}
+          icon={!nameError && error.reason !== 'system' ? 'error' : undefined}
+          title={nameError ? 'Revise o novo nome' : 'Papel não renomeado'}
+        >
+          {error.reason === 'taken'
+            ? 'Já existe um papel com esse nome. Escolha outro.'
+            : error.message}
         </Alert>
       ) : null}
       {state?.ok ? (
-        <Alert title="Papel atualizado">O nome foi salvo.</Alert>
+        <Alert variant="success" title="Papel atualizado">
+          O novo nome foi salvo.
+        </Alert>
       ) : null}
       <TextField
         label="Nome"

@@ -2,7 +2,6 @@ import { Alert } from '@/components/alert/alert';
 import { Button } from '@/components/button/button';
 import { Checkbox } from '@/components/checkbox/checkbox';
 import { requirePage } from '@/lib/auth/io/guard';
-import { signInErrorText } from '@/lib/auth/logic/errors';
 import { PRIVACY_NOTICE_VERSION, TERMS_VERSION } from '@/lib/legal/versions';
 
 import { acceptTerms } from './actions';
@@ -14,7 +13,7 @@ export default async function AcceptTermsPage({
 }) {
   await requirePage({ allow: ['terms_outdated'] });
   const params = await searchParams;
-  const message = signInErrorText(params.erro);
+  const needsAcceptance = params.erro === 'termos_obrigatorios';
 
   return (
     <section className="admin-panel">
@@ -24,9 +23,19 @@ export default async function AcceptTermsPage({
         de privacidade está na versão {PRIVACY_NOTICE_VERSION}.
       </p>
       <form className="admin-form" action={acceptTerms}>
-        {message ? (
-          <Alert variant="danger" title="Não foi possível continuar">
-            {message}
+        {params.erro ? (
+          <Alert
+            variant={needsAcceptance ? 'warning' : 'danger'}
+            icon={needsAcceptance ? undefined : 'error'}
+            title={
+              needsAcceptance
+                ? 'Aceite os termos para continuar'
+                : 'Não foi possível continuar'
+            }
+          >
+            {needsAcceptance
+              ? 'Marque a caixa de aceite e selecione Continuar.'
+              : 'Recarregue a página e tente novamente.'}
           </Alert>
         ) : null}
         <Checkbox

@@ -62,7 +62,7 @@ describe('ProfileForm', () => {
     const user = userEvent.setup();
     vi.mocked(saveProfile).mockResolvedValueOnce({
       ok: false,
-      reason: 'invalid',
+      reason: 'display_name',
       message: 'Informe um nome.',
     });
     render(
@@ -77,11 +77,12 @@ describe('ProfileForm', () => {
     );
     await user.click(screen.getByRole('button', { name: 'Salvar' }));
     expect(await screen.findByText('Informe um nome.')).toBeVisible();
+    expect(screen.getByRole('alert')).toHaveClass('alert-warning');
     vi.mocked(saveProfile).mockResolvedValueOnce({ ok: true });
     await user.click(screen.getByRole('button', { name: 'Salvar' }));
-    expect(
-      await screen.findByText('As alterações foram salvas.'),
-    ).toBeVisible();
+    expect(await screen.findByRole('status')).toHaveTextContent(
+      'As alterações foram salvas.',
+    );
     expect(screen.queryByText('Informe um nome.')).not.toBeInTheDocument();
   });
 });

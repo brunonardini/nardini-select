@@ -303,19 +303,26 @@ button.button {
   }
 }
 
-/* Fluid alerts: neutral by default; semantic error colors require danger. */
+/* Fluid feedback with variant-specific accents. */
 .alert {
+  --alert-surface: var(--off-white);
+  --alert-border: var(--argila);
+  --alert-text: var(--cafe);
+  --alert-accent: var(--cafe);
+  --alert-rule: var(--argila);
+  --alert-icon-surface: var(--areia);
+
   display: flex;
   align-items: flex-start;
   width: 100%;
   min-width: 0;
   gap: 11px;
   padding: 15px 14px;
-  border: 1px solid var(--argila);
-  border-top: 3px solid var(--argila);
+  border: 1px solid var(--alert-border);
+  border-top: 3px solid var(--alert-rule);
   border-radius: 8px;
-  background: var(--off-white);
-  color: var(--cafe);
+  background: var(--alert-surface);
+  color: var(--alert-text);
   font-size: 12px;
   line-height: 1.6;
 }
@@ -327,8 +334,8 @@ button.button {
   padding: 7px;
   margin-top: 1px;
   border-radius: 50%;
-  background: var(--areia);
-  color: var(--cafe);
+  background: var(--alert-icon-surface);
+  color: var(--alert-accent);
 }
 .alert-icon svg {
   width: 20px;
@@ -341,7 +348,7 @@ button.button {
 .alert-content strong {
   display: block;
   margin-bottom: 4px;
-  color: var(--cafe);
+  color: var(--alert-accent);
   font-size: 13px;
   font-weight: 800;
 }
@@ -349,18 +356,37 @@ button.button {
   font-size: 12px;
   line-height: 1.65;
 }
+.alert-info {
+  --alert-surface: #e5eff9;
+  --alert-border: #7c9ebf;
+  --alert-text: #223e60;
+  --alert-accent: #294c76;
+  --alert-rule: #3c6495;
+  --alert-icon-surface: #c9dcf0;
+}
+.alert-success {
+  --alert-surface: #e5f2e6;
+  --alert-border: #7ca880;
+  --alert-text: #254b2d;
+  --alert-accent: #2c5835;
+  --alert-rule: #3e7549;
+  --alert-icon-surface: #c9e3cc;
+}
+.alert-warning {
+  --alert-surface: #fbf2d6;
+  --alert-border: #bea054;
+  --alert-text: #57420e;
+  --alert-accent: #644c0e;
+  --alert-rule: #8b681b;
+  --alert-icon-surface: #f1dfa4;
+}
 .alert-danger {
-  border-color: var(--error-border);
-  border-top-color: var(--error-rule);
-  background: var(--error-surface);
-  color: var(--error-text);
-}
-.alert-danger .alert-icon {
-  background: var(--error-icon-surface);
-  color: var(--error-accent);
-}
-.alert-danger .alert-content strong {
-  color: var(--error-accent);
+  --alert-surface: var(--error-surface);
+  --alert-border: var(--error-border);
+  --alert-text: var(--error-text);
+  --alert-accent: var(--error-accent);
+  --alert-rule: var(--error-rule);
+  --alert-icon-surface: var(--error-icon-surface);
 }
 
 /* Hero: off-white copy beside the dog and the brand's N. */

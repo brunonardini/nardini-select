@@ -29,9 +29,13 @@ function InviteRow({
     renewed?.ok === true && typeof window !== 'undefined'
       ? `${window.location.origin}/admin/convite/${renewed.token}`
       : null;
-  const error =
-    (renewed && !renewed.ok ? renewed.message : null) ??
-    (canceled && !canceled.ok ? canceled.message : null);
+  const renewFailed = renewed?.ok === false;
+  const cancelFailed = canceled?.ok === false;
+  const errorTitle = renewFailed
+    ? cancelFailed
+      ? 'Não foi possível alterar o convite'
+      : 'Não foi possível gerar um novo link'
+    : 'Não foi possível cancelar o convite';
 
   useEffect(() => {
     if (canceled?.ok) onCanceled();
@@ -50,9 +54,9 @@ function InviteRow({
         },
       ]}
     >
-      {error ? (
-        <Alert variant="danger" title="Convite não alterado">
-          {error}
+      {!link && (renewFailed || cancelFailed) ? (
+        <Alert variant="danger" icon="error" title={errorTitle}>
+          Atualize a lista de convites e confira se ele ainda está disponível.
         </Alert>
       ) : null}
       {link ? (

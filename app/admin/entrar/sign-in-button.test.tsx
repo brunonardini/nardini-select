@@ -2,6 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { signInFeedback } from './feedback';
 import { SignInButton } from './sign-in-button';
 
 const signInSocial = vi.fn();
@@ -64,20 +65,29 @@ describe('SignInButton', () => {
 
   it('shows the safe server error and clears it when retrying', async () => {
     signInSocial.mockReturnValue(new Promise(() => {}));
-    render(
-      <SignInButton
-        initialTitle="Acesso negado"
-        initialMessage="Peça um convite ao administrador."
-      />,
-    );
+    render(<SignInButton initialFeedback={signInFeedback('acesso_negado')} />);
     expect(screen.getByRole('alert')).toHaveTextContent('Acesso negado');
     expect(screen.getByRole('alert')).toHaveTextContent(
-      'Peça um convite ao administrador.',
+      'Use outra conta Google ou peça um convite a um administrador.',
     );
     await userEvent.click(
       screen.getByRole('button', { name: 'Entrar com Google' }),
     );
     expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+  });
+
+  it.each([
+    ['usuario_desabilitado', 'danger', 'Conta desabilitada'],
+    ['convite_invalido', 'danger', 'Convite indisponível'],
+    ['convite_expirado', 'warning', 'Convite expirado'],
+    ['termos_obrigatorios', 'warning', 'Aceite os termos para continuar'],
+    ['email_nao_verificado', 'warning', 'Verifique seu e-mail do Google'],
+    ['__proto__', 'danger', 'Não foi possível entrar'],
+  ])('uses the appropriate feedback for %s', (code, variant, title) => {
+    render(<SignInButton initialFeedback={signInFeedback(code)} />);
+    const alert = screen.getByRole('alert');
+    expect(alert).toHaveClass(`alert-${variant}`);
+    expect(alert).toHaveTextContent(title);
   });
 
   it.each([
@@ -96,7 +106,7 @@ describe('SignInButton', () => {
       );
       await waitFor(() =>
         expect(screen.getByRole('alert')).toHaveTextContent(
-          'Não foi possível entrar. Tente de novo.',
+          'Tente entrar com o Google novamente.',
         ),
       );
       expect(
@@ -120,7 +130,7 @@ describe('SignInButton', () => {
       screen.getByRole('button', { name: 'Entrar com Google' }),
     );
     expect(await screen.findByRole('alert')).toHaveTextContent(
-      'Não foi possível entrar. Tente de novo.',
+      'Tente entrar com o Google novamente.',
     );
     expect(
       screen.getByRole('button', { name: 'Entrar com Google' }),

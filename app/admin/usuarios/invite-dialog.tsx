@@ -61,8 +61,8 @@ export function InviteDialog() {
       ) : (
         <form className="dialog-form" action={action}>
           {state && !state.ok ? (
-            <Alert variant="danger" title="Convite não criado">
-              {state.message}
+            <Alert variant="warning" title="Revise o nome da pessoa convidada">
+              Informe o nome completo para gerar o link.
             </Alert>
           ) : null}
           <TextField label="Nome completo" name="full_name" required />
