@@ -62,6 +62,24 @@ it('loads the saved preference and writes only on toggle', () => {
   }
 });
 
+it('forwards the account photo into the navigation', () => {
+  render(
+    <AdminShell
+      access="administrator"
+      name="Ana Martins"
+      photoSrc="/admin/api/avatar/user-1"
+      signOutAction={vi.fn()}
+    >
+      <h1>Início</h1>
+    </AdminShell>,
+  );
+  const account = screen.getByRole('button', { name: /Conta de/ });
+  expect(within(account).getByRole('presentation')).toHaveAttribute(
+    'src',
+    expect.stringContaining('/admin/api/avatar/user-1'),
+  );
+});
+
 it('keeps public and signed-out pages outside the private shell', () => {
   router.pathname = '/admin/privacidade';
   const { rerender } = render(

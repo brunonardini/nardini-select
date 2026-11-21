@@ -21,6 +21,7 @@ function card(index: number, fields: Partial<UserCard> = {}): UserCard {
     roleName: 'Estoque',
     state: 'Ativo',
     lastLoginAt: '2026-11-20T12:00:00.000Z',
+    photo: false,
     ...fields,
   };
 }
@@ -85,7 +86,7 @@ describe('UsersList', () => {
   it('renders person cards with role, state and last access', async () => {
     respondWith({
       items: [
-        card(1),
+        card(1, { photo: true }),
         card(2, {
           name: 'Usuário removido',
           email: null,
@@ -102,12 +103,17 @@ describe('UsersList', () => {
     const link = await screen.findByRole('link', { name: 'Pessoa 1' });
     expect(link).toHaveAttribute('href', '/admin/usuarios/u1');
     const first = link.closest('li') as HTMLElement;
+    expect(within(first).getByRole('presentation')).toHaveAttribute(
+      'src',
+      expect.stringContaining('/admin/api/avatar/u1'),
+    );
     expect(within(first).getByText('pessoa1@exemplo.com')).toBeVisible();
     expect(within(first).getByText('Estoque')).toBeVisible();
     expect(within(first).getByText('Ativo')).toBeVisible();
     const removed = screen
       .getByRole('link', { name: 'Usuário removido' })
       .closest('li') as HTMLElement;
+    expect(within(removed).queryByRole('presentation')).not.toBeInTheDocument();
     expect(within(removed).getByText('Sem papel')).toBeVisible();
     expect(within(removed).getByText('Sem registro')).toBeVisible();
     expect(screen.getByRole('status')).toHaveTextContent(

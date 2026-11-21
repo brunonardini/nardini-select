@@ -27,6 +27,7 @@ function user(id: string, fields: Partial<ListedUser> = {}): ListedUser {
     state: 'Ativo',
     lastLoginAt: null,
     anonymizedAt: null,
+    photo: false,
     ...fields,
   };
 }
@@ -287,6 +288,26 @@ describe('selectUserPage', () => {
     expect(names({ role: '33333333-3333-4333-8333-333333333333' })).toEqual([]);
   });
 
+  it('keeps a provider photo and drops it after anonymization', () => {
+    const page = selectUserPage(
+      [
+        user('photo', { fullName: 'Ana', photo: true }),
+        user('gone', {
+          fullName: 'Removido',
+          photo: true,
+          anonymizedAt: '2026-11-01T00:00:00.000Z',
+          email: 'anonymized+gone@invalid',
+          state: 'Anonimizado',
+        }),
+      ],
+      query(),
+    );
+    expect(page.items.map((item) => [item.id, item.photo])).toEqual([
+      ['photo', true],
+      ['gone', false],
+    ]);
+  });
+
   it('returns only card fields and hides the anonymized email', () => {
     const page = selectUserPage(team, query());
     expect(page.items[0]).toEqual({
@@ -296,6 +317,7 @@ describe('selectUserPage', () => {
       roleName: 'Estoque',
       state: 'Ativo',
       lastLoginAt: '2026-11-20T12:00:00.000Z',
+      photo: false,
     });
     expect(page.items[5].email).toBeNull();
   });

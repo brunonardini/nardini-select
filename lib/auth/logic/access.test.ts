@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import {
   MAX_SESSION_AGE_MS,
   allowsMutationOrigin,
+  accountAvatarSrc,
   decideAccess,
   sessionWithinLimit,
   viewerState,
@@ -17,6 +18,7 @@ function viewer(overrides: Partial<Viewer> = {}): Viewer {
     email: 'ana@example.com',
     displayName: 'Ana',
     fullName: 'Ana Silva',
+    photo: false,
     roleId: 'a1d00000-0000-4000-8000-000000000002',
     isAdmin: false,
     state: 'active',
@@ -207,5 +209,22 @@ describe('allowsMutationOrigin', () => {
         siteUrl: 'not a url',
       }),
     ).toBe(false);
+  });
+});
+
+describe('accountAvatarSrc', () => {
+  it('points at the avatar route when a photo can be served', () => {
+    const person = viewer({ photo: true });
+    expect(accountAvatarSrc(person)).toBe(`/admin/api/avatar/${person.id}`);
+    expect(accountAvatarSrc(viewer({ photo: true, state: 'pending' }))).toBe(
+      `/admin/api/avatar/${person.id}`,
+    );
+  });
+
+  it('keeps initials when there is no photo or the terms are outdated', () => {
+    expect(accountAvatarSrc(viewer())).toBeNull();
+    expect(
+      accountAvatarSrc(viewer({ photo: true, state: 'terms_outdated' })),
+    ).toBeNull();
   });
 });

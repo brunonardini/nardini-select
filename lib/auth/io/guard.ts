@@ -23,6 +23,7 @@ import { allowsMutationOrigin } from '@/lib/auth/logic/access';
 import { SESSION_COOKIE_NAME } from '@/lib/auth/logic/session';
 import { getDatabase, transaction } from '@/lib/db/io/client';
 import { PRIVACY_NOTICE_VERSION, TERMS_VERSION } from '@/lib/legal/versions';
+import { providerPhotoAvailable } from '@/lib/users/logic/avatar';
 
 import { getAuth } from './server';
 
@@ -33,6 +34,8 @@ type UserRow = {
   email: string;
   display_name: string | null;
   full_name: string | null;
+  photo_source: string;
+  photo_url: string | null;
   role_id: string | null;
   terms_version: string | null;
   terms_accepted_at: string | null;
@@ -57,6 +60,7 @@ function toViewer(row: UserRow, sessionCreatedAt: string): Viewer {
     email: row.email,
     displayName: row.display_name,
     fullName: row.full_name,
+    photo: providerPhotoAvailable(row.photo_source, row.photo_url),
     roleId: row.role_id,
     isAdmin: row.role_id === ADMIN_ROLE_ID,
     state: viewerState({
@@ -90,6 +94,8 @@ async function loadUser(
       'email',
       'display_name',
       'full_name',
+      'photo_source',
+      'photo_url',
       'role_id',
       'terms_version',
       'terms_accepted_at',

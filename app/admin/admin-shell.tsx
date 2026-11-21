@@ -43,6 +43,8 @@ function toggleSidebar() {
 type Props = {
   access: ComponentProps<typeof AdminNavigation>['access'] | null;
   name: string | null;
+  /** Same-origin avatar route. Omitted when the person has no photo. */
+  photoSrc?: string | null;
   signOutAction: ComponentProps<typeof AdminNavigation>['signOutAction'];
   children: ReactNode;
 };
@@ -50,6 +52,7 @@ type Props = {
 function PrivateShell({
   access,
   name,
+  photoSrc,
   signOutAction,
   children,
   pathname,
@@ -67,6 +70,7 @@ function PrivateShell({
       pathname={pathname}
       access={access}
       name={name}
+      photoSrc={photoSrc}
       signOutAction={signOutAction}
       collapsed={collapsed}
       onToggle={toggleSidebar}
@@ -76,7 +80,13 @@ function PrivateShell({
   );
 }
 
-export function AdminShell({ access, name, signOutAction, children }: Props) {
+export function AdminShell({
+  access,
+  name,
+  photoSrc = null,
+  signOutAction,
+  children,
+}: Props) {
   const pathname = usePathname();
   if (!access || isPublicAdminPath(pathname))
     return <div className="admin">{children}</div>;
@@ -84,6 +94,7 @@ export function AdminShell({ access, name, signOutAction, children }: Props) {
     <PrivateShell
       access={access}
       name={name}
+      photoSrc={photoSrc}
       signOutAction={signOutAction}
       pathname={pathname}
     >

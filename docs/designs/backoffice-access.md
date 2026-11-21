@@ -457,7 +457,7 @@ Rules, all in `lib/users/logic/rules.ts`:
 #### B5. Profile and photos
 
 *   On first access after sign-up, the user lands on `/admin/perfil`: display name and photo choice (Google photo or none). Full name and email are read-only there; admins edit full name on the user page.
-*   Photos are served by `GET /admin/api/avatar/[userId]`. It fetches only `https://lh3.googleusercontent.com/`, follows no redirects, times out after 5 seconds, accepts only `image/*` up to 1 MB, and returns `Cache-Control: private, max-age=3600`. `photo_url` comes only from the verified ID token. Without a photo, the page shows initials.
+*   Photos are served by `GET /admin/api/avatar/[userId]`. It fetches only `https://lh3.googleusercontent.com/`, follows no redirects, times out after 5 seconds, accepts only `image/*` up to 1 MB, and returns `Cache-Control: private, max-age=3600`. `photo_url` comes only from the verified ID token. The account menu and each person card use that route when the stored photo is a trusted Google photo, and initials otherwise. The account menu keeps initials while the terms are outdated, because the route refuses that state. Without a photo, the page shows initials.
 
 #### B6. Logout
 

@@ -23,6 +23,8 @@ type Props = {
   pathname: string;
   access: 'administrator' | 'staff' | 'pending' | 'terms';
   name: string | null;
+  /** Same-origin avatar route. Omitted when the person has no photo. */
+  photoSrc?: string | null;
   collapsed: boolean;
   onToggle: () => void;
   signOutAction: (formData: FormData) => void | Promise<void>;
@@ -118,6 +120,7 @@ export function AdminNavigation({
   pathname,
   access,
   name,
+  photoSrc = null,
   collapsed,
   onToggle,
   signOutAction,
@@ -161,7 +164,7 @@ export function AdminNavigation({
         <Popover.Root key={`account:${pathname}`}>
           <Popover.Trigger className={styles.account}>
             <span className="sr-only">Conta de {accountLabel} </span>
-            <Avatar name={name} announceInitials />
+            <Avatar name={name} src={photoSrc} announceInitials />
             <span className={styles.identity}>
               <strong>{accountLabel}</strong>
               <small>{accessLabels[access]}</small>

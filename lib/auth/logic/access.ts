@@ -5,6 +5,8 @@ export type Viewer = {
   email: string;
   displayName: string | null;
   fullName: string | null;
+  /** A trusted Google photo the avatar route can serve. */
+  photo: boolean;
   roleId: string | null;
   isAdmin: boolean;
   state: ViewerState;
@@ -24,6 +26,17 @@ export type AccessDecision =
   | { kind: 'allow' };
 
 export const MAX_SESSION_AGE_MS = 7 * 24 * 60 * 60 * 1000;
+
+/**
+ * Same-origin photo for the account menu. The avatar route refuses a
+ * viewer whose terms are outdated, so that state keeps the initials.
+ */
+export function accountAvatarSrc(
+  viewer: Pick<Viewer, 'id' | 'photo' | 'state'>,
+): string | null {
+  if (!viewer.photo || viewer.state === 'terms_outdated') return null;
+  return `/admin/api/avatar/${viewer.id}`;
+}
 
 const DESTINATION: Record<ViewerState, string> = {
   terms_outdated: '/admin/termos/aceitar',

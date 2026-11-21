@@ -1,10 +1,24 @@
 import { describe, expect, it } from 'vitest';
 
-import { AVATAR_MAX_BYTES, avatarBytesAllowed, avatarFetchUrl } from './avatar';
+import {
+  AVATAR_MAX_BYTES,
+  avatarBytesAllowed,
+  avatarFetchUrl,
+  providerPhotoAvailable,
+} from './avatar';
 
 const PHOTO = 'https://lh3.googleusercontent.com/a/photo';
 
 describe('avatar proxy checks', () => {
+  it('shows a photo only when Google is the source and the URL is trusted', () => {
+    expect(providerPhotoAvailable('provider', PHOTO)).toBe(true);
+    expect(providerPhotoAvailable('none', PHOTO)).toBe(false);
+    expect(providerPhotoAvailable('provider', null)).toBe(false);
+    expect(
+      providerPhotoAvailable('provider', 'https://evil.example/a.png'),
+    ).toBe(false);
+  });
+
   it('accepts only a credential-free Google photo URL', () => {
     expect(avatarFetchUrl(PHOTO)).toBe(PHOTO);
     expect(avatarFetchUrl(null)).toBeNull();

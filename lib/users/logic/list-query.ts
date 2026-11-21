@@ -54,6 +54,8 @@ export type ListedUser = {
   state: string;
   lastLoginAt: string | null;
   anonymizedAt: string | null;
+  /** A trusted Google photo the avatar route can serve. */
+  photo: boolean;
 };
 
 export type UserCard = {
@@ -63,6 +65,8 @@ export type UserCard = {
   roleName: string | null;
   state: string;
   lastLoginAt: string | null;
+  /** A trusted Google photo the avatar route can serve. */
+  photo: boolean;
 };
 
 export type UserPage = {
@@ -239,6 +243,7 @@ export function selectUserPage(
       roleName: user.roleName,
       state: user.state,
       lastLoginAt: user.lastLoginAt,
+      photo: user.anonymizedAt ? false : user.photo,
     })),
     total: rows.length,
     page,
