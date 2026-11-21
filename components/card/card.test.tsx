@@ -33,6 +33,19 @@ describe('Card', () => {
     expect(screen.queryByRole('checkbox')).not.toBeInTheDocument();
   });
 
+  it('renders extra content inside the card', () => {
+    renderCard(
+      <Card title="Ana Silva">
+        <button type="button">Gerar novo link</button>
+      </Card>,
+    );
+    expect(
+      within(screen.getByRole('listitem')).getByRole('button', {
+        name: 'Gerar novo link',
+      }),
+    ).toBeVisible();
+  });
+
   it('renders a plain title when there is no link or description', () => {
     renderCard(<Card title="Usuário removido" />);
     expect(screen.getByText('Usuário removido').tagName).toBe('SPAN');

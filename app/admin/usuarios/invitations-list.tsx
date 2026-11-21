@@ -4,6 +4,7 @@ import { useActionState, useEffect } from 'react';
 
 import { Alert } from '@/components/alert/alert';
 import { Button } from '@/components/button/button';
+import { Card } from '@/components/card/card';
 import { ConfirmDialog } from '@/components/confirm-dialog/confirm-dialog';
 import { LocalDateTime } from '@/components/local-date-time/local-date-time';
 import { TextField } from '@/components/text-field/text-field';
@@ -39,11 +40,16 @@ function InviteRow({
   if (canceled?.ok) return null;
 
   return (
-    <li className={styles.invitation}>
-      <strong>{invite.fullName}</strong>
-      <p>
-        Expira em <LocalDateTime value={invite.expiresAt} />
-      </p>
+    <Card
+      title={invite.fullName}
+      facts={[
+        {
+          key: 'expires',
+          label: 'Expira em',
+          value: <LocalDateTime value={invite.expiresAt} />,
+        },
+      ]}
+    >
       {error ? (
         <Alert variant="danger" title="Convite não alterado">
           {error}
@@ -99,7 +105,7 @@ function InviteRow({
           )}
         </div>
       )}
-    </li>
+    </Card>
   );
 }
 

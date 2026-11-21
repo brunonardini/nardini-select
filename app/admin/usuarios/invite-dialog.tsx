@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState } from 'react';
+import { useActionState, useEffect } from 'react';
 
 import { Alert } from '@/components/alert/alert';
 import { Button } from '@/components/button/button';
@@ -9,10 +9,18 @@ import { TextField } from '@/components/text-field/text-field';
 import { useNotice } from '@/components/toast/toast';
 
 import { createInvite } from './invitation-actions';
+import { usePublishInvite } from './invitation-list-provider';
 
 export function InviteDialog() {
   const [state, action, pending] = useActionState(createInvite, null);
+  const publish = usePublishInvite();
   const notice = useNotice();
+
+  useEffect(() => {
+    if (state?.ok !== true) return;
+    publish(state.invite);
+  }, [publish, state]);
+
   const link =
     state?.ok === true && typeof window !== 'undefined'
       ? `${window.location.origin}/admin/convite/${state.token}`

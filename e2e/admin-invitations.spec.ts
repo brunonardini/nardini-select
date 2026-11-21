@@ -28,6 +28,11 @@ test('an admin generates an invitation link', async ({ page }, testInfo) => {
     await expect(
       page.getByRole('textbox', { name: 'Link do convite' }),
     ).toHaveValue(/\/admin\/convite\//);
+    await page.getByRole('button', { name: 'Fechar' }).click();
+    const pending = page.getByRole('button', { name: /Convites pendentes/ });
+    await expect(pending).not.toHaveAttribute('aria-busy', 'true');
+    await pending.click();
+    await expect(page.getByText(`Convidado ${slot}`)).toBeVisible();
   } finally {
     await setRole(adminId, ATENDIMENTO_ROLE_ID);
   }

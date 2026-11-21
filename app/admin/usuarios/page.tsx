@@ -6,6 +6,7 @@ import { listOpenInvitations } from '@/lib/invitations/io/invitations';
 import { listRoles } from '@/lib/roles/io/roles';
 import { pageSizeFrom, parseUserListQuery } from '@/lib/users/logic/list-query';
 
+import { InvitationListProvider } from './invitation-list-provider';
 import { InvitationsDisclosure } from './invitations-disclosure';
 import { InviteDialog } from './invite-dialog';
 import { UsersList } from './users-list';
@@ -42,18 +43,20 @@ export default async function UsersPage({
   const roles = await listRoles(ctx);
 
   return (
-    <div className={styles.page}>
-      <div className={styles.body}>
-        <PageHeader title="Usuários" action={<InviteDialog />} />
-        <Suspense fallback={<InvitationsDisclosure invites={null} />}>
-          <Invitations ctx={ctx} />
-        </Suspense>
-        <UsersList
-          roles={roles.map(({ id, name }) => ({ id, name }))}
-          initialQuery={initialQuery}
-          pageSizeInAddress={pageSizeFrom(values.por_pagina) !== null}
-        />
+    <InvitationListProvider>
+      <div className={styles.page}>
+        <div className={styles.body}>
+          <PageHeader title="Usuários" action={<InviteDialog />} />
+          <Suspense fallback={<InvitationsDisclosure invites={null} />}>
+            <Invitations ctx={ctx} />
+          </Suspense>
+          <UsersList
+            roles={roles.map(({ id, name }) => ({ id, name }))}
+            initialQuery={initialQuery}
+            pageSizeInAddress={pageSizeFrom(values.por_pagina) !== null}
+          />
+        </div>
       </div>
-    </div>
+    </InvitationListProvider>
   );
 }

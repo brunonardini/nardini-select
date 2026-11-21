@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { PawLoading } from '@/components/button/button';
 import { Icon } from '@/components/icon/icon';
 
+import { useCreatedInvites } from './invitation-list-provider';
 import { InvitationsList, type Invite } from './invitations-list';
 import styles from './users.module.css';
 
@@ -18,14 +19,49 @@ export function invitationsAfterCancel(
   return current.filter((invite) => invite.id !== id);
 }
 
+/** Remembers a canceled id once. A repeated cancel leaves the list as it is. */
+export function hiddenIdsAfterCancel(
+  current: readonly string[],
+  id: string,
+): readonly string[] {
+  if (current.includes(id)) return current;
+  return [...current, id];
+}
+
+/**
+ * Created invites lead the loaded list. Hidden ids stay out, and an id already
+ * loaded is not repeated. A list that has not loaded yet stays unloaded.
+ */
+export function invitationsWithCreated(
+  current: Invite[] | null,
+  created: readonly Invite[],
+  hiddenIds: readonly string[] = [],
+): Invite[] | null {
+  if (!current) return null;
+  const hidden = new Set(hiddenIds);
+  const ids = new Set(current.map((invite) => invite.id));
+  const fresh = created.filter(
+    (invite) => !hidden.has(invite.id) && !ids.has(invite.id),
+  );
+  const base =
+    hidden.size === 0
+      ? current
+      : current.filter((invite) => !hidden.has(invite.id));
+  if (fresh.length === 0) return base;
+  return [...fresh, ...base];
+}
+
 /** Pending invitations behind a counted disclosure. `null` means still loading. */
 export function InvitationsDisclosure({
   invites,
 }: {
   invites: Invite[] | null;
 }) {
+  const created = useCreatedInvites();
   const [shown, setShown] = useState(invites);
-  const loading = shown === null;
+  const [hiddenIds, setHiddenIds] = useState<readonly string[]>([]);
+  const visible = invitationsWithCreated(shown, created, hiddenIds);
+  const loading = visible === null;
 
   return (
     <Collapsible.Root className={styles.invitations} disabled={loading}>
@@ -43,24 +79,25 @@ export function InvitationsDisclosure({
         <span className={styles.disclosureLabel}>
           Convites pendentes
           <span className={styles.badge}>
-            {loading ? (
+            {visible === null ? (
               <>
                 –<span className="sr-only">, carregando</span>
               </>
             ) : (
-              shown.length
+              visible.length
             )}
           </span>
         </span>
         <Icon className={styles.disclosureChevron} name="chevron" />
       </Collapsible.Trigger>
       <Collapsible.Panel className={styles.disclosurePanel}>
-        {shown ? (
+        {visible ? (
           <InvitationsList
-            invites={shown}
-            onCanceled={(id) =>
-              setShown((current) => invitationsAfterCancel(current, id))
-            }
+            invites={visible}
+            onCanceled={(id) => {
+              setHiddenIds((current) => hiddenIdsAfterCancel(current, id));
+              setShown((current) => invitationsAfterCancel(current, id));
+            }}
           />
         ) : null}
       </Collapsible.Panel>

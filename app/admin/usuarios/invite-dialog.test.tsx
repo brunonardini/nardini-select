@@ -6,10 +6,16 @@ import { ToastProvider } from '@/components/toast/toast';
 import { InviteDialog } from './invite-dialog';
 import { cancelInvite, createInvite, renewInvite } from './invitation-actions';
 import {
+  createdAfterPublish,
+  InvitationListProvider,
+} from './invitation-list-provider';
+import {
+  hiddenIdsAfterCancel,
   invitationsAfterCancel,
+  invitationsWithCreated,
   InvitationsDisclosure,
 } from './invitations-disclosure';
-import { InvitationsList } from './invitations-list';
+import { InvitationsList, type Invite } from './invitations-list';
 
 vi.mock('./invitation-actions', () => ({
   createInvite: vi.fn(),
@@ -21,6 +27,12 @@ const invite = {
   id: 'a1d20000-0000-4000-8000-000000000001',
   fullName: 'Ana Silva',
   expiresAt: '2026-12-01T00:00:00.000Z',
+};
+
+const createdInvite: Invite = {
+  id: 'a1d20000-0000-4000-8000-000000000002',
+  fullName: 'Bruno Nardini',
+  expiresAt: '2026-12-01T00:30:00.000Z',
 };
 
 describe('invitation UI', () => {
@@ -116,6 +128,41 @@ describe('invitation UI', () => {
     expect(invitationsAfterCancel([invite], invite.id)).toEqual([]);
   });
 
+  it('remembers a canceled id once', () => {
+    const hidden = [invite.id];
+    expect(hiddenIdsAfterCancel([], invite.id)).toEqual([invite.id]);
+    expect(hiddenIdsAfterCancel(hidden, invite.id)).toBe(hidden);
+  });
+
+  it('keeps a missing list missing and prepends a new invite once', () => {
+    const loaded = [invite];
+    expect(invitationsWithCreated(null, [createdInvite])).toBeNull();
+    expect(invitationsWithCreated([], [createdInvite])).toEqual([
+      createdInvite,
+    ]);
+    expect(invitationsWithCreated(loaded, [invite])).toBe(loaded);
+    expect(invitationsWithCreated([invite], [createdInvite])).toEqual([
+      createdInvite,
+      invite,
+    ]);
+    expect(
+      invitationsWithCreated(
+        [invite, createdInvite],
+        [createdInvite],
+        [createdInvite.id],
+      ),
+    ).toEqual([invite]);
+  });
+
+  it('keeps a repeated publish in place', () => {
+    const published = [invite];
+    expect(createdAfterPublish(published, invite)).toBe(published);
+    expect(createdAfterPublish([invite], createdInvite)).toEqual([
+      createdInvite,
+      invite,
+    ]);
+  });
+
   it('shows why the invite was not created', async () => {
     const user = (await import('@testing-library/user-event')).default.setup();
     vi.mocked(createInvite).mockResolvedValue({
@@ -143,7 +190,11 @@ describe('invitation UI', () => {
       configurable: true,
       value: { writeText },
     });
-    vi.mocked(createInvite).mockResolvedValue({ ok: true, token: 'tok-1' });
+    vi.mocked(createInvite).mockResolvedValue({
+      ok: true,
+      token: 'tok-1',
+      invite: createdInvite,
+    });
     render(
       <ToastProvider>
         <InviteDialog />
@@ -164,6 +215,70 @@ describe('invitation UI', () => {
     writeText.mockRejectedValueOnce(new Error('denied'));
     await user.click(screen.getByRole('button', { name: 'Copiar link' }));
     expect(await screen.findByText('Não foi possível copiar')).toBeVisible();
+  });
+
+  it('adds a created invite to the list and drops it after cancel', async () => {
+    const user = (await import('@testing-library/user-event')).default.setup();
+    vi.mocked(createInvite).mockResolvedValue({
+      ok: true,
+      token: 'tok-1',
+      invite: createdInvite,
+    });
+    vi.mocked(cancelInvite).mockResolvedValue({ ok: true });
+    const { rerender } = render(
+      <ToastProvider>
+        <InvitationListProvider>
+          <InviteDialog />
+          <InvitationsDisclosure key="loading" invites={null} />
+        </InvitationListProvider>
+      </ToastProvider>,
+    );
+    await user.click(screen.getByRole('button', { name: 'Convidar usuário' }));
+    await user.type(
+      screen.getByRole('textbox', { name: 'Nome completo' }),
+      'Bruno Nardini',
+    );
+    await user.click(screen.getByRole('button', { name: 'Gerar link' }));
+    expect(
+      await screen.findByRole('textbox', { name: 'Link do convite' }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole('button', {
+        name: /Convites pendentes/,
+        hidden: true,
+      }),
+    ).toHaveAttribute('aria-busy', 'true');
+
+    rerender(
+      <ToastProvider>
+        <InvitationListProvider>
+          <InviteDialog />
+          <InvitationsDisclosure key="ready" invites={[invite]} />
+        </InvitationListProvider>
+      </ToastProvider>,
+    );
+    await user.click(screen.getByRole('button', { name: 'Fechar' }));
+    const trigger = screen.getByRole('button', { name: /Convites pendentes/ });
+    expect(trigger).toHaveTextContent('2');
+    await user.click(trigger);
+    expect(screen.getByText('Bruno Nardini')).toBeVisible();
+    expect(screen.getByText('Ana Silva')).toBeVisible();
+
+    const bruno = screen.getByText('Bruno Nardini').closest('li');
+    expect(bruno).not.toBeNull();
+    await user.click(
+      within(bruno as HTMLElement).getByRole('button', {
+        name: 'Cancelar convite',
+      }),
+    );
+    await user.click(
+      within(screen.getByRole('dialog')).getByRole('button', {
+        name: 'Cancelar convite',
+      }),
+    );
+    await waitFor(() => expect(trigger).toHaveTextContent('1'));
+    expect(screen.queryByText('Bruno Nardini')).not.toBeInTheDocument();
+    expect(screen.getByText('Ana Silva')).toBeVisible();
   });
 
   it('copies a renewed link and reports a clipboard failure', async () => {
