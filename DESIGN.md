@@ -7,6 +7,12 @@ colors:
   argila: '#c8af9a'
   areia: '#e2d1be'
   off-white: '#f7efe6'
+  info-surface: '#e5eff9'
+  info-text: '#223e60'
+  success-surface: '#e5f2e6'
+  success-text: '#254b2d'
+  warning-surface: '#fbf2d6'
+  warning-text: '#57420e'
   error-surface: '#fce6e1'
   error-border: '#c9796b'
   error-text: '#792820'
@@ -94,6 +100,24 @@ components:
     rounded: '{rounded.menu}'
     padding: '15px 14px'
     typography: '{typography.feedback}'
+  alert-info:
+    backgroundColor: '{colors.info-surface}'
+    textColor: '{colors.info-text}'
+    rounded: '{rounded.menu}'
+    padding: '15px 14px'
+    typography: '{typography.feedback}'
+  alert-success:
+    backgroundColor: '{colors.success-surface}'
+    textColor: '{colors.success-text}'
+    rounded: '{rounded.menu}'
+    padding: '15px 14px'
+    typography: '{typography.feedback}'
+  alert-warning:
+    backgroundColor: '{colors.warning-surface}'
+    textColor: '{colors.warning-text}'
+    rounded: '{rounded.menu}'
+    padding: '15px 14px'
+    typography: '{typography.feedback}'
   alert-danger:
     backgroundColor: '{colors.error-surface}'
     textColor: '{colors.error-text}'
@@ -129,7 +153,7 @@ The page reads like the manual's own spreads: large quiet off-white and areia su
 
 **Key Characteristics:**
 
-- The five official brand colors, with Café as the base and Terracota as the accent; scoped semantic colors for errors.
+- The five official brand colors, with Café as the base and Terracota as the accent, plus scoped semantic colors for feedback.
 - Karvest ExtraBold for headings and the Admin word; Montserrat 400/800 for body text and controls.
 - Graphic blocks and diagonal cuts taken from the N monogram, used as support, never as excess.
 - Official logo files, never redrawn, recolored, cropped or distorted.
@@ -137,7 +161,7 @@ The page reads like the manual's own spreads: large quiet off-white and areia su
 
 ## Colors
 
-The official brand palette has exactly five colors. The approved semantic error tokens below are reserved for error feedback; they do not expand the marketing palette. Do not add other decorative hues or saturated combinations.
+The official brand palette has exactly five colors. The semantic feedback colors below are reserved for interface messages. Keep decorative colors within the brand palette.
 
 | Token       | Manual name   | Hex       | Role                                                                        |
 | ----------- | ------------- | --------- | --------------------------------------------------------------------------- |
@@ -159,7 +183,15 @@ The official brand palette has exactly five colors. The approved semantic error 
 
 This is why buttons are Café, not Terracota, and why focus rings are Café on light surfaces and Off-white on Café.
 
-### Semantic error feedback
+### Semantic feedback
+
+Alert variants pair a lightly tinted surface and icon circle with a darker title, icon and top rule. The description has its own foreground color.
+
+| Variant   | Surface   | Border    | Description | Title and icon | Top rule  | Icon circle |
+| --------- | --------- | --------- | ----------- | -------------- | --------- | ----------- |
+| `info`    | `#E5EFF9` | `#7C9EBF` | `#223E60`   | `#294C76`      | `#3C6495` | `#C9DCF0`   |
+| `success` | `#E5F2E6` | `#7CA880` | `#254B2D`   | `#2C5835`      | `#3E7549` | `#C9E3CC`   |
+| `warning` | `#FBF2D6` | `#BEA054` | `#57420E`   | `#644C0E`      | `#8B681B` | `#F1DFA4`   |
 
 The owner approved a pink/red error treatment for the admin login. `Alert variant="danger"` uses these shared CSS tokens from `app/globals.css`; use them for errors, never for decoration or primary actions.
 
@@ -172,7 +204,7 @@ The owner approved a pink/red error treatment for the admin login. `Alert varian
 | `error-rule`         | `#A3382D` | 3px top rule                            |
 | `error-icon-surface` | `#F3C9BF` | Circular lock background                |
 
-**The Semantic Feedback Rule.** Error colors belong to feedback, never marketing decoration or primary actions. Meaning comes from the title, recovery text and icon as well as color. Never render raw provider errors or sensitive response details.
+**The Semantic Feedback Rule.** Reserve semantic colors for feedback. Convey meaning through the title, supporting text and icon as well as color. Never render raw provider errors or sensitive response details.
 
 ## Typography
 
@@ -247,11 +279,13 @@ Paws pulse forever with a 1.2s cycle and 0/0.15/0.3s stagger. This expresses act
 
 ### Alert variants
 
-Use `components/alert/Alert` with a short `title` and a safe description/recovery instruction in `children`. Omitting `variant` or setting `variant="default"` uses the neutral Off-white background, Cafe text, Argila border and Areia icon circle. Set `variant="danger"` for errors, including the login feedback. Its approved pink surface has a 1px boundary, 3px red top rule, 8px corners, 15×14px padding and 11px icon gap. A 20px decorative lock sits in a 34px tinted circle. Montserrat sets the 13px/800 title and 12px/400 body at 1.65 line height. There are no shadows or entrance animations.
+Use `components/alert/Alert` with a short `title` and a safe description or recovery instruction in `children`. Omitting `variant` or setting `variant="default"` uses the neutral Off-white background, Cafe text, Argila border and Areia icon circle. Set `variant="danger"` for failures and blocked access. Use its default lock for access restrictions and set `icon="error"` for an operational failure that calls for a circled exclamation mark. Its approved pink surface has a 1px boundary, 3px red top rule, 8px corners, 15×14px padding and 11px icon gap. The 20px decorative icon sits in a 34px tinted circle. Montserrat sets the 13px/800 title and 12px/400 body at 1.65 line height. There are no shadows or entrance animations.
 
-The component owns `role="alert"` and the hidden decorative icon; the component fills 100% of the available width, while the parent owns max-width and outer spacing. The login content column constrains the alert; the shared component has no width cap. Long content wraps without horizontal overflow. Login titles distinguish "Acesso negado" from a failed attempt, retain recovery guidance and re-enable the Google action after a provider/network failure.
+Use `info` for informational updates and `success` for completed actions. Both use `role="status"`, with a blue information icon for `info` and a green check for `success`. Use the yellow `warning` variant with a warning triangle when the message needs prompt attention. Warning, default and danger use `role="alert"`. The title and body carry the message for assistive technology. The icons are decorative and hidden from assistive technology.
 
-Storybook covers left/right icon placement, primary on dark surfaces, secondary navigation, loading for all action variants, disabled and keyboard-focus states, and the alert's default, danger and constrained-container examples. Google, lock and directional icons belong to the existing `Icon` family. Use `name="left"` for return actions and `name="down"` for the home arrows; the back button consumes the shared left-arrow icon.
+The alert fills the available width and wraps long content. Its parent sets any max-width and outer spacing. The login content column constrains the alert. Login titles distinguish "Acesso negado" from a failed attempt, retain recovery guidance and re-enable the Google action after a provider or network failure.
+
+Storybook covers all five alert variants and shows how a parent can constrain an alert. The button stories cover left and right icon placement, primary on dark surfaces, secondary navigation, loading for all action variants, and disabled and keyboard-focus states. The alert icons, Google mark and directional arrows use the shared `Icon` component.
 
 ### Error 500
 
@@ -354,7 +388,7 @@ The one authored moment is the hero dog rising 24px into place over 0.9s (`cubic
 
 ### Don't:
 
-- **Don't** expand the five-color brand palette with decoration. The documented semantic error tokens are the approved exception for feedback only.
+- **Don't** expand the five-color brand palette with decoration. Reserve the documented semantic colors for feedback.
 - **Don't** redraw, recolor, crop, distort or regenerate any brand mark, including with AI (the earlier regenerated transparent seal was removed for this reason).
 - **Don't** put the horizontal logo on Café or Terracota, or put buttons and small text on a Terracota fill.
 - **Don't** combine a giant dog, the seal and text in the same panel.

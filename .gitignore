@@ -11,7 +11,7 @@ npm-debug.log*
 !.env.example
 .impeccable/review/
 
-# EGM scratch drafts
+# Design doc drafts and reviews
 .dev/docs/
 
 # Local-only files (brand sources, etc.)

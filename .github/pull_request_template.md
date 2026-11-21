@@ -30,7 +30,7 @@ footer in this description isn't part of the commit.
 
 ## Design
 
-<!-- Design and architecture changes follow the Elephant-Goldfish Model: the
+<!-- Design and architecture changes follow the design-doc workflow: the
      design document is reviewed, approved, and committed before any code. -->
 
 - [ ] Not needed (small change: copy tweak or one-off fix)
