@@ -4,7 +4,7 @@
 [![codecov](https://codecov.io/gh/brunonardini/nardini-select/branch/main/graph/badge.svg?token=RAnmvbM53n)](https://codecov.io/gh/brunonardini/nardini-select)
 [![Release](https://img.shields.io/github/v/release/brunonardini/nardini-select?sort=semver)](https://github.com/brunonardini/nardini-select/releases)
 
-Website for Nardini Select. [Visit the live site](https://nardiniselect.com.br).
+Website for Nardini Select.
 
 ## Run locally
 
