@@ -87,7 +87,7 @@ components:
     textColor: '{colors.cafe}'
     rounded: '{rounded.pill}'
     padding: '0 16px'
-    height: '44px'
+    height: '50px'
   alert-default:
     backgroundColor: '{colors.off-white}'
     textColor: '{colors.cafe}'

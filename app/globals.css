@@ -182,7 +182,6 @@ h2 span {
   color: var(--off-white);
 }
 .button-secondary {
-  min-height: 44px;
   gap: 8px;
   padding: 0 16px;
   border-color: transparent;
