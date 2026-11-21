@@ -48,7 +48,14 @@ async function inviteFromCookie(
 
   const row = await trx
     .selectFrom('invitations')
-    .select(['id', 'used_at', 'canceled_at', 'expires_at', 'created_at'])
+    .select([
+      'id',
+      'full_name',
+      'used_at',
+      'canceled_at',
+      'expires_at',
+      'created_at',
+    ])
     .where('token_hash', '=', hashInvitationToken(opened.token))
     .executeTakeFirst();
 
@@ -59,6 +66,7 @@ async function inviteFromCookie(
         id: '',
         status: 'missing',
         createdAt: '',
+        fullName: '',
         termsVersion: opened.termsVersion,
         privacyVersion: opened.privacyVersion,
       },
@@ -79,6 +87,7 @@ async function inviteFromCookie(
         now,
       ),
       createdAt: row.created_at,
+      fullName: row.full_name,
       termsVersion: opened.termsVersion,
       privacyVersion: opened.privacyVersion,
     },

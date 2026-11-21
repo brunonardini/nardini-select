@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest';
 
 import { decideSignUp, type SignUpInvite } from './sign-up';
 
+type PresentInvite = Extract<SignUpInvite, { kind: 'present' }>;
+
 const NOW = new Date('2026-11-18T15:00:00.000Z');
 const PHOTO = 'https://lh3.googleusercontent.com/a/ana';
 
@@ -27,12 +29,13 @@ function invite(
     termsVersion: '2026-11-18',
     privacyVersion: '2026-11-18',
   },
-): SignUpInvite {
+): PresentInvite {
   return {
     kind: 'present',
     id: 'a1d20000-0000-4000-8000-000000000001',
     status,
     createdAt: '2026-11-18T14:00:00.000Z',
+    fullName: 'Ana Silva',
     ...versions,
   };
 }
@@ -159,6 +162,7 @@ describe('decideSignUp', () => {
       path: 'invitation',
       fields: {
         name: 'ana',
+        fullName: 'Ana Silva',
         image: null,
         photoSource: 'none',
         roleId: null,
@@ -193,6 +197,35 @@ describe('decideSignUp', () => {
     expect(decision.fields.photoSource).toBe('provider');
     expect(decision.fields.termsVersion).toBeNull();
     expect(decision.fields.invitedAt).toBeNull();
+    expect(decision.fields.fullName).toBeNull();
+  });
+
+  it('copies the invitation full name and refuses a blank one', () => {
+    const profile = {
+      email: 'ana@example.com',
+      emailVerified: true,
+      name: 'Ana Google',
+      image: null,
+    };
+    const named = decideSignUp({
+      ...base,
+      profile,
+      invite: { ...invite('valid'), fullName: '  Ana   Silva  ' },
+    });
+    expect(named.ok).toBe(true);
+    if (!named.ok) return;
+    expect(named.fields.fullName).toBe('Ana   Silva');
+    expect(named.fields.name).toBe('Ana Google');
+
+    expect(
+      errorCode(
+        decideSignUp({
+          ...base,
+          profile,
+          invite: { ...invite('valid'), fullName: '   ' },
+        }),
+      ),
+    ).toBe('erro');
   });
 
   it('refuses everyone else', () => {

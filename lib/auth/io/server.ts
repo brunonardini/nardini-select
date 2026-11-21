@@ -226,7 +226,7 @@ function options(db: Kysely<DB>): BetterAuthOptions {
                 emailVerified: true,
                 photoSource: fields.photoSource,
                 roleId: fields.roleId,
-                fullName: null,
+                fullName: fields.fullName,
                 termsVersion: fields.termsVersion,
                 termsAcceptedAt: fields.termsAcceptedAt
                   ? new Date(fields.termsAcceptedAt)
