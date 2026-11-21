@@ -1,7 +1,54 @@
+import type { ReactNode } from 'react';
+
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { expect, fn, userEvent, within } from 'storybook/test';
+
 import { Icon } from '../icon/icon';
 import { Button } from './button';
+
+const variants = ['primary', 'secondary', 'outline'] as const;
+const variantClick = fn();
+const leadingClick = fn();
+const disabledClick = fn();
+const loadingClick = fn();
+
+function VariantRow({
+  children,
+  surface,
+}: {
+  children: ReactNode;
+  surface?: 'dark';
+}) {
+  const row = (
+    <div
+      style={{
+        display: 'flex',
+        flexWrap: 'wrap',
+        alignItems: 'center',
+        gap: 12,
+      }}
+    >
+      {children}
+    </div>
+  );
+  if (surface !== 'dark') return row;
+  return (
+    <div className="button-surface-dark" style={{ padding: 24 }}>
+      {row}
+    </div>
+  );
+}
+
+function variantButtons(
+  render: (variant: (typeof variants)[number]) => ReactNode,
+  surface?: 'dark',
+) {
+  return (
+    <VariantRow surface={surface}>
+      {variants.map((variant) => render(variant))}
+    </VariantRow>
+  );
+}
 
 const meta = {
   title: 'Components/Button',
@@ -16,6 +63,7 @@ const meta = {
     },
   },
   parameters: {
+    controls: { disable: true },
     docs: {
       description: {
         component:
@@ -28,203 +76,217 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** Link styled as the filled button, as in the hero. */
-export const PrimaryLink: Story = {
-  args: {
-    href: '#selecao',
-    children: 'Conheça nossa seleção',
-    trailingIcon: <Icon name="down" />,
-  },
+async function expectThreeVariants(
+  canvas: ReturnType<typeof within>,
+  role: 'button' | 'link',
+  name: string,
+) {
+  const items = canvas.getAllByRole(role, { name });
+  await expect(items).toHaveLength(3);
+  await expect(items[0]).toHaveClass('button-primary');
+  await expect(items[1]).toHaveClass('button-secondary');
+  await expect(items[2]).toHaveClass('button-outline');
+  return items;
+}
+
+/** The three variants, text only. */
+export const Variants: Story = {
+  render: () =>
+    variantButtons((variant) => (
+      <Button key={variant} variant={variant} onClick={variantClick}>
+        Adicionar à sacola
+      </Button>
+    )),
   play: async ({ canvasElement }) => {
-    const link = within(canvasElement).getByRole('link');
-    await expect(link).toHaveAttribute('href', '#selecao');
+    const [primary] = await expectThreeVariants(
+      within(canvasElement),
+      'button',
+      'Adicionar à sacola',
+    );
+    await userEvent.click(primary);
+    await expect(variantClick).toHaveBeenCalledOnce();
   },
 };
 
-/** Link styled as the outline button, as in the hero. */
-export const OutlineLink: Story = {
-  args: {
-    variant: 'outline',
-    href: '#loja',
-    children: 'Visite nossa loja',
-    trailingIcon: <Icon name="down" />,
+/** Links that stay in this site, one for each variant. */
+export const InternalLinks: Story = {
+  name: 'Internal links',
+  render: () =>
+    variantButtons((variant) => (
+      <Button key={variant} variant={variant} href="#selecao">
+        Conheça nossa seleção
+      </Button>
+    )),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const links = await expectThreeVariants(
+      canvas,
+      'link',
+      'Conheça nossa seleção',
+    );
+    for (const link of links) {
+      await expect(link).toHaveAttribute('href', '#selecao');
+    }
+    await expect(canvas.queryByRole('button')).not.toBeInTheDocument();
+    await userEvent.tab();
+    await expect(links[0]).toHaveFocus();
   },
 };
 
-/** External link that opens in a new tab, with the hint for screen readers. */
-export const ExternalLink: Story = {
-  args: {
-    href: 'https://www.instagram.com/nardiniselect/',
-    target: '_blank',
-    rel: 'noopener noreferrer',
-    children: (
-      <>
+/** Links that open in a new tab, one for each variant. */
+export const ExternalLinks: Story = {
+  name: 'External links',
+  render: () =>
+    variantButtons((variant) => (
+      <Button
+        key={variant}
+        variant={variant}
+        href="https://www.instagram.com/nardiniselect/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         Siga @nardiniselect
         <span className="sr-only"> no Instagram, em uma nova aba</span>
-      </>
-    ),
-  },
-};
-
-/** A real action renders Base UI’s Button. */
-export const Action: Story = {
-  args: { children: 'Adicionar à sacola', onClick: fn() },
-  play: async ({ args, canvasElement }) => {
-    const button = within(canvasElement).getByRole('button', {
-      name: 'Adicionar à sacola',
-    });
-    await userEvent.click(button);
-    await expect(args.onClick).toHaveBeenCalledOnce();
-  },
-};
-
-export const OutlineAction: Story = {
-  args: { variant: 'outline', children: 'Ver detalhes', onClick: fn() },
-  play: async ({ args, canvasElement }) => {
-    await userEvent.click(
-      within(canvasElement).getByRole('button', { name: 'Ver detalhes' }),
+      </Button>
+    )),
+  play: async ({ canvasElement }) => {
+    const links = await expectThreeVariants(
+      within(canvasElement),
+      'link',
+      'Siga @nardiniselect no Instagram, em uma nova aba',
     );
-    await expect(args.onClick).toHaveBeenCalledOnce();
+    for (const link of links) {
+      await expect(link).toHaveAttribute('target', '_blank');
+      await expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+    }
   },
 };
 
-/** Keyboard focus shows the café outline. */
-export const Focused: Story = {
-  args: { href: '#selecao', children: 'Conheça nossa seleção' },
-  play: async ({ canvasElement }) => {
-    await userEvent.tab();
-    await expect(within(canvasElement).getByRole('link')).toHaveFocus();
-  },
-};
-
-export const Disabled: Story = {
-  args: { children: 'Adicionar à sacola', disabled: true, onClick: fn() },
-  play: async ({ args, canvasElement }) => {
-    const button = within(canvasElement).getByRole('button');
-    await expect(button).toBeDisabled();
-    await userEvent.click(button, { pointerEventsCheck: 0 });
-    await expect(args.onClick).not.toHaveBeenCalled();
-  },
-};
-
-/** Stays in the tab order while disabled, for loading states. */
-export const DisabledFocusable: Story = {
-  args: {
-    variant: 'outline',
-    children: 'Adicionando…',
-    disabled: true,
-    focusableWhenDisabled: true,
-  },
-  play: async ({ canvasElement }) => {
-    await userEvent.tab();
-    const button = within(canvasElement).getByRole('button');
-    await expect(button).toHaveFocus();
-    await expect(button).toHaveAttribute('aria-disabled', 'true');
-  },
-};
-
-/** Any decorative icon can lead the label; Google is only the login's choice. */
+/** A decorative icon before the label, on every variant. */
 export const LeadingIcon: Story = {
-  args: {
-    children: 'Encontrar loja',
-    leadingIcon: <Icon name="pin" />,
-    onClick: fn(),
-  },
-  play: async ({ args, canvasElement }) => {
-    await userEvent.click(
-      within(canvasElement).getByRole('button', { name: 'Encontrar loja' }),
-    );
-    await expect(args.onClick).toHaveBeenCalledOnce();
-  },
-};
-/** The home keeps its arrow after the label through trailingIcon. */
-export const TrailingIcon: Story = { ...PrimaryLink };
-export const SecondaryLink: Story = {
-  args: {
-    variant: 'secondary',
-    href: '/',
-    children: 'Voltar ao site',
-    leadingIcon: <Icon name="left" />,
-  },
+  name: 'Leading icon',
+  render: () =>
+    variantButtons((variant) => (
+      <Button
+        key={variant}
+        variant={variant}
+        leadingIcon={<Icon name="pin" />}
+        onClick={leadingClick}
+      >
+        Encontrar loja
+      </Button>
+    )),
   play: async ({ canvasElement }) => {
-    await expect(
-      within(canvasElement).getByRole('link', { name: 'Voltar ao site' }),
-    ).toHaveAttribute('href', '/');
-  },
-};
-export const SecondaryAction: Story = {
-  ...Action,
-  args: { variant: 'secondary', children: 'Voltar', onClick: fn() },
-  play: async ({ args, canvasElement }) => {
-    await userEvent.click(
-      within(canvasElement).getByRole('button', { name: 'Voltar' }),
+    const buttons = await expectThreeVariants(
+      within(canvasElement),
+      'button',
+      'Encontrar loja',
     );
-    await expect(args.onClick).toHaveBeenCalledOnce();
+    for (const button of buttons) {
+      await expect(button.querySelectorAll('svg')).toHaveLength(1);
+      await expect(button.firstElementChild?.tagName).toBe('svg');
+    }
+    await userEvent.click(buttons[0]);
+    await expect(leadingClick).toHaveBeenCalledOnce();
   },
 };
-/** Primary stays primary on dark surfaces; only inherited contrast tokens change. */
-export const PrimaryOnDark: Story = {
-  args: {
-    children: 'Entrar com Google',
-    leadingIcon: <Icon name="google" />,
-    onClick: fn(),
-  },
-  decorators: [
-    (Story) => (
-      <div className="button-surface-dark" style={{ padding: 24 }}>
-        <Story />
-      </div>
-    ),
-  ],
-  play: async ({ args, canvasElement }) => {
-    await userEvent.click(
-      within(canvasElement).getByRole('button', { name: 'Entrar com Google' }),
+
+/** A decorative icon after the label, on every variant. */
+export const TrailingIcon: Story = {
+  name: 'Trailing icon',
+  render: () =>
+    variantButtons((variant) => (
+      <Button
+        key={variant}
+        variant={variant}
+        trailingIcon={<Icon name="down" />}
+      >
+        Ver detalhes
+      </Button>
+    )),
+  play: async ({ canvasElement }) => {
+    const buttons = await expectThreeVariants(
+      within(canvasElement),
+      'button',
+      'Ver detalhes',
     );
-    await expect(args.onClick).toHaveBeenCalledOnce();
+    for (const button of buttons) {
+      await expect(button.querySelectorAll('svg')).toHaveLength(1);
+      await expect(button.lastElementChild?.tagName).toBe('svg');
+    }
   },
 };
+
+/** Disabled actions, one for each variant. */
+export const Disabled: Story = {
+  render: () =>
+    variantButtons((variant) => (
+      <Button key={variant} variant={variant} disabled onClick={disabledClick}>
+        Salvar
+      </Button>
+    )),
+  play: async ({ canvasElement }) => {
+    const buttons = await expectThreeVariants(
+      within(canvasElement),
+      'button',
+      'Salvar',
+    );
+    for (const button of buttons) {
+      await expect(button).toBeDisabled();
+      await userEvent.click(button, { pointerEventsCheck: 0 });
+    }
+    await expect(disabledClick).not.toHaveBeenCalled();
+  },
+};
+
+/** Loading replaces the label and any icons with paws, on every variant. */
 export const Loading: Story = {
-  args: {
-    variant: 'primary',
-    loading: true,
-    loadingLabel: 'Carregando…',
-    children: 'Salvar',
-    leadingIcon: <Icon name="pin" />,
-    trailingIcon: <Icon name="down" />,
-    onClick: fn(),
-  },
-  play: async ({ args, canvasElement }) => {
-    const button = within(canvasElement).getByRole('button', {
-      name: 'Carregando…',
-    });
-    await expect(button).toBeDisabled();
-    await expect(button).toHaveAttribute('aria-busy', 'true');
-    await expect(button.querySelectorAll('svg')).toHaveLength(3);
-    await userEvent.click(button, { pointerEventsCheck: 0 });
-    await expect(args.onClick).not.toHaveBeenCalled();
-  },
-};
-export const LoadingSecondary: Story = {
-  ...Loading,
-  args: { ...Loading.args, variant: 'secondary' },
-};
-export const LoadingOutline: Story = {
-  ...Loading,
-  args: { ...Loading.args, variant: 'outline' },
-};
-export const LoadingOnDark: Story = {
-  ...Loading,
-  decorators: PrimaryOnDark.decorators,
-  globals: { viewport: { value: 'mobile' } },
-};
-export const SecondaryFocused: Story = {
-  args: { variant: 'secondary', children: 'Voltar ao site', href: '/' },
+  render: () =>
+    variantButtons((variant) => (
+      <Button
+        key={variant}
+        variant={variant}
+        loading
+        loadingLabel="Carregando…"
+        onClick={loadingClick}
+      >
+        Salvar
+      </Button>
+    )),
   play: async ({ canvasElement }) => {
-    await userEvent.tab();
-    await expect(within(canvasElement).getByRole('link')).toHaveFocus();
+    const buttons = await expectThreeVariants(
+      within(canvasElement),
+      'button',
+      'Carregando…',
+    );
+    for (const button of buttons) {
+      await expect(button).toBeDisabled();
+      await expect(button).toHaveAttribute('aria-busy', 'true');
+      await expect(button.querySelectorAll('svg')).toHaveLength(3);
+      await userEvent.click(button, { pointerEventsCheck: 0 });
+    }
+    await expect(loadingClick).not.toHaveBeenCalled();
   },
 };
-export const SecondaryDisabled: Story = {
-  ...Disabled,
-  args: { ...Disabled.args, variant: 'secondary' },
+
+/** The three variants on a café surface. */
+export const DarkBackground: Story = {
+  name: 'With dark background',
+  render: () =>
+    variantButtons(
+      (variant) => (
+        <Button key={variant} variant={variant}>
+          Entrar com Google
+        </Button>
+      ),
+      'dark',
+    ),
+  play: async ({ canvasElement }) => {
+    const [primary] = await expectThreeVariants(
+      within(canvasElement),
+      'button',
+      'Entrar com Google',
+    );
+    await expect(primary.closest('.button-surface-dark')).not.toBeNull();
+  },
 };

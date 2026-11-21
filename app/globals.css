@@ -176,6 +176,11 @@ h2 span {
   background: var(--cafe);
   color: var(--off-white);
 }
+/* Outline keeps the café ink, which disappears on this surface. */
+.button-surface-dark .button-outline {
+  border-color: var(--off-white);
+  color: var(--off-white);
+}
 .button-secondary {
   min-height: 44px;
   gap: 8px;
@@ -215,6 +220,10 @@ h2 span {
   .button-outline:hover {
     background: var(--cafe);
     color: var(--off-white);
+  }
+  .button-surface-dark .button-outline:hover {
+    background: var(--off-white);
+    color: var(--cafe);
   }
 }
 button.button {
