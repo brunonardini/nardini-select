@@ -26,8 +26,11 @@ export default function TermsPage() {
         O acesso usa somente a conta Google. A Nardini Select não cria senha
         para esta área. O botão de entrada só funciona depois que você marca que
         leu e aceita estes termos. O{' '}
-        <a href="/admin/privacidade">aviso de privacidade</a> faz parte desse
-        aceite.
+        <a href="/admin/privacidade" target="_blank" rel="noopener noreferrer">
+          aviso de privacidade
+          <span className="sr-only"> em uma nova aba</span>
+        </a>{' '}
+        faz parte desse aceite.
       </p>
 
       <h2>O que a área faz</h2>
@@ -72,7 +75,11 @@ export default function TermsPage() {
       <p>
         O tratamento dos dados pessoais, os prazos e a transferência para os
         Estados Unidos estão no{' '}
-        <a href="/admin/privacidade">aviso de privacidade</a>.
+        <a href="/admin/privacidade" target="_blank" rel="noopener noreferrer">
+          aviso de privacidade
+          <span className="sr-only"> em uma nova aba</span>
+        </a>
+        .
       </p>
       <p className="admin-links">
         <a href="/admin">Ir para a área interna</a>

@@ -14,8 +14,11 @@ export default function PrivacyPage() {
         Este aviso descreve os dados pessoais da área interna da Nardini Select,
         loja em Resende, RJ. A loja é a controladora. O tratamento segue a Lei
         Geral de Proteção de Dados (Lei 13.709/2018). Os{' '}
-        <a href="/admin/termos">termos de uso</a> dizem quem pode entrar e o que
-        a área faz.
+        <a href="/admin/termos" target="_blank" rel="noopener noreferrer">
+          termos de uso
+          <span className="sr-only"> em uma nova aba</span>
+        </a>{' '}
+        dizem quem pode entrar e o que a área faz.
       </p>
 
       <h2>Quais dados, para quê e por quanto tempo</h2>
@@ -110,7 +113,10 @@ export default function PrivacyPage() {
         qualquer outra ação.
       </p>
       <p className="admin-links">
-        <a href="/admin/termos">Termos de uso</a>
+        <a href="/admin/termos" target="_blank" rel="noopener noreferrer">
+          Termos de uso
+          <span className="sr-only"> em uma nova aba</span>
+        </a>
         {' · '}
         <a href="/admin">Ir para a área interna</a>
       </p>

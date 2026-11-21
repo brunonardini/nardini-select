@@ -1,3 +1,4 @@
+import { Alert } from '@/components/alert/alert';
 import { Button } from '@/components/button/button';
 import { Checkbox } from '@/components/checkbox/checkbox';
 import { requirePage } from '@/lib/auth/io/guard';
@@ -22,17 +23,32 @@ export default async function AcceptTermsPage({
         Para continuar, aceite os documentos na versão {TERMS_VERSION}. O aviso
         de privacidade está na versão {PRIVACY_NOTICE_VERSION}.
       </p>
-      {message ? <p role="alert">{message}</p> : null}
       <form className="admin-form" action={acceptTerms}>
+        {message ? (
+          <Alert variant="danger" title="Não foi possível continuar">
+            {message}
+          </Alert>
+        ) : null}
         <Checkbox
           name="aceite"
           value="on"
           label="Li e aceito os termos de uso"
         />
         <p className="admin-links">
-          <a href="/admin/termos">Termos de uso</a>
+          <a href="/admin/termos" target="_blank" rel="noopener noreferrer">
+            Termos de uso
+            <span className="sr-only"> em uma nova aba</span>
+          </a>
           {' e '}
-          <a href="/admin/privacidade">aviso de privacidade</a>.
+          <a
+            href="/admin/privacidade"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            aviso de privacidade
+            <span className="sr-only"> em uma nova aba</span>
+          </a>
+          .
         </p>
         <Button type="submit">Continuar</Button>
       </form>
