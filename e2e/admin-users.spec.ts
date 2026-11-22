@@ -104,7 +104,7 @@ test('the profile saves a display name', async ({ page }, testInfo) => {
       .getByRole('textbox', { name: 'Nome de exibição' })
       .fill(`worker-${slot} perfil`);
     await page.getByRole('button', { name: 'Salvar' }).click();
-    await expect(page.getByRole('main').getByRole('alert')).toContainText(
+    await expect(page.getByRole('main').getByRole('status')).toContainText(
       'As alterações foram salvas.',
     );
   } finally {

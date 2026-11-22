@@ -90,6 +90,28 @@ it('marks Perfil as the current page from the account menu', async () => {
   ).toHaveAttribute('aria-current', 'page');
 });
 
+it('shows the Google photo in the account menu', () => {
+  render(
+    <AdminNavigation
+      pathname="/admin"
+      access="administrator"
+      name="Ana Martins"
+      photoSrc="/admin/api/avatar/user-1"
+      collapsed={false}
+      onToggle={vi.fn()}
+      signOutAction={vi.fn()}
+    >
+      <h1>Início</h1>
+    </AdminNavigation>,
+  );
+  const account = screen.getByRole('button', { name: /Conta de/ });
+  expect(within(account).getByRole('presentation')).toHaveAttribute(
+    'src',
+    expect.stringContaining('/admin/api/avatar/user-1'),
+  );
+  expect(within(account).queryByText('AM')).not.toBeInTheDocument();
+});
+
 it('offers only sign-out while terms are outdated', async () => {
   const user = userEvent.setup();
   render(

@@ -74,20 +74,27 @@ export const MobileDrawer: Story = {
     const trigger = canvas.getByRole('button', { name: 'Menu' });
     const account = canvas.getByRole('button', { name: /Conta de/ });
     const icon = trigger.querySelector('svg');
-    await expect(trigger).toHaveStyle({ minWidth: '44px', minHeight: '44px' });
+    await expect(trigger).toHaveStyle({
+      width: '36px',
+      height: '36px',
+      borderRadius: '8px',
+    });
     await expect(icon).toHaveStyle({ width: '18px', height: '18px' });
-    for (const circle of [
-      icon?.parentElement,
-      account.querySelector('.avatar'),
-    ]) {
-      await expect(circle).toHaveStyle({
-        width: '36px',
-        height: '36px',
-        borderRadius: '50%',
-      });
-    }
+    await expect(account.querySelector('.avatar')).toHaveStyle({
+      width: '36px',
+      height: '36px',
+      borderRadius: '50%',
+    });
+
     await userEvent.click(trigger);
-    await expect(body.getByRole('dialog', { name: 'Menu' })).toBeVisible();
+    const drawer = body.getByRole('dialog', { name: 'Menu' });
+    const close = within(drawer).getByRole('button', { name: 'Fechar menu' });
+    await expect(close).toBeVisible();
+    await expect(close).toHaveStyle({ width: '36px', height: '36px' });
+    await userEvent.click(close);
+    await waitFor(() => expect(trigger).toHaveFocus());
+    await userEvent.click(trigger);
+    close.focus();
     await userEvent.keyboard('{Escape}');
     await waitFor(() => expect(trigger).toHaveFocus());
     await userEvent.click(trigger);

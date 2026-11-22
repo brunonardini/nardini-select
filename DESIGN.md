@@ -7,6 +7,12 @@ colors:
   argila: '#c8af9a'
   areia: '#e2d1be'
   off-white: '#f7efe6'
+  info-surface: '#e5eff9'
+  info-text: '#223e60'
+  success-surface: '#e5f2e6'
+  success-text: '#254b2d'
+  warning-surface: '#fbf2d6'
+  warning-text: '#57420e'
   error-surface: '#fce6e1'
   error-border: '#c9796b'
   error-text: '#792820'
@@ -70,27 +76,53 @@ components:
     backgroundColor: '{colors.cafe}'
     textColor: '{colors.off-white}'
     rounded: '{rounded.pill}'
-    padding: '13px 26px'
+    padding: '7px 21px'
     typography: '{typography.label}'
     height: '50px'
   button-outline:
     textColor: '{colors.cafe}'
     rounded: '{rounded.pill}'
-    padding: '13px 26px'
+    padding: '7px 21px'
     typography: '{typography.label}'
     height: '50px'
   button-outline-hover:
     backgroundColor: '{colors.cafe}'
     textColor: '{colors.off-white}'
   button-secondary:
-    backgroundColor: '{colors.off-white}'
+    backgroundColor: 'transparent'
     textColor: '{colors.cafe}'
     rounded: '{rounded.pill}'
-    padding: '0 16px'
-    height: '44px'
+    padding: '7px 21px'
+    typography: '{typography.label}'
+    height: '50px'
+  button-danger:
+    backgroundColor: '#cb241c'
+    textColor: '#fff7f2'
+    rounded: '{rounded.pill}'
+    padding: '7px 21px'
+    typography: '{typography.label}'
+    height: '50px'
   alert-default:
     backgroundColor: '{colors.off-white}'
     textColor: '{colors.cafe}'
+    rounded: '{rounded.menu}'
+    padding: '15px 14px'
+    typography: '{typography.feedback}'
+  alert-info:
+    backgroundColor: '{colors.info-surface}'
+    textColor: '{colors.info-text}'
+    rounded: '{rounded.menu}'
+    padding: '15px 14px'
+    typography: '{typography.feedback}'
+  alert-success:
+    backgroundColor: '{colors.success-surface}'
+    textColor: '{colors.success-text}'
+    rounded: '{rounded.menu}'
+    padding: '15px 14px'
+    typography: '{typography.feedback}'
+  alert-warning:
+    backgroundColor: '{colors.warning-surface}'
+    textColor: '{colors.warning-text}'
     rounded: '{rounded.menu}'
     padding: '15px 14px'
     typography: '{typography.feedback}'
@@ -129,7 +161,7 @@ The page reads like the manual's own spreads: large quiet off-white and areia su
 
 **Key Characteristics:**
 
-- The five official brand colors, with Café as the base and Terracota as the accent; scoped semantic colors for errors.
+- The five official brand colors, with Café as the base and Terracota as the accent, plus scoped semantic colors for feedback.
 - Karvest ExtraBold for headings and the Admin word; Montserrat 400/800 for body text and controls.
 - Graphic blocks and diagonal cuts taken from the N monogram, used as support, never as excess.
 - Official logo files, never redrawn, recolored, cropped or distorted.
@@ -137,7 +169,7 @@ The page reads like the manual's own spreads: large quiet off-white and areia su
 
 ## Colors
 
-The official brand palette has exactly five colors. The approved semantic error tokens below are reserved for error feedback; they do not expand the marketing palette. Do not add other decorative hues or saturated combinations.
+The official brand palette has exactly five colors. The semantic feedback colors below are reserved for interface messages. Keep decorative colors within the brand palette.
 
 | Token       | Manual name   | Hex       | Role                                                                        |
 | ----------- | ------------- | --------- | --------------------------------------------------------------------------- |
@@ -159,7 +191,15 @@ The official brand palette has exactly five colors. The approved semantic error 
 
 This is why buttons are Café, not Terracota, and why focus rings are Café on light surfaces and Off-white on Café.
 
-### Semantic error feedback
+### Semantic feedback
+
+Alert and Toast share the semantic feedback colors. A lightly tinted surface and icon circle pair with a darker title, icon and top rule. The description has its own foreground color.
+
+| Variant   | Surface   | Border    | Description | Title and icon | Top rule  | Icon circle |
+| --------- | --------- | --------- | ----------- | -------------- | --------- | ----------- |
+| `info`    | `#E5EFF9` | `#7C9EBF` | `#223E60`   | `#294C76`      | `#3C6495` | `#C9DCF0`   |
+| `success` | `#E5F2E6` | `#7CA880` | `#254B2D`   | `#2C5835`      | `#3E7549` | `#C9E3CC`   |
+| `warning` | `#FBF2D6` | `#BEA054` | `#57420E`   | `#644C0E`      | `#8B681B` | `#F1DFA4`   |
 
 The owner approved a pink/red error treatment for the admin login. `Alert variant="danger"` uses these shared CSS tokens from `app/globals.css`; use them for errors, never for decoration or primary actions.
 
@@ -172,7 +212,7 @@ The owner approved a pink/red error treatment for the admin login. `Alert varian
 | `error-rule`         | `#A3382D` | 3px top rule                            |
 | `error-icon-surface` | `#F3C9BF` | Circular lock background                |
 
-**The Semantic Feedback Rule.** Error colors belong to feedback, never marketing decoration or primary actions. Meaning comes from the title, recovery text and icon as well as color. Never render raw provider errors or sensitive response details.
+**The Semantic Feedback Rule.** Reserve the Alert and Toast palettes for feedback. Permanent record deletion uses its own button red. Convey meaning through the title, supporting text and icon as well as color. Never render raw provider errors or sensitive response details.
 
 ## Typography
 
@@ -226,32 +266,50 @@ Flat. Depth comes from color blocks (café panels against off-white), photograph
 
 ### Buttons
 
-Pill, 50px minimum height (48px in the mobile hero), 800 weight label, 1.5px Café border.
+Pill with a Montserrat label at 14px and weight 800. Minimum heights are 44px for compact, 50px for standard, and 56px for large. Standard is the default. Use compact for back and dismiss actions. The mobile hero sets its own 48px minimum.
 
 - **Primary:** Café fill, Off-white text. Hover adds an inset 2px Terracota ring and a 2px lift.
+- **Secondary:** transparent, Café text, and a 1px Argila border. Hover adds a quiet Areia fill. On Café, use Off-white text and a warm border and hover tint.
 - **Outline:** transparent, Café text. Hover fills with Café and turns the text Off-white.
-- Press scales to 0.98. Focus-visible: 2px Café outline offset 4px (Off-white on Café surfaces).
+- **Danger:** reserved for permanent record deletion. The subdued opener pairs the trash icon with visible text. The solid confirmation uses deletion red (#CB241C), a deeper hover (#A91B15), and pale text (#FFF7F2). See the [approved palette and confirmation behavior](docs/designs/button.md).
+- All enabled text buttons lift 2px on hover within 150ms. Press scales to 0.98 and takes precedence. A 2px focus ring sits 3px from the boundary and adapts to the surface and variant. Reduced motion keeps color transitions.
 - Hover effects are gated behind `(hover: hover) and (pointer: fine)`.
 
 ### Button icons, surface context and loading
 
-The shared Button variants are `primary`, `secondary` and `outline`. Login uses `primary`, exactly as other main actions; there is no route-specific variant. `secondary` is the quieter 44px action/link used for "Voltar ao site": Off-white surface, Café text, transparent border, 0×16px padding and a 12px/400 label. It retains the pill and visible keyboard focus. Its hover uses Areia and an underline, without lifting.
+IconButton is a native action with a required accessible name and a decorative icon. Normal is the default and measures 44×44px with a 21px icon. Small measures 36×36px with an 18px icon. Use small for the admin mobile menu trigger and icon-only dismiss controls. The default treatment uses 8px corners and a quiet border. Use visible labels for dangerous actions or ambiguous icons.
 
 `leadingIcon` places a decorative icon to the left of the label; `trailingIcon` places one to the right. Both work for native links and actions, and both can be supplied together. Use the existing Icon family or another accessible decorative SVG. The login uses the monochrome Google G on the left. The home's down arrows remain on the right via `trailingIcon`. Never encode either position as part of a button variant or hard-code Google into the shared Button.
 
-Primary colors follow the surrounding surface through inherited `--button-primary-background`, `--button-primary-text` and `--button-focus-color` custom properties. Defaults are Café fill, Off-white text and Café focus on a light surface. A dark surface can invert the first two and use Off-white focus; Storybook demonstrates `button-surface-dark`. The login sets that context on mobile and returns to light-surface defaults on desktop. This changes contrast, not the semantic variant. The route owns full width and outer spacing; shared primary sizing, typography, border and interaction behavior stay consistent.
+Primary colors follow the surrounding surface through inherited `--button-primary-background`, `--button-primary-text` and `--button-focus-color` custom properties. Defaults are Café fill, Off-white text and Café focus on a light surface. A dark surface can invert the first two and use Off-white focus; Storybook demonstrates `button-surface-dark`. The login sets that context on mobile and returns to light-surface defaults on desktop. The route owns full width and outer spacing; shared primary sizing, typography, border and interaction behavior stay consistent.
 
 Every action variant supports `loading` and `loadingLabel` (default: "Carregando…"). Loading disables the action, sets `aria-busy`, replaces both optional icons with the same three 14×16px paws, and shows the loading label. Login uses "Conectando ao Google…". Labels remain readable while busy; do not dim the whole control. Native links have icon slots but no loading/disabled action state.
 
 Paws pulse forever with a 1.2s cycle and 0/0.15/0.3s stagger. This expresses activity, never progress. Animate opacity and scale; reduced motion keeps opacity and removes scaling. There is no timeout, estimated percentage or progress track. Busy actions do not lift or scale on hover/press. Keyboard focus stays visible against the surrounding surface.
 
+### Dialogs
+
+Dialog and ConfirmDialog show a small IconButton in the top-right corner. Its accessible name defaults to “Fechar”. ConfirmDialog uses “Fechar confirmação”. Use the shared dialog action row to align footer actions to the right. Put secondary actions first and the primary or destructive submit action last so reading, focus, and visual order agree. The row wraps at narrow widths.
+
 ### Alert variants
 
-Use `components/alert/Alert` with a short `title` and a safe description/recovery instruction in `children`. Omitting `variant` or setting `variant="default"` uses the neutral Off-white background, Cafe text, Argila border and Areia icon circle. Set `variant="danger"` for errors, including the login feedback. Its approved pink surface has a 1px boundary, 3px red top rule, 8px corners, 15×14px padding and 11px icon gap. A 20px decorative lock sits in a 34px tinted circle. Montserrat sets the 13px/800 title and 12px/400 body at 1.65 line height. There are no shadows or entrance animations.
+Use `components/alert/Alert` with a short `title` and a safe description or recovery instruction in `children`. Omitting `variant` or setting `variant="default"` uses the neutral Off-white background, Cafe text, Argila border and Areia icon circle. Set `variant="danger"` for failures and blocked access. Use its default lock for access restrictions and set `icon="error"` for an operational failure that calls for a circled exclamation mark. Its approved pink surface has a 1px boundary, 3px red top rule, 8px corners, 15×14px padding and 11px icon gap. The 20px decorative icon sits in a 34px tinted circle. Montserrat sets the 13px/800 title and 12px/400 body at 1.65 line height. There are no shadows or entrance animations.
 
-The component owns `role="alert"` and the hidden decorative icon; the component fills 100% of the available width, while the parent owns max-width and outer spacing. The login content column constrains the alert; the shared component has no width cap. Long content wraps without horizontal overflow. Login titles distinguish "Acesso negado" from a failed attempt, retain recovery guidance and re-enable the Google action after a provider/network failure.
+Use `info` for informational updates and `success` for completed actions. Both use `role="status"`, with a blue information icon for `info` and a green check for `success`. Use the yellow `warning` variant with a warning triangle when the message needs prompt attention. Warning, default and danger use `role="alert"`. The title and body carry the message for assistive technology. The icons are decorative and hidden from assistive technology.
 
-Storybook covers left/right icon placement, primary on dark surfaces, secondary navigation, loading for all action variants, disabled and keyboard-focus states, and the alert's default, danger and constrained-container examples. Google, lock and directional icons belong to the existing `Icon` family. Use `name="left"` for return actions and `name="down"` for the home arrows; the back button consumes the shared left-arrow icon.
+The alert fills the available width and wraps long content. Its parent sets any max-width and outer spacing. The login content column constrains the alert. Login titles distinguish "Acesso negado" from a failed attempt, retain recovery guidance and re-enable the Google action after a provider or network failure.
+
+Storybook covers all five alert variants and shows how a parent can constrain an alert. The button stories cover left and right icon placement, primary on dark surfaces, secondary navigation, loading for all action variants, and disabled and keyboard-focus states. The alert icons, Google mark and directional arrows use the shared `Icon` component.
+
+### Toast
+
+Toast reports an outcome beside the current task. It uses the shared feedback colors and one of three variants. Success uses a check and expires after 4 seconds. Warning uses a triangle and expires after 8 seconds. Danger uses a circled exclamation and stays until dismissed.
+
+Show up to three cards, oldest first, and queue additional notices in arrival order. Repeats with the same variant and title increment a counter on the first card. Their timer keeps its remaining duration. Pause the visible timers on mouse hover, keyboard focus within the stack, and while the document is hidden.
+
+Use an 8px radius, a 3px top rule, a 34px icon circle and a small IconButton for dismissal. Montserrat sets the 13px bold title and the 12px description. Use a 12px inset on phones. From 650px, anchor a 350px viewport to the bottom right with a 19px inset. From 1000px, use 374px and a 25px inset. Respect safe areas and allow the stack to scroll in short viewports.
+
+Cards enter with an 180ms fade and a 7px upward translation. Reduced motion keeps a short fade. Close or expiry removes the card immediately. Success and warning announcements are polite. Danger announcements are assertive. The invitation dialog hosts the same toast viewport within its modal focus boundary.
 
 ### Error 500
 
@@ -298,7 +356,7 @@ The off-white header holds the official horizontal logo on the left (210px, 180p
 
 The Admin signature combines the official dog-and-N symbol with “Admin” in Karvest ExtraBold on Off-white. The word matches the height and placement of the original Nardini wordmark, including the flat-top i dot.
 
-Below 700px, the signature is centered between the menu and account buttons. Both have 44px touch targets and visible 36px circles. The menu icon is 18px. The menu opens a Café modal drawer from the left. From 700px, the Café sidebar is 190–270px wide and collapses to 72px. The compact sidebar shows the destination icons with accessible names. Off-white fill and Café text mark the current section. The browser remembers the sidebar width as a display preference.
+Below 700px, the signature is centered between the menu and account buttons. The bordered menu button matches the 36px avatar circle. The account's touch target is 44px. The menu opens a Café modal drawer from the left with a named icon-only close button. From 700px, the Café sidebar is 190–270px wide and collapses to 72px. The sidebar toggle has a keyboard-accessible tooltip. The compact sidebar shows the destination icons with accessible names. Off-white fill and Café text mark the current section. The browser remembers the sidebar width as a display preference.
 
 The account popover groups the viewer’s name and access state with the actions available to the viewer. “Perfil” and “Sair” are matching full-width rows with 14px Montserrat at weight 650, 21px outline icons and no underline. See [Admin navigation and browser preferences](docs/designs/admin-navigation.md).
 
@@ -354,7 +412,7 @@ The one authored moment is the hero dog rising 24px into place over 0.9s (`cubic
 
 ### Don't:
 
-- **Don't** expand the five-color brand palette with decoration. The documented semantic error tokens are the approved exception for feedback only.
+- **Don't** expand the five-color brand palette with decoration. Use the documented colors for feedback and permanent deletion in their assigned components.
 - **Don't** redraw, recolor, crop, distort or regenerate any brand mark, including with AI (the earlier regenerated transparent seal was removed for this reason).
 - **Don't** put the horizontal logo on Café or Terracota, or put buttons and small text on a Terracota fill.
 - **Don't** combine a giant dog, the seal and text in the same panel.

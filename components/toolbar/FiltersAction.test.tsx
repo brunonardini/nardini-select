@@ -34,6 +34,19 @@ function renderFilters(defaultOpen = false) {
 }
 
 describe('FiltersAction', () => {
+  it('opens a modal and restores trigger focus after Escape', async () => {
+    const user = userEvent.setup();
+    renderFilters();
+    const trigger = screen.getByRole('button', { name: 'Filtros' });
+    await user.click(trigger);
+    expect(
+      screen.getByRole('dialog', { name: 'Filtrar equipe' }),
+    ).toBeVisible();
+    await user.keyboard('{Escape}');
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    expect(trigger).toHaveFocus();
+  });
+
   it('submits the chosen fields and closes', async () => {
     const user = userEvent.setup();
     const { onSubmit } = renderFilters();

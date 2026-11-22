@@ -1,8 +1,57 @@
 import { expect, test } from '@playwright/test';
 
 import { INVITE_TOKENS } from '../db/seeds/tokens';
+import { PRIVACY_NOTICE_VERSION, TERMS_VERSION } from '../lib/legal/versions';
 
 import { sessionCookie, setTerms, slotUser } from './fixtures/auth';
+
+test('terms and the privacy notice publish the current version', async ({
+  page,
+}) => {
+  await page.goto('/admin/termos');
+  await expect(
+    page.getByRole('heading', { name: 'Termos de uso' }),
+  ).toBeVisible();
+  await expect(
+    page.getByText(`Versão ${TERMS_VERSION}`, { exact: false }),
+  ).toBeVisible();
+  await expect(page.getByText(/provisório/i)).toHaveCount(0);
+  const privacyLinks = page.getByRole('link', {
+    name: /aviso de privacidade/,
+  });
+  await expect(privacyLinks).toHaveCount(2);
+  for (const link of await privacyLinks.all()) {
+    await expect(link).toHaveAttribute('target', '_blank');
+    await expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+  }
+  const privacyPagePromise = page.waitForEvent('popup');
+  await privacyLinks.first().click();
+  const privacyPage = await privacyPagePromise;
+  await expect(page).toHaveURL(/\/admin\/termos$/);
+  await expect(privacyPage).toHaveURL(/\/admin\/privacidade$/);
+  await expect(
+    privacyPage.getByRole('heading', { name: 'Aviso de privacidade' }),
+  ).toBeVisible();
+  await expect(
+    privacyPage.getByText(`Versão ${PRIVACY_NOTICE_VERSION}`, { exact: false }),
+  ).toBeVisible();
+  await expect(privacyPage.getByText('Estados Unidos')).toBeVisible();
+  await expect(privacyPage.getByText(/6 meses e 4 dias/)).toBeVisible();
+  await expect(privacyPage.getByText(/provisório/i)).toHaveCount(0);
+  const inlineTerms = privacyPage.getByRole('link', {
+    name: /^termos de uso/,
+  });
+  await expect(inlineTerms).toHaveAttribute('href', '/admin/termos');
+  await expect(inlineTerms).toHaveAttribute('target', '_blank');
+  await expect(inlineTerms).toHaveAttribute('rel', 'noopener noreferrer');
+  const termsLink = privacyPage.getByRole('link', { name: /^Termos de uso/ });
+  await expect(termsLink).toHaveAttribute('href', '/admin/termos');
+  await expect(termsLink).toHaveAttribute('target', '_blank');
+  await expect(termsLink).toHaveAttribute('rel', 'noopener noreferrer');
+  await expect(
+    privacyPage.getByRole('link', { name: 'Ir para a área interna' }),
+  ).not.toHaveAttribute('target', '_blank');
+});
 
 test('an unsigned request to the admin home goes to sign-in', async ({
   page,
@@ -19,11 +68,11 @@ test('a known sign-in error is shown and an unknown one stays generic', async ({
 }) => {
   await page.goto('/admin/entrar?erro=acesso_negado');
   await expect(page.getByRole('main').getByRole('alert')).toContainText(
-    'Esta conta não tem acesso. Use outra conta Google ou peça um convite ao administrador.',
+    'Use outra conta Google ou peça um convite a um administrador.',
   );
   await page.goto('/admin/entrar?error=something_else');
   await expect(page.getByRole('main').getByRole('alert')).toContainText(
-    'Não foi possível entrar. Tente de novo.',
+    'Tente entrar com o Google novamente.',
   );
 });
 
@@ -109,6 +158,23 @@ test('the first acceptance opens the profile and a later one goes home', async (
   await setTerms(userId, 'none');
   await page.context().addCookies([await sessionCookie(userId)]);
   await page.goto('/admin/termos/aceitar');
+  const alerts = page.getByRole('main').getByRole('alert');
+  await expect(alerts).toHaveCount(0);
+  await page.getByRole('button', { name: 'Continuar' }).click();
+  await expect(page).toHaveURL(/erro=termos_obrigatorios/);
+  const feedback = alerts.filter({
+    hasText: 'Aceite os termos para continuar',
+  });
+  await expect(feedback).toHaveClass(/alert-warning/);
+  await expect(feedback).toContainText('Marque a caixa de aceite');
+  const terms = page.getByRole('link', { name: /Termos de uso/ });
+  const notice = page.getByRole('link', { name: /aviso de privacidade/ });
+  await expect(terms).toHaveAttribute('href', '/admin/termos');
+  await expect(notice).toHaveAttribute('href', '/admin/privacidade');
+  await expect(terms).toHaveAttribute('target', '_blank');
+  await expect(notice).toHaveAttribute('target', '_blank');
+  await expect(terms).toHaveAttribute('rel', 'noopener noreferrer');
+  await expect(notice).toHaveAttribute('rel', 'noopener noreferrer');
   await page
     .getByRole('checkbox', { name: 'Li e aceito os termos de uso' })
     .check();

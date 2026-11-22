@@ -5,7 +5,6 @@
   min-height: 100dvh;
 }
 .header {
-  --account-circle-size: 36px;
   display: grid;
   grid-column: 1 / -1;
   grid-template-columns: minmax(44px, 1fr) auto minmax(44px, 1fr);
@@ -28,9 +27,6 @@
   width: 139px;
   height: auto;
 }
-.mobileTrigger,
-.toggle,
-.close,
 .account {
   display: inline-flex;
   align-items: center;
@@ -47,15 +43,6 @@
 .mobileTrigger {
   grid-column: 1;
   justify-self: start;
-  border-radius: 999px;
-}
-.menuCircle {
-  display: grid;
-  place-items: center;
-  width: var(--account-circle-size);
-  height: var(--account-circle-size);
-  border: 1px solid var(--argila);
-  border-radius: 50%;
 }
 .account {
   grid-column: 3;
@@ -64,8 +51,8 @@
   gap: 10px;
 }
 .account :global(.avatar) {
-  width: var(--account-circle-size);
-  height: var(--account-circle-size);
+  width: var(--control-size-small);
+  height: var(--control-size-small);
   border-radius: 50%;
   flex: none;
 }
@@ -73,16 +60,11 @@
 .accountChevron {
   display: none;
 }
-.header svg,
-.sidebar svg,
-.drawer svg {
+.account svg,
+.destination svg {
   width: 21px;
   height: 21px;
   flex: none;
-}
-.header .menuCircle svg {
-  width: 18px;
-  height: 18px;
 }
 .content {
   min-width: 0;
@@ -98,6 +80,10 @@
 }
 .drawer,
 .sidebar {
+  --button-ink: var(--off-white);
+  --button-focus-color: var(--off-white);
+  --button-quiet-border: #b6907c;
+  --button-quiet-hover: #7d4c3d;
   background: var(--cafe);
   color: var(--off-white);
 }
@@ -125,10 +111,6 @@
   font-size: 26px;
   margin: 0;
 }
-.close {
-  gap: 6px;
-  padding-inline: 8px;
-}
 .destination {
   display: flex;
   align-items: center;
@@ -154,6 +136,14 @@
 }
 .positioner {
   z-index: 40;
+}
+.toggleTooltip {
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: var(--cafe);
+  color: var(--off-white);
+  font-size: 0.75rem;
+  font-weight: 700;
 }
 .accountPopup {
   display: grid;
@@ -211,15 +201,12 @@
   margin: 0;
 }
 @media (hover: hover) and (pointer: fine) {
-  .destination:hover,
-  .drawer .close:hover,
-  .toggle:hover {
+  .destination:hover {
     color: var(--cafe);
     background: var(--areia);
   }
   .account:hover,
-  .accountAction:hover,
-  .mobileTrigger:hover .menuCircle {
+  .accountAction:hover {
     background: var(--areia);
   }
 }
@@ -271,7 +258,7 @@
     width: 15px;
     height: 15px;
   }
-  .mobileTrigger {
+  .header .mobileTrigger {
     display: none;
   }
   .sidebar {
@@ -281,13 +268,9 @@
   .sideHeading {
     margin-bottom: 14px;
   }
-  .sideHeading span {
+  .sideHeading > span {
     padding-left: 12px;
     font-size: 12px;
-  }
-  .toggle {
-    border: 1px solid var(--argila);
-    border-radius: 6px;
   }
   [data-sidebar='collapsed'] .sideHeading,
   [data-sidebar='collapsed'] .destination {

@@ -1,8 +1,8 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 
-import { Dialog, DialogClose } from './dialog';
+import { Dialog } from './dialog';
 
 describe('Dialog', () => {
   it('opens and closes', async () => {
@@ -12,13 +12,15 @@ describe('Dialog', () => {
         title="Aviso"
         description="Leia antes de continuar."
       >
-        <DialogClose>Fechar</DialogClose>
+        <p>Conteúdo do aviso.</p>
       </Dialog>,
     );
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-    await userEvent.click(screen.getByRole('button', { name: 'Abrir' }));
+    const trigger = screen.getByRole('button', { name: 'Abrir' });
+    await userEvent.click(trigger);
     expect(screen.getByRole('dialog', { name: 'Aviso' })).toBeVisible();
     await userEvent.click(screen.getByRole('button', { name: 'Fechar' }));
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    await waitFor(() => expect(trigger).toHaveFocus());
   });
 });

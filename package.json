@@ -26,6 +26,7 @@
     "db:codegen": "node --env-file-if-exists=.env ./node_modules/kysely-codegen/dist/cli/bin.js",
     "db:lint": "squawk db/migrations/*.sql",
     "db:grants": "node --env-file-if-exists=.env --disable-warning=MODULE_TYPELESS_PACKAGE_JSON db/provision/grants-check.ts",
+    "db:retain": "node --env-file-if-exists=.env --disable-warning=MODULE_TYPELESS_PACKAGE_JSON db/maintenance/retention.ts",
     "test": "vitest run --project=unit",
     "test:watch": "vitest --project=unit",
     "test:coverage": "vitest run --project=unit --coverage",

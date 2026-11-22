@@ -22,7 +22,7 @@ The heading is 39px (34px below 360px), desktop 52px. Supporting text is 13px on
 
 ## Shared primitives and behavior
 
-The page consumes Button variant=primary with loading/loadingLabel/leadingIcon, Button variant=secondary for the desktop back link, and Alert variant=danger. The page module owns composition and outer spacing only. Shared feedback uses the documented semantic tokens in DESIGN.md; these are not marketing colors. Google and lock are in Icon.
+The page consumes Button variant=primary with loading/loadingLabel/leadingIcon, Button variant=secondary and size=compact for the desktop back link, and Alert variant=danger. The page module owns composition and outer spacing only. Shared feedback uses the documented semantic tokens in DESIGN.md; these are not marketing colors. Google and lock are in Icon.
 
 Pending uses three 14x16px paw icons with infinite staggered opacity/scale pulses; reduced motion retains opacity only. Never show a fake timeout or progress percentage. Pending blocks duplicate submissions. Provider/network failures clear the busy state and show safe, actionable error copy. Do not expose raw provider messages.
 

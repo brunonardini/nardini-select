@@ -9,7 +9,12 @@ export function UserCard({ user }: { user: ListedUser }) {
     <Card
       title={user.name}
       href={`/admin/usuarios/${user.id}`}
-      leading={<Avatar name={user.email ? user.name : null} />}
+      leading={
+        <Avatar
+          name={user.email ? user.name : null}
+          src={user.photo ? `/admin/api/avatar/${user.id}` : null}
+        />
+      }
       description={user.email}
       facts={[
         {

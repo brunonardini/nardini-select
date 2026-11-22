@@ -52,6 +52,8 @@ In CircleCI, set `CODECOV_TOKEN` for the unit coverage upload. Keep credential v
 | `nardini-select-prod-deploy` | `main` | `NETLIFY_AUTH_TOKEN`, `NETLIFY_SITE_ID` |
 | `nardini-select-preview-db` | Branches of this repository, not `main` | `DATABASE_MIGRATION_URL`, `DATABASE_URL` |
 | `nardini-select-preview-deploy` | Branches of this repository, not `main` | `NETLIFY_AUTH_TOKEN`, `NETLIFY_SITE_ID` |
+| `nardini-select-prod-retention` | `main` | `AUDIT_MAINTAINER_URL` for `nardini_prod` |
+| `nardini-select-preview-retention` | `main` | `AUDIT_MAINTAINER_URL` for `nardini_stg` |
 
 `NETLIFY_AUTH_TOKEN` and `NETLIFY_SITE_ID` used to live in `nardini-select-release`. Copy them into `nardini-select-prod-deploy` before the first production deploy from this pipeline, and into `nardini-select-preview-deploy` before the first preview. The deploy fails without them. `GH_TOKEN` stays on the release context.
 
@@ -84,6 +86,16 @@ Set `BOOTSTRAP_ADMIN_EMAIL` to the owner's Google account before the first sign-
 | Development | `http://localhost:4473/api/auth/callback/google` |
 
 `<site-name>` is the site name in Netlify (Site configuration, Site details). Keep both Netlify protections: Stopped builds, and `ignore` in `netlify.toml`.
+
+## Retention
+
+`retention` runs on `main` at Monday and Friday 06:00 UTC and does not run on pushes. It checks out current `main`, installs dependencies through `setup`, and runs `npm run db:retain` twice: `retain-production` with `nardini-select-prod-retention`, and `retain-preview` with `nardini-select-preview-retention`. The script reads `AUDIT_MAINTAINER_URL`, deletes `audit.events` older than six calendar months and `invitations` older than seven days, and prints the two row counts. It writes nothing else. A row lives at most six months and four days, because the longest gap between runs is Monday to Friday.
+
+`validate` and `preview` do not run when `pipeline.event.name` is `schedule`, so a schedule does not migrate or deploy. Create both retention contexts before the first run. Restrict them to `main`. The preview retention context is allowed on `main` because the cron runs there; its URL points at `nardini_stg`, the direct endpoint, as `audit_maintainer`, with `sslmode=verify-full` and `channel_binding=require`. Do not put that URL in Netlify.
+
+An in-config schedule does not run on a GitHub App pipeline. `retention-event` runs the same two deletes when a pipeline's event name is `schedule`. On a GitHub App project, add a schedule trigger in Project Settings for branch `main`, cron `0 6 * * 1,5` UTC. If one pipeline starts both workflows, the second pass finds nothing left to delete.
+
+Locally, `npm run db:retain` uses `AUDIT_MAINTAINER_URL` from `.env` and deletes rows in that database. The example URL points at `nardini_dev`.
 
 ## Failed migration
 

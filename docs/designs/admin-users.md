@@ -33,7 +33,7 @@ All widths below refer to the width of the main content area (the column next to
 - The “Equipe” heading shows the number of people matching the current search and filters.
 - Below it, the toolbar holds the “Buscar por nome ou e-mail” search field and the “Filtros” and “Ordenar” buttons. All three are 44px high. When narrow, the search field takes its own row and the two buttons share the next one.
 - People appear as cards: one column when narrow, two from 460px and three from 760px.
-- Each card shows the initials avatar and the person's name as a link to the detail route, then the full email. Below a divider come the role (or “Sem papel”), the state and “Último acesso”. The last access is shown in the browser timezone with `LocalDateTime`, or as “Sem registro” when it is missing. Names and emails wrap, including long strings with no spaces.
+- Each card shows the person's Google photo through `/admin/api/avatar/[userId]` when `photo_source` is `provider` and the URL is trusted, and the initials avatar otherwise. Anonymized people always show initials. The name is a link to the detail route, then the full email. Below a divider come the role (or “Sem papel”), the state and “Último acesso”. The last access is shown in the browser timezone with `LocalDateTime`, or as “Sem registro” when it is missing. Names and emails wrap, including long strings with no spaces.
 - Each state is written out and preceded by a small decorative dot. The text carries the meaning, so the dot is hidden from assistive technology. Dot colors use only brand tokens: Ativo is a filled Café dot, Pendente a filled Terracota dot, “Termos desatualizados” a Terracota ring, Desabilitado an Argila ring and Anonimizado a filled Argila dot.
 - The paginator holds the “Por página” select, the visible range (“1–6 de 24”), the current page (“Página 1 de 4”) and buttons named “Página anterior” and “Próxima página”. Each button is disabled on the first or last page.
 - Text sizes use Montserrat: 15px for names; 14px for emails, controls and roles; 13px for counts and states. The existing brand tokens cover every color and spacing step.
@@ -46,6 +46,7 @@ All widths below refer to the width of the main content area (the column next to
 - Opening the disclosure shows the pending invitations in place, above the team. Each invitation shows the name, “Expira em” followed by the local time, and the existing “Gerar novo link” and “Cancelar convite” actions. Cancelling asks for confirmation.
 - The disclosure is shown even when there are no pending invitations. Its count is 0, and when opened it reads “Nenhum convite pendente.”
 - The disclosure opens and closes without a height animation. Its content fades in, and the fade is skipped under `prefers-reduced-motion`.
+- Copying a generated or renewed link publishes the same success toast. A clipboard failure stays visible as a danger toast and explains how to copy manually. See [Admin toast feedback](admin-toast.md).
 
 ### Search, filters and sorting
 

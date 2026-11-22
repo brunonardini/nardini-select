@@ -1,18 +1,27 @@
 'use client';
 
-import { useActionState } from 'react';
+import { useActionState, useEffect } from 'react';
 
 import { Alert } from '@/components/alert/alert';
 import { Button } from '@/components/button/button';
 import { Dialog, DialogClose } from '@/components/dialog/dialog';
 import { TextField } from '@/components/text-field/text-field';
-import { useNotice } from '@/components/toast/toast';
+import { ToastHost } from '@/components/toast/toast';
 
 import { createInvite } from './invitation-actions';
+import { usePublishInvite } from './invitation-list-provider';
+import { useCopyInviteLink } from './use-copy-invite-link';
 
 export function InviteDialog() {
   const [state, action, pending] = useActionState(createInvite, null);
-  const notice = useNotice();
+  const publish = usePublishInvite();
+  const copyInviteLink = useCopyInviteLink();
+
+  useEffect(() => {
+    if (state?.ok !== true) return;
+    publish(state.invite);
+  }, [publish, state]);
+
   const link =
     state?.ok === true && typeof window !== 'undefined'
       ? `${window.location.origin}/admin/convite/${state.token}`
@@ -24,6 +33,7 @@ export function InviteDialog() {
       variant="primary"
       title="Convidar usuário"
       description="O link vale por 30 minutos e pode ser usado uma vez."
+      viewportOverlay={<ToastHost />}
     >
       {link ? (
         <div className="dialog-form">
@@ -32,29 +42,19 @@ export function InviteDialog() {
           <div className="dialog-actions">
             <Button
               type="button"
-              variant="secondary"
-              onClick={() => {
-                void navigator.clipboard.writeText(link).then(
-                  () =>
-                    notice('Link copiado', 'Esse link expira em 30 minutos.'),
-                  () =>
-                    notice(
-                      'Não foi possível copiar',
-                      'Selecione o link e copie manualmente.',
-                    ),
-                );
-              }}
+              onClick={(event) =>
+                void copyInviteLink(link, event.currentTarget)
+              }
             >
               Copiar link
             </Button>
-            <DialogClose>Fechar</DialogClose>
           </div>
         </div>
       ) : (
         <form className="dialog-form" action={action}>
           {state && !state.ok ? (
-            <Alert variant="danger" title="Convite não criado">
-              {state.message}
+            <Alert variant="warning" title="Revise o nome da pessoa convidada">
+              Informe o nome completo para gerar o link.
             </Alert>
           ) : null}
           <TextField label="Nome completo" name="full_name" required />

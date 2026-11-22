@@ -20,6 +20,7 @@ export function Card({
   facts = [],
   selected = false,
   onSelectedChange,
+  children,
 }: {
   title: string;
   href?: string;
@@ -28,6 +29,8 @@ export function Card({
   facts?: CardFact[];
   selected?: boolean;
   onSelectedChange?: (selected: boolean) => void;
+  /** Actions and other content that belong to this record. */
+  children?: ReactNode;
 }) {
   const name = href ? (
     <Link className={styles.name} href={href}>
@@ -63,6 +66,7 @@ export function Card({
           ))}
         </div>
       ) : null}
+      {children}
     </li>
   );
 }

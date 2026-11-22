@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 import { Button } from '../button/button';
+import { Icon } from '../icon/icon';
 import { TextField } from '../text-field/text-field';
 
 import { Dialog, DialogClose } from '../dialog/dialog';
@@ -16,6 +17,7 @@ type Props = {
   expectedText?: string;
   fields: Record<string, string>;
   action: (formData: FormData) => void | Promise<void>;
+  intent?: 'delete';
   variant?: 'primary' | 'secondary' | 'outline';
 };
 
@@ -28,8 +30,11 @@ export function ConfirmDialog({
   expectedText,
   fields,
   action,
+  intent,
   variant = 'outline',
 }: Props) {
+  const cancelRef = useRef<HTMLButtonElement>(null);
+  const deleting = intent === 'delete';
   const [typed, setTyped] = useState('');
   const ready = !expectedText || typed === expectedText;
 
@@ -39,6 +44,20 @@ export function ConfirmDialog({
       title={title}
       description={description}
       variant={variant}
+      trigger={
+        deleting ? (
+          <Button
+            variant="danger"
+            emphasis="subdued"
+            leadingIcon={<Icon name="trash" />}
+          >
+            {label}
+          </Button>
+        ) : undefined
+      }
+      closeLabel="Fechar confirmação"
+      initialFocus={deleting ? cancelRef : undefined}
+      onClose={deleting ? () => setTyped('') : undefined}
     >
       <form className="dialog-form" action={action}>
         {Object.entries(fields).map(([name, value]) => (
@@ -54,8 +73,14 @@ export function ConfirmDialog({
           />
         ) : null}
         <div className="dialog-actions">
-          <DialogClose>Cancelar</DialogClose>
-          <Button type="submit" disabled={!ready}>
+          <DialogClose compact={deleting} ref={cancelRef}>
+            Cancelar
+          </DialogClose>
+          <Button
+            type="submit"
+            {...(deleting ? { variant: 'danger' } : { variant: 'primary' })}
+            disabled={!ready}
+          >
             {confirmLabel}
           </Button>
         </div>

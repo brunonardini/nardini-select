@@ -30,7 +30,7 @@ footer in this description isn't part of the commit.
 
 ## Design
 
-<!-- Design and architecture changes follow the Elephant-Goldfish Model: the
+<!-- Design and architecture changes follow the design-doc workflow: the
      design document is reviewed, approved, and committed before any code. -->
 
 - [ ] Not needed (small change: copy tweak or one-off fix)
@@ -56,7 +56,7 @@ footer in this description isn't part of the commit.
 - [ ] Animates `transform` and `opacity` (`clip-path`, `filter`, or measured height only with a reason); no layout properties
 - [ ] `prefers-reduced-motion` drops movement but keeps fades; hover motion is gated behind `@media (hover: hover) and (pointer: fine)`
 - [ ] Images use `next/image` and fonts use `next/font`
-- [ ] Primary/secondary/outline buttons, left/right icons, shared loading and alerts match `DESIGN.md` and their Storybook states; semantic error colors stay reserved for feedback
+- [ ] Button variants and sizes, IconButton, shared loading and alerts match `DESIGN.md` and their Storybook states; the deletion red is scoped to permanent record deletion
 - [ ] Error 404/500 keep their approved images/titles, safe descriptions and caller-owned recovery actions; actions adapt to the container width
 - [ ] `"use client"` only where there is interactivity
 - [ ] Browser preferences use the shared browser storage module for all `localStorage` access
@@ -82,6 +82,7 @@ footer in this description isn't part of the commit.
 
 - [ ] On `main`, CircleCI migrates production only after lint, type checking, unit tests, and `db-check`, then releases, then deploys. PRs run the full validation suite
 - [ ] Preview is its own workflow on branches other than `main`: `preview-setup`, then a manual hold, then a reset and seed of `nardini_stg`, then the `staging` alias. It does not wait for `validate`, and those jobs are not required checks
+- [ ] The `retention` workflow is scheduled Monday and Friday at 06:00 UTC on `main`, deletes expired audit events and invitations with `AUDIT_MAINTAINER_URL`, and does not migrate or deploy
 - [ ] App variables are set in Netlify for Production and Deploy Previews, pipeline-only variables in CircleCI, and both are documented in `docs/deployment.md` (never set `SENTRY_RELEASE` in Netlify)
 - [ ] The three `Sentry.init` calls are still in sync
 - [ ] Upgrading `@playwright/test` also updates the Playwright image tag in `.circleci/config.yml`

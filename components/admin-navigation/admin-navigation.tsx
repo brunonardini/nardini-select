@@ -2,13 +2,15 @@
 
 import { Dialog } from '@base-ui/react/dialog';
 import { Popover } from '@base-ui/react/popover';
+import { Tooltip } from '@base-ui/react/tooltip';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useId, useState, type ReactNode } from 'react';
+import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
 
 import { adminActionFont } from '@/app/fonts';
 import { Avatar } from '@/components/avatar/avatar';
 import { Icon } from '@/components/icon/icon';
+import { IconButton } from '@/components/icon-button/icon-button';
 
 import styles from './admin-navigation.module.css';
 
@@ -23,6 +25,8 @@ type Props = {
   pathname: string;
   access: 'administrator' | 'staff' | 'pending' | 'terms';
   name: string | null;
+  /** Same-origin avatar route. Omitted when the person has no photo. */
+  photoSrc?: string | null;
   collapsed: boolean;
   onToggle: () => void;
   signOutAction: (formData: FormData) => void | Promise<void>;
@@ -79,20 +83,30 @@ function MobileDrawer({
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
-      <Dialog.Trigger className={styles.mobileTrigger} aria-label="Menu">
-        <span className={styles.menuCircle}>
-          <Icon name="menu" />
-        </span>
-      </Dialog.Trigger>
+      <Dialog.Trigger
+        render={
+          <IconButton
+            className={styles.mobileTrigger}
+            aria-label="Menu"
+            size="small"
+            icon={<Icon name="menu" />}
+          />
+        }
+      />
       <Dialog.Portal>
         <Dialog.Backdrop className={styles.backdrop} />
         <Dialog.Popup className={styles.drawer}>
           <div className={styles.drawerHeader}>
             <Dialog.Title className={styles.drawerTitle}>Menu</Dialog.Title>
-            <Dialog.Close className={styles.close}>
-              <Icon name="close" />
-              Fechar
-            </Dialog.Close>
+            <Dialog.Close
+              render={
+                <IconButton
+                  aria-label="Fechar menu"
+                  size="small"
+                  icon={<Icon name="close" />}
+                />
+              }
+            />
           </div>
           <nav aria-label="Administração">
             <Links
@@ -118,12 +132,14 @@ export function AdminNavigation({
   pathname,
   access,
   name,
+  photoSrc = null,
   collapsed,
   onToggle,
   signOutAction,
   children,
 }: Props) {
   const linksId = useId();
+  const sidebarRef = useRef<HTMLElement>(null);
   const showNav = access !== 'terms';
   const toggleLabel = collapsed
     ? 'Expandir menu lateral'
@@ -161,7 +177,7 @@ export function AdminNavigation({
         <Popover.Root key={`account:${pathname}`}>
           <Popover.Trigger className={styles.account}>
             <span className="sr-only">Conta de {accountLabel} </span>
-            <Avatar name={name} announceInitials />
+            <Avatar name={name} src={photoSrc} announceInitials />
             <span className={styles.identity}>
               <strong>{accountLabel}</strong>
               <small>{accessLabels[access]}</small>
@@ -211,20 +227,41 @@ export function AdminNavigation({
         </Popover.Root>
       </header>
       {showNav && (
-        <nav className={styles.sidebar} aria-label="Administração">
+        <nav
+          ref={sidebarRef}
+          className={styles.sidebar}
+          aria-label="Administração"
+        >
           <div className={styles.sideHeading}>
             {!collapsed && <span>Área interna</span>}
-            <button
-              type="button"
-              className={styles.toggle}
-              aria-label={toggleLabel}
-              title={toggleLabel}
-              aria-expanded={!collapsed}
-              aria-controls={linksId}
-              onClick={onToggle}
-            >
-              <Icon name="collapse" />
-            </button>
+            <Tooltip.Root>
+              <Tooltip.Trigger
+                render={
+                  <IconButton
+                    className={styles.toggle}
+                    icon={<Icon name="collapse" />}
+                    aria-label={toggleLabel}
+                    aria-expanded={!collapsed}
+                    aria-controls={linksId}
+                    onClick={onToggle}
+                  />
+                }
+              />
+              <Tooltip.Portal container={sidebarRef}>
+                <Tooltip.Positioner
+                  side="right"
+                  sideOffset={8}
+                  className={styles.positioner}
+                >
+                  <Tooltip.Popup
+                    role="tooltip"
+                    className={styles.toggleTooltip}
+                  >
+                    {toggleLabel}
+                  </Tooltip.Popup>
+                </Tooltip.Positioner>
+              </Tooltip.Portal>
+            </Tooltip.Root>
           </div>
           <div id={linksId}>
             <Links pathname={pathname} access={access} compact={collapsed} />

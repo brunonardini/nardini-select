@@ -10,6 +10,11 @@ export function Icon({
     | 'whatsapp'
     | 'instagram'
     | 'lock'
+    | 'info'
+    | 'check'
+    | 'warning'
+    | 'error'
+    | 'trash'
     | 'google'
     | 'left'
     | 'home'
@@ -78,6 +83,21 @@ export function Icon({
       <>
         <rect x="5" y="10" width="14" height="11" rx="2" />
         <path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3" />
+      </>
+    ),
+    info: (
+      <>
+        <circle cx="12" cy="12" r="9" />
+        <path d="M12 11v5m0-8h.01" />
+      </>
+    ),
+    check: <path d="m5 12 4 4L19 6" />,
+    warning: <path d="m12 3 10 17H2L12 3Zm0 6v4m0 3h.01" />,
+    trash: <path d="M4 7h16M9 7V4h6v3m3 0-1 13H7L6 7m4 4v5m4-5v5" />,
+    error: (
+      <>
+        <circle cx="12" cy="12" r="9" />
+        <path d="M12 7.5v5m0 3.5h.01" />
       </>
     ),
     down: <path d="M12 4v16M5 13l7 7 7-7" />,

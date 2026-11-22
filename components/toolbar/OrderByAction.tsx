@@ -4,10 +4,10 @@ import type { ReactNode } from 'react';
 
 import { Button } from '@/components/button/button';
 
-import { ActionPopover, closeOnSubmit } from './action-popover';
+import { ActionDialog, closeOnSubmit } from './action-dialog';
 import styles from './toolbar.module.css';
 
-/** Sort popover. The fields are submitted together. */
+/** Sort dialog. The fields are submitted together. */
 export function OrderByAction({
   label,
   title,
@@ -24,7 +24,7 @@ export function OrderByAction({
   children: ReactNode;
 }) {
   return (
-    <ActionPopover
+    <ActionDialog
       label={label}
       icon="sort"
       title={title}
@@ -33,11 +33,11 @@ export function OrderByAction({
       {(close) => (
         <form className={styles.form} onSubmit={closeOnSubmit(onSubmit, close)}>
           {children}
-          <div className={styles.formActions}>
+          <div className="dialog-actions">
             <Button type="submit">{submitLabel}</Button>
           </div>
         </form>
       )}
-    </ActionPopover>
+    </ActionDialog>
   );
 }

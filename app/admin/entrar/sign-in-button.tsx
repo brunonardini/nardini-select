@@ -6,27 +6,24 @@ import { Alert } from '@/components/alert/alert';
 import { Button } from '@/components/button/button';
 import { Icon } from '@/components/icon/icon';
 import { authClient } from '@/lib/auth/io/client';
-import { SIGN_IN_ERRORS } from '@/lib/auth/logic/errors';
 
+import { signInFeedback } from './feedback';
 import styles from './sign-in.module.css';
 
 export function SignInButton({
-  initialMessage = null,
-  initialTitle = 'Não foi possível entrar',
+  initialFeedback = null,
 }: {
-  initialMessage?: string | null;
-  initialTitle?: string;
+  initialFeedback?: ReturnType<typeof signInFeedback> | null;
 }) {
   const [pending, setPending] = useState(false);
-  const [message, setMessage] = useState(initialMessage);
-  const [title, setTitle] = useState(initialTitle);
+  const [feedback, setFeedback] = useState(initialFeedback);
   const submitting = useRef(false);
 
   async function signIn() {
     if (submitting.current) return;
     submitting.current = true;
     setPending(true);
-    setMessage(null);
+    setFeedback(null);
 
     try {
       const result = await authClient.signIn.social({
@@ -41,15 +38,19 @@ export function SignInButton({
 
     submitting.current = false;
     setPending(false);
-    setTitle('Não foi possível entrar');
-    setMessage(SIGN_IN_ERRORS.erro);
+    setFeedback(signInFeedback('erro'));
   }
 
   return (
     <>
-      {message ? (
-        <Alert variant="danger" className={styles.feedback} title={title}>
-          {message}
+      {feedback ? (
+        <Alert
+          variant={feedback.variant}
+          icon={feedback.icon}
+          className={styles.feedback}
+          title={feedback.title}
+        >
+          {feedback.message}
         </Alert>
       ) : null}
       <Button

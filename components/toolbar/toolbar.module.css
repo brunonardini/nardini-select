@@ -98,37 +98,8 @@
     background: var(--areia);
   }
 }
-.popup {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  width: min(20rem, calc(100vw - 24px));
-  padding: 16px;
-  border: 1.5px solid var(--cafe);
-  background: var(--off-white);
-  color: var(--cafe);
-  transition: opacity 0.15s ease;
-}
-.popup[data-starting-style],
-.popup[data-ending-style] {
-  opacity: 0;
-}
 .form {
   display: flex;
   flex-direction: column;
   gap: 16px;
-}
-.positioner {
-  z-index: 40;
-}
-.title {
-  margin: 0;
-  font-family: var(--font);
-  font-size: 1rem;
-  font-weight: 800;
-}
-.formActions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
 }

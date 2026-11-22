@@ -6,7 +6,10 @@ import type { DB } from '@/db/schema';
 import { ADMIN_ROLE_ID } from '@/db/seeds/ids';
 import type { AuthorizedContext } from '@/lib/auth/io/guard';
 import { getDatabase } from '@/lib/db/io/client';
-import { avatarFetchUrl } from '@/lib/users/logic/avatar';
+import {
+  avatarFetchUrl,
+  providerPhotoAvailable,
+} from '@/lib/users/logic/avatar';
 import {
   anonymizedEmail,
   confirmationMatches,
@@ -37,6 +40,8 @@ export type UserListItem = {
   disabledAt: string | null;
   anonymizedAt: string | null;
   photoSource: string;
+  /** A trusted Google photo the avatar route can serve. */
+  photo: boolean;
 };
 
 export type UserDetail = UserListItem & {
@@ -84,6 +89,7 @@ function toListItem(row: UserRow): UserListItem {
     disabledAt: row.disabled_at,
     anonymizedAt: row.anonymized_at,
     photoSource: row.photo_source,
+    photo: providerPhotoAvailable(row.photo_source, row.photo_url),
   };
 }
 

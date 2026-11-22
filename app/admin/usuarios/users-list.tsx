@@ -99,9 +99,10 @@ export function UsersList({ roles, initialQuery, pageSizeInAddress }: Props) {
           <div className={styles.empty}>
             <Alert
               variant="danger"
+              icon="error"
               title="Não foi possível carregar os usuários"
             >
-              Verifique a conexão e tente de novo.
+              Use o botão Tentar novamente para carregar a lista.
             </Alert>
             <Button type="button" variant="secondary" onClick={list.retry}>
               Tentar novamente
@@ -162,6 +163,8 @@ function TeamToolbar({
     { value: NO_ROLE, label: 'Sem papel' },
     ...roles.map((role) => ({ value: role.id, label: role.name })),
   ];
+  const filterCount =
+    Number(query.state !== null) + Number(query.role !== null);
 
   return (
     <Toolbar>
@@ -174,7 +177,7 @@ function TeamToolbar({
       </Toolbar.Content>
       <Toolbar.Actions>
         <FiltersAction
-          label="Filtros"
+          label={filterCount ? `Filtros (${filterCount})` : 'Filtros'}
           title="Filtrar equipe"
           submitLabel="Aplicar filtros"
           clearLabel="Limpar filtros"

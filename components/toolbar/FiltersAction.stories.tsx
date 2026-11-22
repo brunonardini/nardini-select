@@ -44,7 +44,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Filter popover. Aplicar submits the fields together and Limpar drops them. The fields belong to the listing.',
+          'Filter dialog. Aplicar submits the fields together and Limpar drops them. The fields belong to the listing.',
       },
     },
   },

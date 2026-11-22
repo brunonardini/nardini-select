@@ -28,7 +28,9 @@ export function ProfileForm({
 }: Props) {
   const [state, action, pending] = useActionState(saveProfile, null);
   const saved = state?.ok === true;
-  const error = state && !state.ok ? state.message : null;
+  const error = state && !state.ok ? state : null;
+  const nameError = error?.reason === 'display_name' ? error.message : null;
+  const photoError = error?.reason === 'photo';
 
   return (
     <form className="admin-form" action={action}>
@@ -36,13 +38,20 @@ export function ProfileForm({
         name={displayName || fullName}
         src={photoSource === 'provider' ? `/admin/api/avatar/${userId}` : null}
       />
-      {error ? (
-        <Alert variant="danger" title="Não foi possível salvar">
-          {error}
+      {error && !nameError && !photoError ? (
+        <Alert variant="danger" icon="error" title="Não foi possível salvar">
+          {error.message}
         </Alert>
       ) : null}
       {saved ? (
-        <Alert title="Perfil atualizado">As alterações foram salvas.</Alert>
+        <Alert variant="success" title="Perfil atualizado">
+          As alterações foram salvas.
+        </Alert>
+      ) : null}
+      {nameError ? (
+        <Alert variant="warning" title="Revise o nome de exibição">
+          {nameError}
+        </Alert>
       ) : null}
       <TextField
         label="Nome de exibição"
@@ -51,6 +60,11 @@ export function ProfileForm({
         required
         maxLength={80}
       />
+      {photoError ? (
+        <Alert variant="warning" title="Revise a opção de foto">
+          Escolha Foto do Google ou Sem foto.
+        </Alert>
+      ) : null}
       <fieldset className="choice">
         <legend className="text-field-label">Foto</legend>
         <label>

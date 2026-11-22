@@ -4,12 +4,13 @@ import { useActionState, useEffect } from 'react';
 
 import { Alert } from '@/components/alert/alert';
 import { Button } from '@/components/button/button';
+import { Card } from '@/components/card/card';
 import { ConfirmDialog } from '@/components/confirm-dialog/confirm-dialog';
 import { LocalDateTime } from '@/components/local-date-time/local-date-time';
 import { TextField } from '@/components/text-field/text-field';
-import { useNotice } from '@/components/toast/toast';
 
 import { cancelInvite, renewInvite } from './invitation-actions';
+import { useCopyInviteLink } from './use-copy-invite-link';
 import styles from './users.module.css';
 
 export type Invite = { id: string; fullName: string; expiresAt: string };
@@ -23,14 +24,18 @@ function InviteRow({
 }) {
   const [renewed, renew, renewing] = useActionState(renewInvite, null);
   const [canceled, cancel, canceling] = useActionState(cancelInvite, null);
-  const notice = useNotice();
+  const copyInviteLink = useCopyInviteLink();
   const link =
     renewed?.ok === true && typeof window !== 'undefined'
       ? `${window.location.origin}/admin/convite/${renewed.token}`
       : null;
-  const error =
-    (renewed && !renewed.ok ? renewed.message : null) ??
-    (canceled && !canceled.ok ? canceled.message : null);
+  const renewFailed = renewed?.ok === false;
+  const cancelFailed = canceled?.ok === false;
+  const errorTitle = renewFailed
+    ? cancelFailed
+      ? 'Não foi possível alterar o convite'
+      : 'Não foi possível gerar um novo link'
+    : 'Não foi possível cancelar o convite';
 
   useEffect(() => {
     if (canceled?.ok) onCanceled();
@@ -39,14 +44,19 @@ function InviteRow({
   if (canceled?.ok) return null;
 
   return (
-    <li className={styles.invitation}>
-      <strong>{invite.fullName}</strong>
-      <p>
-        Expira em <LocalDateTime value={invite.expiresAt} />
-      </p>
-      {error ? (
-        <Alert variant="danger" title="Convite não alterado">
-          {error}
+    <Card
+      title={invite.fullName}
+      facts={[
+        {
+          key: 'expires',
+          label: 'Expira em',
+          value: <LocalDateTime value={invite.expiresAt} />,
+        },
+      ]}
+    >
+      {!link && (renewFailed || cancelFailed) ? (
+        <Alert variant="danger" icon="error" title={errorTitle}>
+          Atualize a lista de convites e confira se ele ainda está disponível.
         </Alert>
       ) : null}
       {link ? (
@@ -56,16 +66,7 @@ function InviteRow({
           <Button
             type="button"
             variant="secondary"
-            onClick={() => {
-              void navigator.clipboard.writeText(link).then(
-                () => notice('Link copiado', 'Esse link expira em 30 minutos.'),
-                () =>
-                  notice(
-                    'Não foi possível copiar',
-                    'Selecione o link e copie manualmente.',
-                  ),
-              );
-            }}
+            onClick={(event) => void copyInviteLink(link, event.currentTarget)}
           >
             Copiar link
           </Button>
@@ -99,7 +100,7 @@ function InviteRow({
           )}
         </div>
       )}
-    </li>
+    </Card>
   );
 }
 

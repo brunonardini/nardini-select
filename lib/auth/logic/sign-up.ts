@@ -1,3 +1,5 @@
+import { invitationName } from '@/lib/invitations/logic/rules';
+
 import { displayNameFromProfile, trustedGooglePhoto } from './photo';
 
 export type GoogleProfile = {
@@ -26,12 +28,14 @@ export type SignUpInvite =
       id: string;
       status: InvitationGateStatus;
       createdAt: string;
+      fullName: string;
       termsVersion: string;
       privacyVersion: string;
     };
 
 type NewUserFields = {
   name: string;
+  fullName: string | null;
   image: string | null;
   photoSource: 'provider' | 'none';
   roleId: string | null;
@@ -89,11 +93,14 @@ export function decideSignUp(input: {
     ) {
       return { ok: false, error: 'termos_obrigatorios' };
     }
+    const fullName = invitationName(input.invite.fullName);
+    if (!fullName) return { ok: false, error: 'erro' };
     return {
       ok: true,
       path: 'invitation',
       fields: {
         ...base,
+        fullName,
         roleId: null,
         termsVersion: input.currentTermsVersion,
         termsAcceptedAt: registeredAt,
@@ -115,6 +122,7 @@ export function decideSignUp(input: {
       path: 'first_admin',
       fields: {
         ...base,
+        fullName: null,
         roleId: input.adminRoleId,
         termsVersion: null,
         termsAcceptedAt: null,

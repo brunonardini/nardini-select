@@ -134,10 +134,21 @@ test('admin sign-in, invite, terms, and home have no detectable violations', asy
   page,
 }, testInfo) => {
   const slot = testInfo.parallelIndex;
+  await page.goto('/admin/termos');
+  expect(await scan(page)).toEqual([]);
+  await page.goto('/admin/privacidade');
+  expect(await scan(page)).toEqual([]);
+
   await page.goto('/admin/entrar');
   expect(await scan(page)).toEqual([]);
 
   await page.goto('/admin/entrar?erro=acesso_negado');
+  expect(await scan(page)).toEqual([]);
+
+  await page.goto('/admin/entrar?erro=email_nao_verificado');
+  expect(await scan(page)).toEqual([]);
+
+  await page.goto('/admin/entrar?erro=erro');
   expect(await scan(page)).toEqual([]);
 
   await page.route('**/api/auth/sign-in/social', () => Promise.resolve());
@@ -154,6 +165,9 @@ test('admin sign-in, invite, terms, and home have no detectable violations', asy
   await setTerms(approved, 'none');
   await page.context().addCookies([await sessionCookie(approved)]);
   await page.goto('/admin/termos/aceitar');
+  expect(await scan(page)).toEqual([]);
+  await page.getByRole('button', { name: 'Continuar' }).click();
+  await expect(page.getByText('Aceite os termos para continuar')).toBeVisible();
   expect(await scan(page)).toEqual([]);
 
   await setTerms(approved, 'current');
@@ -186,7 +200,13 @@ test('admin management pages and dialogs have no detectable violations', async (
       await drawer.click();
       await expect(page.getByRole('dialog', { name: 'Menu' })).toBeVisible();
     } else {
-      await page.getByRole('button', { name: 'Recolher menu lateral' }).click();
+      const collapse = page.getByRole('button', {
+        name: 'Recolher menu lateral',
+      });
+      await collapse.hover();
+      await expect(page.getByRole('tooltip')).toBeVisible();
+      expect(await scan(page)).toEqual([]);
+      await collapse.click();
     }
     expect(await scan(page)).toEqual([]);
     await page.keyboard.press('Escape');
@@ -194,6 +214,18 @@ test('admin management pages and dialogs have no detectable violations', async (
     expect(await scan(page)).toEqual([]);
     await page.keyboard.press('Escape');
     await page.getByRole('button', { name: 'Convidar usuário' }).click();
+    expect(await scan(page)).toEqual([]);
+    await page
+      .getByRole('textbox', { name: 'Nome completo' })
+      .fill('Convidado para teste');
+    await page.getByRole('button', { name: 'Gerar link' }).click();
+    await page.evaluate(() => {
+      Object.defineProperty(navigator, 'clipboard', { value: undefined });
+    });
+    await page.getByRole('button', { name: 'Copiar link' }).click();
+    await expect(
+      page.getByRole('dialog', { name: 'Não foi possível copiar' }),
+    ).toHaveCSS('opacity', '1');
     expect(await scan(page)).toEqual([]);
     await page.keyboard.press('Escape');
     await expect(
@@ -220,10 +252,18 @@ test('admin management pages and dialogs have no detectable violations', async (
     }
 
     await page.goto(`/admin/usuarios/${disabled}`);
-    for (const name of ['Habilitar', 'Excluir', 'Anonimizar']) {
-      await page.getByRole('button', { name }).click();
+    for (const [name, title] of [
+      ['Habilitar', 'Habilitar usuário'],
+      ['Excluir', 'Excluir usuário'],
+      ['Anonimizar', 'Anonimizar usuário'],
+    ]) {
+      const opener = page.getByRole('button', { name, exact: true });
+      await opener.click();
+      const dialog = page.getByRole('dialog', { name: title });
+      await expect(dialog).toHaveCSS('opacity', '1');
       expect(await scan(page)).toEqual([]);
       await page.keyboard.press('Escape');
+      await expect(opener).toBeFocused();
     }
 
     await page.goto('/admin/papeis');

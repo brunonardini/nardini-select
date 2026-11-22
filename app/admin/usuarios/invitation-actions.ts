@@ -24,11 +24,17 @@ function failed(error: unknown): { ok: false; message: string } | null {
 
 export async function createInvite(
   _previous:
-    { ok: true; token: string } | { ok: false; message: string } | null,
+    | {
+        ok: true;
+        token: string;
+        invite: { id: string; fullName: string; expiresAt: string };
+      }
+    | { ok: false; message: string }
+    | null,
   formData: FormData,
 ) {
-  const fullName = text(formData.get('full_name'));
-  if (!invitationName(fullName)) {
+  const fullName = invitationName(text(formData.get('full_name')));
+  if (!fullName) {
     return { ok: false as const, message: 'Informe o nome completo.' };
   }
   return withAction(
@@ -40,7 +46,15 @@ export async function createInvite(
         fullName: input.fullName,
         now: new Date(),
       });
-      return { ok: true as const, token: created.token };
+      return {
+        ok: true as const,
+        token: created.token,
+        invite: {
+          id: created.id,
+          fullName: input.fullName,
+          expiresAt: created.expiresAt,
+        },
+      };
     },
   )({ fullName });
 }

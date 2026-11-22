@@ -93,7 +93,7 @@ Four constraints shape the solution:
 
 *   **Covers:** G-B4, G-B5, G-C2.
 *   **Given**: An active admin is signed in.
-*   **When**: The admin clicks "Convidar usuário", types the person's full name, and copies the link shown with "Esse link expira em 30 minutos". The person opens the link within 30 minutes, checks "Li e aceito os termos de uso" (with links to the terms and the privacy notice), and clicks "Entrar com Google", which stays disabled until the box is checked.
+*   **When**: The admin clicks "Convidar usuário", types the person's full name, and copies the link shown with "Esse link expira em 30 minutos". The person opens the link within 30 minutes, checks "Li e aceito os termos de uso" (the terms and the privacy notice each open in a new tab), and clicks "Entrar com Google", which stays disabled until the box is checked.
 *   **Then**: At the Google callback, the invitation is consumed and cannot be used again. The user row is created with the admin-typed `full_name`, `invited_at` copied from the invitation, the Google name as `display_name`, the Google photo (or none), the Google email, `registered_at`, and the accepted document versions. The user lands on `/admin/perfil`, where they may change the display name and photo. On `/admin` they see "Cadastro em aprovação" and a "Sair" button. Audit entries: `invitation.created` (admin), `user.registered` (system).
 
 ### CUJ 3: An admin approves a user by assigning a role
@@ -457,7 +457,7 @@ Rules, all in `lib/users/logic/rules.ts`:
 #### B5. Profile and photos
 
 *   On first access after sign-up, the user lands on `/admin/perfil`: display name and photo choice (Google photo or none). Full name and email are read-only there; admins edit full name on the user page.
-*   Photos are served by `GET /admin/api/avatar/[userId]`. It fetches only `https://lh3.googleusercontent.com/`, follows no redirects, times out after 5 seconds, accepts only `image/*` up to 1 MB, and returns `Cache-Control: private, max-age=3600`. `photo_url` comes only from the verified ID token. Without a photo, the page shows initials.
+*   Photos are served by `GET /admin/api/avatar/[userId]`. It fetches only `https://lh3.googleusercontent.com/`, follows no redirects, times out after 5 seconds, accepts only `image/*` up to 1 MB, and returns `Cache-Control: private, max-age=3600`. `photo_url` comes only from the verified ID token. The account menu and each person card use that route when the stored photo is a trusted Google photo, and initials otherwise. The account menu keeps initials while the terms are outdated, because the route refuses that state. Without a photo, the page shows initials.
 
 #### B6. Logout
 
@@ -511,8 +511,9 @@ Legal bases refer to LGPD art. 7: II, compliance with a legal obligation; V, per
 #### C2. Terms of use and privacy notice
 
 *   `lib/legal/versions.ts` holds the current versions. The texts are public pages at `/admin/termos` and `/admin/privacidade`.
+*   Every link to those two pages opens in a new tab (`target="_blank"`, `rel="noopener noreferrer"`) and includes the screen-reader text "em uma nova aba". "Ir para a área interna" stays in the same tab.
 *   Invite page: "Li e aceito os termos de uso" checkbox, links to both documents, and "Entrar com Google" disabled until checked; the server also refuses the start route without the checkbox.
-*   `/admin/termos/aceitar`: shown to the first admin and to anyone whose stored versions differ from the current ones; records `user.terms_accepted`.
+*   `/admin/termos/aceitar`: shown to the first admin and to anyone whose stored versions differ from the current ones; the same two links open in a new tab; records `user.terms_accepted`.
 *   The notice discloses the international transfer to the US (Neon, Netlify, Google, Sentry) and the retention periods above.
 
 #### C3. Sentry
@@ -988,11 +989,11 @@ Exact library versions are pinned in `package.json` at implementation time, usin
 
 ##### 52. `app/admin/convite/[token]/page.tsx`, `app/admin/convite/[token]/iniciar/route.ts` (Create, M3)
 
-*   **Proposed Changes**: The page rejects malformed tokens without a query, shows the invitee's full name and expiry for valid ones, and renders the terms checkbox and "Entrar com Google". The `POST` route checks the checkbox, sets the invite cookie with the accepted versions, and starts the Google sign-in.
+*   **Proposed Changes**: The page rejects malformed tokens without a query, shows the invitee's full name and expiry for valid ones, and renders the terms checkbox and "Entrar com Google". The document links open in a new tab. The `POST` route checks the checkbox, sets the invite cookie with the accepted versions, and starts the Google sign-in.
 
 ##### 53. `app/admin/termos/aceitar/page.tsx`, `app/admin/termos/aceitar/actions.ts` (Create, M3)
 
-*   **Proposed Changes**: Acceptance page for `terms_outdated` viewers; records versions and `user.terms_accepted`; redirects to `/admin/perfil` on first access, otherwise to `/admin`.
+*   **Proposed Changes**: Acceptance page for `terms_outdated` viewers; the terms and privacy links open in a new tab; records versions and `user.terms_accepted`; redirects to `/admin/perfil` on first access, otherwise to `/admin`.
 
 ##### 54. `app/admin/perfil/page.tsx`, `app/admin/perfil/profile-form.tsx`, `app/admin/perfil/actions.ts` (Create, M4)
 
@@ -1054,7 +1055,7 @@ Exact library versions are pinned in `package.json` at implementation time, usin
 
 ##### 68. `app/admin/termos/page.tsx`, `app/admin/privacidade/page.tsx` (Create, M3; final text in M5)
 
-*   **Proposed Changes**: Terms and notice with version and date; final text required before the production-data gate.
+*   **Proposed Changes**: Terms and notice with version and date; each document links to the other in a new tab; final text required before the production-data gate.
 
 ##### 69. `docs/privacy/backoffice-data-inventory.md` (Create, M5)
 

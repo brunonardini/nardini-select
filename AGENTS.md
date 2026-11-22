@@ -35,6 +35,7 @@ Run `nvm use` at the start of every terminal session, before any `node`, `npm`, 
 | Schema types | `npm run db:codegen` |
 | SQL lint | `npm run db:lint` |
 | Grants | `npm run db:grants` |
+| Retention | `npm run db:retain` (deletes expired audit events and invitations as `audit_maintainer`) |
 
 Testing:
 - Unit and component tests: Vitest + React Testing Library, next to the code as `app/**/*.test.ts(x)`, `components/**/*.test.ts(x)`, `lib/**/*.test.ts(x)`, and `db/**/*.test.ts(x)` (the `unit` project in `vitest.config.mts`, jsdom). Query by role and accessible name. Async Server Components can't be unit tested; cover them with E2E.
@@ -189,17 +190,15 @@ Security scanning (CodeQL) and disclosure — the repository is public, so vulne
 
 Fonts load through `next/font`. Montserrat sets the text as `--font-brand` (`brandFont`, from Google). Karvest ExtraBold sets h1, h2, and h3 as `--font-display` (`displayFont`, self-hosted from `app/fonts/`). `app/fonts/` keeps every Karvest weight as `.woff2` so the licensed files stay in the repository, but `app/fonts.ts` loads only the weights in use. Add other weights to `app/fonts.ts` only when a design needs them (see DESIGN.md).
 
-## Design workflow (EGM)
+## Design workflow
 
 Design and architecture decisions go through a reviewed design doc before any code. Small changes (copy tweaks, one-off fixes) skip it.
 
-1. `/egm:egm-brainstorm` to explore the idea, then `/egm:egm-draft` to write the doc.
-2. `/egm:egm-review` with fresh-context reviewers, then `/egm:egm-resolve` for the findings.
+1. Use the `design-doc` skill to frame the decision and write the draft in `.dev/docs/<feature>/design.md` (gitignored).
+2. The skill sends the draft to one fresh-context reviewer on Sonnet, records the findings in `.dev/docs/<feature>/review.md`, and resolves them with the user.
 3. Implementation starts only after the doc is approved and committed to `docs/designs/`.
 
-EGM artifact directory: .dev/docs
-
-Drafts, briefs, and review reports go to `.dev/docs/` (gitignored). See [docs/designs/README.md](docs/designs/README.md).
+See [docs/designs/README.md](docs/designs/README.md).
 
 ## Code graph (Graphify)
 
@@ -227,11 +226,11 @@ Drafts, briefs, and review reports go to `.dev/docs/` (gitignored). See [docs/de
 | Code structure and relationships | Graphify CLI (`graphify query`, `path`, `explain`; see Code graph) |
 | Existing components, their props and stories | Storybook MCP server (`docs-list`, `docs-show`, `test-run`; see Components and Storybook) |
 | Interactive components | Base UI docs for agents (https://base-ui.com/llms.txt) |
-| Design docs | EGM plugin (`egm-*`) |
+| Design docs | `design-doc` (draft, one fresh-context review, approval; drift check on request) |
 
 Project rules win over skills. Known exception: `web-design-guidelines` fetches its rules from GitHub at run time, so findings that contradict this file don't apply.
 
-Skills live in `.agents/skills/` (Codex, Cursor) with symlinks or copies in `.claude/skills/` and `.cursor/skills/`. `skills-lock.json` pins the Emil and Vercel skills; update them with `npx skills update -p`. Update Impeccable with `.claude/skills/impeccable/scripts/impeccable update --project`, then move any hooks it writes to `.claude/settings.local.json` into `.claude/settings.json`. EGM is a Claude Code plugin declared in `.claude/settings.json`.
+Skills live in `.agents/skills/` (Codex, Cursor) with symlinks or copies in `.claude/skills/` and `.cursor/skills/`. `skills-lock.json` pins the Emil and Vercel skills; update them with `npx skills update -p`. Update Impeccable with `.claude/skills/impeccable/scripts/impeccable update --project`, then move any hooks it writes to `.claude/settings.local.json` into `.claude/settings.json`.
 
 <!-- BEGIN:nextjs-agent-rules -->
 
