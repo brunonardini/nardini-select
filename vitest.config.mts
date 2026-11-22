@@ -77,6 +77,7 @@ export default defineConfig({
             '@base-ui/react/popover',
             '@base-ui/react/select',
             '@base-ui/react/toast',
+            '@base-ui/react/tooltip',
           ],
         },
         plugins: [

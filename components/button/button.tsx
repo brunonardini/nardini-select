@@ -1,7 +1,7 @@
 import { Button as BaseButton } from '@base-ui/react/button';
 import type { ComponentProps, ReactNode } from 'react';
 
-type Variant = 'primary' | 'secondary' | 'outline';
+type NeutralVariant = 'primary' | 'secondary' | 'outline';
 type LinkProps = Omit<ComponentProps<'a'>, 'className'> & {
   href: string;
   loading?: never;
@@ -14,9 +14,18 @@ type ActionProps = Omit<BaseButton.Props, 'className' | 'render'> & {
   /** Accessible text shown while loading; no estimated progress. */
   loadingLabel?: string;
 };
-export type ButtonProps = (LinkProps | ActionProps) & {
-  /** Primary action, quiet secondary action, or outlined action. */
-  variant?: Variant;
+export type ButtonProps = (
+  | ((LinkProps | ActionProps) & {
+      variant?: NeutralVariant;
+      emphasis?: never;
+    })
+  | (ActionProps & {
+      variant: 'danger';
+      emphasis?: 'solid' | 'subdued';
+    })
+) & {
+  /** Minimum height. Defaults to the 50px standard size. */
+  size?: 'compact' | 'standard' | 'large';
   className?: string;
   /** Decorative leading icon, replaced by paws while loading. */
   leadingIcon?: ReactNode;
@@ -72,10 +81,18 @@ export function PawLoading() {
 /** Brand action or native link. Loading belongs to actions, never navigation. */
 export function Button({
   variant = 'primary',
+  emphasis,
+  size = 'standard',
   className,
   ...props
 }: ButtonProps) {
-  const classes = ['button', `button-${variant}`, className]
+  const classes = [
+    'button',
+    `button-${variant}`,
+    `button-${size}`,
+    emphasis === 'subdued' && 'button-danger-subdued',
+    className,
+  ]
     .filter(Boolean)
     .join(' ');
   if (isLink(props)) {

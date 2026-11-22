@@ -106,10 +106,11 @@ export function UserActions({
         ) : null}
         {allow.remove ? (
           <ConfirmDialog
+            intent="delete"
             label="Excluir"
             title="Excluir usuário"
             description="A conta é apagada. Esta ação não pode ser desfeita."
-            confirmLabel="Excluir"
+            confirmLabel="Excluir usuário definitivamente"
             fields={{ id: user.id }}
             action={removeAccount}
           />

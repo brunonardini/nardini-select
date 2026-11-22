@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import { expect, fn, userEvent, within } from 'storybook/test';
+import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 
 import { ConfirmDialog } from './confirm-dialog';
 
 const meta = {
-  title: 'Components/ConfirmDialog',
+  title: 'Feedback/ConfirmDialog',
   component: ConfirmDialog,
   args: {
     label: 'Excluir',
@@ -55,5 +55,32 @@ export const TypedConfirmation: Story = {
       'Ana Silva',
     );
     await expect(confirm).toBeEnabled();
+  },
+};
+
+export const DeleteConfirmation: Story = {
+  args: {
+    intent: 'delete',
+    label: 'Excluir papel',
+    confirmLabel: 'Excluir papel definitivamente',
+    description: 'O papel será removido. Esta ação não pode ser desfeita.',
+  },
+  play: async ({ canvas, canvasElement, userEvent }) => {
+    const trigger = canvas.getByRole('button', { name: 'Excluir papel' });
+    const body = within(canvasElement.ownerDocument.body);
+    await expect(trigger).toHaveClass('button-danger-subdued');
+    await userEvent.click(trigger);
+    const dialog = within(body.getByRole('dialog', { name: 'Excluir papel' }));
+    await waitFor(() =>
+      expect(dialog.getByRole('button', { name: 'Cancelar' })).toHaveFocus(),
+    );
+    await expect(
+      dialog.getByRole('button', { name: 'Excluir papel definitivamente' }),
+    ).toHaveClass('button-danger');
+    await userEvent.click(
+      dialog.getByRole('button', { name: 'Fechar confirmação' }),
+    );
+    await waitFor(() => expect(trigger).toHaveFocus());
+    await userEvent.click(trigger);
   },
 };

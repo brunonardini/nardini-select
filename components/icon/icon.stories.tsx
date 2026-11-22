@@ -44,6 +44,7 @@ const meta = {
         'lock',
         'google',
         'left',
+        'trash',
         ...feedbackIcons,
       ],
     },
@@ -112,6 +113,8 @@ export const Social: Story = {
     <IconGallery {...args} names={['instagram', 'whatsapp', 'google']} />
   ),
 };
+
+export const Trash: Story = { args: { name: 'trash' } };
 
 export const Pin: Story = { args: { name: 'pin' } };
 export const Lock: Story = { args: { name: 'lock' } };

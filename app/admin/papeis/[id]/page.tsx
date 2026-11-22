@@ -40,10 +40,11 @@ export default async function RolePage({
       )}
       {canDeleteRole(role) ? (
         <ConfirmDialog
+          intent="delete"
           label="Excluir papel"
           title="Excluir papel"
           description="O papel é apagado. Esta ação não pode ser desfeita."
-          confirmLabel="Excluir"
+          confirmLabel="Excluir papel definitivamente"
           fields={{ id: role.id }}
           action={removeRole}
         />

@@ -14,6 +14,7 @@ export function Icon({
     | 'check'
     | 'warning'
     | 'error'
+    | 'trash'
     | 'google'
     | 'left'
     | 'home'
@@ -92,6 +93,7 @@ export function Icon({
     ),
     check: <path d="m5 12 4 4L19 6" />,
     warning: <path d="m12 3 10 17H2L12 3Zm0 6v4m0 3h.01" />,
+    trash: <path d="M4 7h16M9 7V4h6v3m3 0-1 13H7L6 7m4 4v5m4-5v5" />,
     error: (
       <>
         <circle cx="12" cy="12" r="9" />

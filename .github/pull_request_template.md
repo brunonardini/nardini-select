@@ -56,7 +56,7 @@ footer in this description isn't part of the commit.
 - [ ] Animates `transform` and `opacity` (`clip-path`, `filter`, or measured height only with a reason); no layout properties
 - [ ] `prefers-reduced-motion` drops movement but keeps fades; hover motion is gated behind `@media (hover: hover) and (pointer: fine)`
 - [ ] Images use `next/image` and fonts use `next/font`
-- [ ] Primary/secondary/outline buttons, left/right icons, shared loading and alerts match `DESIGN.md` and their Storybook states; semantic error colors stay reserved for feedback
+- [ ] Button variants and sizes, IconButton, shared loading and alerts match `DESIGN.md` and their Storybook states; the deletion red is scoped to permanent record deletion
 - [ ] Error 404/500 keep their approved images/titles, safe descriptions and caller-owned recovery actions; actions adapt to the container width
 - [ ] `"use client"` only where there is interactivity
 - [ ] Browser preferences use the shared browser storage module for all `localStorage` access

@@ -65,6 +65,7 @@ export default async function SignInPage({
         </Link>
         <Button
           variant="secondary"
+          size="compact"
           className={styles.back}
           href="/"
           leadingIcon={<Icon name="left" />}

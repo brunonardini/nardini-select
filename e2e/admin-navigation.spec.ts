@@ -33,6 +33,39 @@ test('restores collapsed and expanded preferences after reload', async ({
   await expect(collapse).toHaveAttribute('aria-expanded', 'true');
 });
 
+test('shows a dismissible tooltip on the sidebar toggle', async ({ page }) => {
+  test.skip(
+    test.info().project.name === 'mobile',
+    'The rail is a wide-screen control',
+  );
+  await page.goto('/admin');
+  const toggle = page.getByRole('button', { name: 'Recolher menu lateral' });
+  const tooltip = page.getByRole('tooltip');
+  await expect(
+    page.getByRole('button', { name: 'Menu', exact: true }),
+  ).toHaveCount(0);
+  for (const width of [1440, 834]) {
+    await page.setViewportSize({ width, height: width === 1440 ? 900 : 1194 });
+    await toggle.hover();
+    await expect(tooltip).toHaveText('Recolher menu lateral');
+    await tooltip.hover();
+    await expect(tooltip).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(tooltip).toHaveCount(0);
+    await page.mouse.move(0, 0);
+  }
+
+  await page.reload();
+  await page.keyboard.press('Tab');
+  await page.keyboard.press('Tab');
+  await page.keyboard.press('Tab');
+  await expect(toggle).toBeFocused();
+  await expect(tooltip).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(tooltip).toHaveCount(0);
+  await expect(toggle).toBeFocused();
+});
+
 test('uses document memory when the storage getter throws', async ({
   page,
 }) => {
@@ -81,6 +114,12 @@ test('centers the signature and returns drawer focus on mobile', async ({
     'page',
   );
   await expect(drawer.getByRole('link', { name: 'Usuários' })).toHaveCount(0);
+  const close = drawer.getByRole('button', { name: 'Fechar menu' });
+  await expect(close).toHaveCSS('width', '44px');
+  await close.click();
+  await expect(menu).toBeFocused();
+  await menu.click();
+  await close.focus();
   await page.keyboard.press('Escape');
   await expect(menu).toBeFocused();
   await page.getByRole('button', { name: /Conta de/ }).click();

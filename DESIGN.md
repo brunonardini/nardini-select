@@ -76,23 +76,31 @@ components:
     backgroundColor: '{colors.cafe}'
     textColor: '{colors.off-white}'
     rounded: '{rounded.pill}'
-    padding: '13px 26px'
+    padding: '7px 21px'
     typography: '{typography.label}'
     height: '50px'
   button-outline:
     textColor: '{colors.cafe}'
     rounded: '{rounded.pill}'
-    padding: '13px 26px'
+    padding: '7px 21px'
     typography: '{typography.label}'
     height: '50px'
   button-outline-hover:
     backgroundColor: '{colors.cafe}'
     textColor: '{colors.off-white}'
   button-secondary:
-    backgroundColor: '{colors.off-white}'
+    backgroundColor: 'transparent'
     textColor: '{colors.cafe}'
     rounded: '{rounded.pill}'
-    padding: '0 16px'
+    padding: '7px 21px'
+    typography: '{typography.label}'
+    height: '50px'
+  button-danger:
+    backgroundColor: '#cb241c'
+    textColor: '#fff7f2'
+    rounded: '{rounded.pill}'
+    padding: '7px 21px'
+    typography: '{typography.label}'
     height: '50px'
   alert-default:
     backgroundColor: '{colors.off-white}'
@@ -204,7 +212,7 @@ The owner approved a pink/red error treatment for the admin login. `Alert varian
 | `error-rule`         | `#A3382D` | 3px top rule                            |
 | `error-icon-surface` | `#F3C9BF` | Circular lock background                |
 
-**The Semantic Feedback Rule.** Reserve semantic colors for feedback. Convey meaning through the title, supporting text and icon as well as color. Never render raw provider errors or sensitive response details.
+**The Semantic Feedback Rule.** Reserve the Alert and Toast palettes for feedback. Permanent record deletion uses its own button red. Convey meaning through the title, supporting text and icon as well as color. Never render raw provider errors or sensitive response details.
 
 ## Typography
 
@@ -258,20 +266,22 @@ Flat. Depth comes from color blocks (café panels against off-white), photograph
 
 ### Buttons
 
-Pill, 50px minimum height (48px in the mobile hero), 800 weight label, 1.5px Café border.
+Pill with a Montserrat label at 14px and weight 800. Minimum heights are 44px for compact, 50px for standard, and 56px for large. Standard is the default. Use compact for back and dismiss actions. The mobile hero sets its own 48px minimum.
 
 - **Primary:** Café fill, Off-white text. Hover adds an inset 2px Terracota ring and a 2px lift.
+- **Secondary:** transparent, Café text, and a 1px Argila border. Hover adds a quiet Areia fill. On Café, use Off-white text and a warm border and hover tint.
 - **Outline:** transparent, Café text. Hover fills with Café and turns the text Off-white.
-- Press scales to 0.98. Focus-visible: 2px Café outline offset 4px (Off-white on Café surfaces).
+- **Danger:** reserved for permanent record deletion. The subdued opener pairs the trash icon with visible text. The solid confirmation uses deletion red (#CB241C), a deeper hover (#A91B15), and pale text (#FFF7F2). See the [approved palette and confirmation behavior](docs/designs/button.md).
+- All enabled text buttons lift 2px on hover within 150ms. Press scales to 0.98 and takes precedence. A 2px focus ring sits 3px from the boundary and adapts to the surface and variant. Reduced motion keeps color transitions.
 - Hover effects are gated behind `(hover: hover) and (pointer: fine)`.
 
 ### Button icons, surface context and loading
 
-The shared Button variants are `primary`, `secondary` and `outline`. Login uses `primary`, exactly as other main actions; there is no route-specific variant. `secondary` is the quieter 44px action/link used for "Voltar ao site": Off-white surface, Café text, transparent border, 0×16px padding and a 12px/400 label. It retains the pill and visible keyboard focus. Its hover uses Areia and an underline, without lifting.
+IconButton is a 44×44px native action with 8px corners, a quiet border, and a required accessible name. The icon is decorative. Use visible button labels for dangerous actions or ambiguous icons. The admin drawer, sidebar toggle, and delete confirmation use IconButton for their dedicated controls.
 
 `leadingIcon` places a decorative icon to the left of the label; `trailingIcon` places one to the right. Both work for native links and actions, and both can be supplied together. Use the existing Icon family or another accessible decorative SVG. The login uses the monochrome Google G on the left. The home's down arrows remain on the right via `trailingIcon`. Never encode either position as part of a button variant or hard-code Google into the shared Button.
 
-Primary colors follow the surrounding surface through inherited `--button-primary-background`, `--button-primary-text` and `--button-focus-color` custom properties. Defaults are Café fill, Off-white text and Café focus on a light surface. A dark surface can invert the first two and use Off-white focus; Storybook demonstrates `button-surface-dark`. The login sets that context on mobile and returns to light-surface defaults on desktop. This changes contrast, not the semantic variant. The route owns full width and outer spacing; shared primary sizing, typography, border and interaction behavior stay consistent.
+Primary colors follow the surrounding surface through inherited `--button-primary-background`, `--button-primary-text` and `--button-focus-color` custom properties. Defaults are Café fill, Off-white text and Café focus on a light surface. A dark surface can invert the first two and use Off-white focus; Storybook demonstrates `button-surface-dark`. The login sets that context on mobile and returns to light-surface defaults on desktop. The route owns full width and outer spacing; shared primary sizing, typography, border and interaction behavior stay consistent.
 
 Every action variant supports `loading` and `loadingLabel` (default: "Carregando…"). Loading disables the action, sets `aria-busy`, replaces both optional icons with the same three 14×16px paws, and shows the loading label. Login uses "Conectando ao Google…". Labels remain readable while busy; do not dim the whole control. Native links have icon slots but no loading/disabled action state.
 
@@ -342,7 +352,7 @@ The off-white header holds the official horizontal logo on the left (210px, 180p
 
 The Admin signature combines the official dog-and-N symbol with “Admin” in Karvest ExtraBold on Off-white. The word matches the height and placement of the original Nardini wordmark, including the flat-top i dot.
 
-Below 700px, the signature is centered between the menu and account buttons. Both have 44px touch targets and visible 36px circles. The menu icon is 18px. The menu opens a Café modal drawer from the left. From 700px, the Café sidebar is 190–270px wide and collapses to 72px. The compact sidebar shows the destination icons with accessible names. Off-white fill and Café text mark the current section. The browser remembers the sidebar width as a display preference.
+Below 700px, the signature is centered between the menu and account buttons. Both have 44px touch targets. The menu uses a bordered square with 8px corners and an 18px icon. The account keeps its 36px avatar circle. The menu opens a Café modal drawer from the left with a named icon-only close button. From 700px, the Café sidebar is 190–270px wide and collapses to 72px. The sidebar toggle has a keyboard-accessible tooltip. The compact sidebar shows the destination icons with accessible names. Off-white fill and Café text mark the current section. The browser remembers the sidebar width as a display preference.
 
 The account popover groups the viewer’s name and access state with the actions available to the viewer. “Perfil” and “Sair” are matching full-width rows with 14px Montserrat at weight 650, 21px outline icons and no underline. See [Admin navigation and browser preferences](docs/designs/admin-navigation.md).
 
@@ -398,7 +408,7 @@ The one authored moment is the hero dog rising 24px into place over 0.9s (`cubic
 
 ### Don't:
 
-- **Don't** expand the five-color brand palette with decoration. Reserve the documented semantic colors for feedback.
+- **Don't** expand the five-color brand palette with decoration. Use the documented colors for feedback and permanent deletion in their assigned components.
 - **Don't** redraw, recolor, crop, distort or regenerate any brand mark, including with AI (the earlier regenerated transparent seal was removed for this reason).
 - **Don't** put the horizontal logo on Café or Terracota, or put buttons and small text on a Terracota fill.
 - **Don't** combine a giant dog, the seal and text in the same panel.

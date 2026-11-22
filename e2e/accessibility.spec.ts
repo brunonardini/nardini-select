@@ -200,7 +200,13 @@ test('admin management pages and dialogs have no detectable violations', async (
       await drawer.click();
       await expect(page.getByRole('dialog', { name: 'Menu' })).toBeVisible();
     } else {
-      await page.getByRole('button', { name: 'Recolher menu lateral' }).click();
+      const collapse = page.getByRole('button', {
+        name: 'Recolher menu lateral',
+      });
+      await collapse.hover();
+      await expect(page.getByRole('tooltip')).toBeVisible();
+      expect(await scan(page)).toEqual([]);
+      await collapse.click();
     }
     expect(await scan(page)).toEqual([]);
     await page.keyboard.press('Escape');
@@ -246,10 +252,18 @@ test('admin management pages and dialogs have no detectable violations', async (
     }
 
     await page.goto(`/admin/usuarios/${disabled}`);
-    for (const name of ['Habilitar', 'Excluir', 'Anonimizar']) {
-      await page.getByRole('button', { name }).click();
+    for (const [name, title] of [
+      ['Habilitar', 'Habilitar usuário'],
+      ['Excluir', 'Excluir usuário'],
+      ['Anonimizar', 'Anonimizar usuário'],
+    ]) {
+      const opener = page.getByRole('button', { name, exact: true });
+      await opener.click();
+      const dialog = page.getByRole('dialog', { name: title });
+      await expect(dialog).toHaveCSS('opacity', '1');
       expect(await scan(page)).toEqual([]);
       await page.keyboard.press('Escape');
+      await expect(opener).toBeFocused();
     }
 
     await page.goto('/admin/papeis');

@@ -33,7 +33,7 @@ test('an admin creates, renames, and deletes a role', async ({
     await page.getByRole('button', { name: 'Excluir papel' }).click();
     await page
       .getByRole('dialog')
-      .getByRole('button', { name: 'Excluir' })
+      .getByRole('button', { name: 'Excluir papel definitivamente' })
       .click();
     await expect(page).toHaveURL(/\/admin\/papeis$/);
     await expect(page.getByRole('link', { name: `${name} dois` })).toHaveCount(

@@ -51,7 +51,7 @@ function variantButtons(
 }
 
 const meta = {
-  title: 'Components/Button',
+  title: 'Form/Button',
   component: Button,
   args: { children: 'Conheça nossa seleção', variant: 'primary' },
   argTypes: {
@@ -67,7 +67,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Brand button with primary, secondary and outline variants. leadingIcon and trailingIcon place decorative icons before or after the label, for actions and native links. All action variants share loading/loadingLabel: three infinite paw pulses replace both icons, aria-busy is set, and the action is disabled. Primary colors follow the surrounding surface context, not a route-specific variant. With `href` it renders a plain `<a>` (navigation stays a link); without it, Base UI’s `Button` renders a `<button type="button">`.',
+          'Brand button with primary, secondary and outline variants for actions and links, plus danger for permanent deletion. Choose compact, standard or large. A subdued danger button opens the confirmation and a solid danger button submits it. leadingIcon and trailingIcon place decorative icons before or after the label, for actions and native links. All action variants share loading/loadingLabel: three infinite paw pulses replace both icons, aria-busy is set, and the action is disabled. Primary colors follow the surrounding surface context, not a route-specific variant. With `href` it renders a plain `<a>` (navigation stays a link); without it, Base UI’s `Button` renders a `<button type="button">`.',
       },
     },
   },
@@ -289,4 +289,70 @@ export const DarkBackground: Story = {
     );
     await expect(primary.closest('.button-surface-dark')).not.toBeNull();
   },
+};
+
+export const Sizes: Story = {
+  render: () => (
+    <VariantRow>
+      <Button size="compact" variant="secondary">
+        Voltar
+      </Button>
+      <Button>Salvar alterações</Button>
+      <Button size="large">Conheça nossa seleção</Button>
+      <div style={{ maxWidth: 220 }}>
+        <Button variant="secondary">
+          Voltar para a lista de usuários da loja
+        </Button>
+      </div>
+    </VariantRow>
+  ),
+  play: async ({ canvas, userEvent }) => {
+    await userEvent.tab();
+    await expect(canvas.getByRole('button', { name: 'Voltar' })).toHaveFocus();
+  },
+};
+
+function DangerButtons({ surface }: { surface?: 'dark' }) {
+  return (
+    <VariantRow surface={surface}>
+      <Button
+        variant="danger"
+        emphasis="subdued"
+        leadingIcon={<Icon name="trash" />}
+      >
+        Excluir usuário
+      </Button>
+      <Button variant="danger">Excluir usuário definitivamente</Button>
+      <Button variant="danger" disabled>
+        Excluir papel
+      </Button>
+      <Button variant="danger" loading loadingLabel="Excluindo…">
+        Excluir papel
+      </Button>
+    </VariantRow>
+  );
+}
+
+export const Danger: Story = {
+  render: () => <DangerButtons />,
+  play: async ({ canvas, userEvent }) => {
+    await userEvent.tab();
+    await expect(
+      canvas.getByRole('button', { name: /^Excluir usuário$/ }),
+    ).toHaveFocus();
+    await userEvent.tab();
+    await expect(
+      canvas.getByRole('button', { name: 'Excluir usuário definitivamente' }),
+    ).toHaveFocus();
+    await expect(
+      canvas.getByRole('button', { name: 'Excluir papel' }),
+    ).toBeDisabled();
+    await expect(
+      canvas.getByRole('button', { name: 'Excluindo…' }),
+    ).toHaveAttribute('aria-busy', 'true');
+  },
+};
+
+export const DangerOnCafe: Story = {
+  render: () => <DangerButtons surface="dark" />,
 };

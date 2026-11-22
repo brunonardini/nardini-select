@@ -4,7 +4,7 @@ import { expect, userEvent, within } from 'storybook/test';
 import { Dialog, DialogClose } from './dialog';
 
 const meta = {
-  title: 'Components/Dialog',
+  title: 'Feedback/Dialog',
   component: Dialog,
   args: {
     label: 'Abrir aviso',

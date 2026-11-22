@@ -85,7 +85,7 @@ describe('Button', () => {
     expect(screen.getByTestId('leading-icon')).toBeInTheDocument();
   });
 
-  it.each(['primary', 'secondary', 'outline'] as const)(
+  it.each(['primary', 'secondary', 'outline', 'danger'] as const)(
     'disables the %s action and replaces both icons with paws while loading',
     async (variant) => {
       const onClick = vi.fn();
