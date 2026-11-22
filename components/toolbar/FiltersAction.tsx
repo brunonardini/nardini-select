@@ -37,7 +37,7 @@ export function FiltersAction({
       {(close) => (
         <form className={styles.form} onSubmit={closeOnSubmit(onSubmit, close)}>
           {children}
-          <div className={styles.formActions}>
+          <div className="dialog-actions">
             <Button
               type="button"
               variant="secondary"

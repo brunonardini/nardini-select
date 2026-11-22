@@ -42,14 +42,12 @@ export function InviteDialog() {
           <div className="dialog-actions">
             <Button
               type="button"
-              variant="secondary"
               onClick={(event) =>
                 void copyInviteLink(link, event.currentTarget)
               }
             >
               Copiar link
             </Button>
-            <DialogClose>Fechar</DialogClose>
           </div>
         </div>
       ) : (

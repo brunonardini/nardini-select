@@ -6,11 +6,14 @@ type IconButtonProps = Omit<
 > & {
   'aria-label': string;
   icon: ReactNode;
+  /** Small matches the admin header avatar and fits dismiss actions. */
+  size?: 'normal' | 'small';
 };
 
-/** Icon-only action with an accessible name and a 44px touch target. */
+/** Icon-only action with a required accessible name. */
 export function IconButton({
   icon,
+  size = 'normal',
   type = 'button',
   className,
   ...props
@@ -19,7 +22,13 @@ export function IconButton({
     <button
       {...props}
       type={type}
-      className={['icon-button', className].filter(Boolean).join(' ')}
+      className={[
+        'icon-button',
+        size === 'small' && 'icon-button-small',
+        className,
+      ]
+        .filter(Boolean)
+        .join(' ')}
     >
       <span className="icon-button-icon" aria-hidden="true">
         {icon}

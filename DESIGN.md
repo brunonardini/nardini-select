@@ -277,7 +277,7 @@ Pill with a Montserrat label at 14px and weight 800. Minimum heights are 44px fo
 
 ### Button icons, surface context and loading
 
-IconButton is a 44×44px native action with 8px corners, a quiet border, and a required accessible name. The icon is decorative. Use visible button labels for dangerous actions or ambiguous icons. The admin drawer, sidebar toggle, and delete confirmation use IconButton for their dedicated controls.
+IconButton is a native action with a required accessible name and a decorative icon. Normal is the default and measures 44×44px with a 21px icon. Small measures 36×36px with an 18px icon. Use small for the admin mobile menu trigger and icon-only dismiss controls. The default treatment uses 8px corners and a quiet border. Use visible labels for dangerous actions or ambiguous icons.
 
 `leadingIcon` places a decorative icon to the left of the label; `trailingIcon` places one to the right. Both work for native links and actions, and both can be supplied together. Use the existing Icon family or another accessible decorative SVG. The login uses the monochrome Google G on the left. The home's down arrows remain on the right via `trailingIcon`. Never encode either position as part of a button variant or hard-code Google into the shared Button.
 
@@ -286,6 +286,10 @@ Primary colors follow the surrounding surface through inherited `--button-primar
 Every action variant supports `loading` and `loadingLabel` (default: "Carregando…"). Loading disables the action, sets `aria-busy`, replaces both optional icons with the same three 14×16px paws, and shows the loading label. Login uses "Conectando ao Google…". Labels remain readable while busy; do not dim the whole control. Native links have icon slots but no loading/disabled action state.
 
 Paws pulse forever with a 1.2s cycle and 0/0.15/0.3s stagger. This expresses activity, never progress. Animate opacity and scale; reduced motion keeps opacity and removes scaling. There is no timeout, estimated percentage or progress track. Busy actions do not lift or scale on hover/press. Keyboard focus stays visible against the surrounding surface.
+
+### Dialogs
+
+Dialog and ConfirmDialog show a small IconButton in the top-right corner. Its accessible name defaults to “Fechar”. ConfirmDialog uses “Fechar confirmação”. Use the shared dialog action row to align footer actions to the right. Put secondary actions first and the primary or destructive submit action last so reading, focus, and visual order agree. The row wraps at narrow widths.
 
 ### Alert variants
 
@@ -303,7 +307,7 @@ Toast reports an outcome beside the current task. It uses the shared feedback co
 
 Show up to three cards, oldest first, and queue additional notices in arrival order. Repeats with the same variant and title increment a counter on the first card. Their timer keeps its remaining duration. Pause the visible timers on mouse hover, keyboard focus within the stack, and while the document is hidden.
 
-Use an 8px radius, a 3px top rule, a 34px icon circle and a 44px close target. Montserrat sets the 13px bold title and the 12px description. Use a 12px inset on phones. From 650px, anchor a 350px viewport to the bottom right with a 19px inset. From 1000px, use 374px and a 25px inset. Respect safe areas and allow the stack to scroll in short viewports.
+Use an 8px radius, a 3px top rule, a 34px icon circle and a small IconButton for dismissal. Montserrat sets the 13px bold title and the 12px description. Use a 12px inset on phones. From 650px, anchor a 350px viewport to the bottom right with a 19px inset. From 1000px, use 374px and a 25px inset. Respect safe areas and allow the stack to scroll in short viewports.
 
 Cards enter with an 180ms fade and a 7px upward translation. Reduced motion keeps a short fade. Close or expiry removes the card immediately. Success and warning announcements are polite. Danger announcements are assertive. The invitation dialog hosts the same toast viewport within its modal focus boundary.
 
@@ -352,7 +356,7 @@ The off-white header holds the official horizontal logo on the left (210px, 180p
 
 The Admin signature combines the official dog-and-N symbol with “Admin” in Karvest ExtraBold on Off-white. The word matches the height and placement of the original Nardini wordmark, including the flat-top i dot.
 
-Below 700px, the signature is centered between the menu and account buttons. Both have 44px touch targets. The menu uses a bordered square with 8px corners and an 18px icon. The account keeps its 36px avatar circle. The menu opens a Café modal drawer from the left with a named icon-only close button. From 700px, the Café sidebar is 190–270px wide and collapses to 72px. The sidebar toggle has a keyboard-accessible tooltip. The compact sidebar shows the destination icons with accessible names. Off-white fill and Café text mark the current section. The browser remembers the sidebar width as a display preference.
+Below 700px, the signature is centered between the menu and account buttons. The bordered menu button matches the 36px avatar circle. The account's touch target is 44px. The menu opens a Café modal drawer from the left with a named icon-only close button. From 700px, the Café sidebar is 190–270px wide and collapses to 72px. The sidebar toggle has a keyboard-accessible tooltip. The compact sidebar shows the destination icons with accessible names. Off-white fill and Café text mark the current section. The browser remembers the sidebar width as a display preference.
 
 The account popover groups the viewer’s name and access state with the actions available to the viewer. “Perfil” and “Sair” are matching full-width rows with 14px Montserrat at weight 650, 21px outline icons and no underline. See [Admin navigation and browser preferences](docs/designs/admin-navigation.md).
 

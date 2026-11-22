@@ -4,7 +4,7 @@ Status: Approved
 
 ## Purpose
 
-Give secondary actions a clear button treatment and consistent pointer feedback. Make permanent record deletion recognizable at the entry point and unmistakable at confirmation. Reuse the existing 44px target for named icon-only controls in admin navigation.
+Give secondary actions a clear button treatment and consistent pointer feedback. Make permanent record deletion recognizable at the entry point and unmistakable at confirmation. Reuse a named IconButton for icon-only controls in admin navigation.
 
 ## Text buttons
 
@@ -43,9 +43,9 @@ Apply the delete intent to the existing role and user deletion actions. Use “E
 
 ## Icon-only buttons
 
-Introduce IconButton as an action-only component. Require an explicit accessible label and a decorative icon. Default to a native button with type button. The control measures at least 44×44px, has an 8px radius and a quiet outline, and treats hover and press as local feedback. It has a visible focus ring and adapts its boundary and ink to Café or light surfaces. Actions with consequences or ambiguous icons use visible labels.
+Introduce IconButton as an action-only component. Require an explicit accessible label and a decorative icon. Default to a native button with type button. The control uses the normal size by default and has a small size for the mobile menu and icon-only dismiss actions. It has an 8px radius and a quiet outline and treats hover and press as local feedback. It has a visible focus ring and adapts its boundary and ink to Café or light surfaces. Actions with consequences or ambiguous icons use visible labels.
 
-Use the component for the admin drawer opener and closer, the desktop sidebar toggle, and the deletion confirmation close. The mobile opener keeps the accessible name “Menu” and changes its 36px circular face to a bordered 44px control with 8px corners. The drawer close becomes icon-only with the accessible name “Fechar menu”; the visible drawer heading stays in place. Keep layout, aria-expanded, and drawer/modal logic with their callers. Collapsed navigation destinations remain links with their existing current-page indication and tooltips. Reuse Base UI trigger composition so each integration renders one interactive element with its original handler, ref, and accessible state. Use Base UI Tooltip for the desktop sidebar toggle. Its text must be hoverable and dismissible with Escape while the button keeps focus and its own accessible name. The mobile drawer and deletion dialog close controls use their named icons without tooltips. Escape on either focused close control dismisses its enclosing layer directly.
+Use the component for the admin drawer opener and closer, the desktop sidebar toggle, and the deletion confirmation close. The mobile opener keeps the accessible name “Menu” and matches the 36px account avatar with a bordered square. The drawer close becomes icon-only with the accessible name “Fechar menu”; the visible drawer heading stays in place. Keep layout, aria-expanded, and drawer/modal logic with their callers. Collapsed navigation destinations remain links with their existing current-page indication and tooltips. Reuse Base UI trigger composition so each integration renders one interactive element with its original handler, ref, and accessible state. Use Base UI Tooltip for the desktop sidebar toggle. Its text must be hoverable and dismissible with Escape while the button keeps focus and its own accessible name. The mobile drawer and deletion dialog close controls use their named icons without tooltips. Escape on either focused close control dismisses its enclosing layer directly.
 
 ## Integration and verification
 

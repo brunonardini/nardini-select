@@ -88,6 +88,7 @@ function MobileDrawer({
           <IconButton
             className={styles.mobileTrigger}
             aria-label="Menu"
+            size="small"
             icon={<Icon name="menu" />}
           />
         }
@@ -101,6 +102,7 @@ function MobileDrawer({
               render={
                 <IconButton
                   aria-label="Fechar menu"
+                  size="small"
                   icon={<Icon name="close" />}
                 />
               }

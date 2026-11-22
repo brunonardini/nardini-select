@@ -20,7 +20,7 @@ Give admin users recognizable feedback when an operation completes, needs attent
 | `warning` | Warning triangle | 8 seconds | Polite |
 | `danger` | Circled exclamation | Until dismissed | Assertive |
 
-Reuse the semantic surface, border, icon-circle, accent, foreground, and top-rule colors from the [design system](../../DESIGN.md). The Toast and Alert consume the same color values. Use Montserrat, a 13px bold title, and a 12px body. The card has an 8px radius, a 3px top rule, a 34px icon circle, and a 44px close target named “Fechar: {title}”. The icons are decorative.
+Reuse the semantic surface, border, icon-circle, accent, foreground, and top-rule colors from the [design system](../../DESIGN.md). The Toast and Alert consume the same color values. Use Montserrat, a 13px bold title, and a 12px body. The card has an 8px radius, a 3px top rule, a 34px icon circle, and a small IconButton named “Fechar: {title}”. The icons are decorative.
 
 At 390×844 the viewport fills the width with a 12px inset. From 650px it anchors at bottom right with a 350px width and 19px inset. From 1000px it uses a 374px width and 25px inset. Respect safe-area insets, preserve space for focus outlines, wrap long text, and cap the stack to the available height. A short viewport can scroll the stack.
 

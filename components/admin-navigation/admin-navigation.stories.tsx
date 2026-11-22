@@ -75,8 +75,8 @@ export const MobileDrawer: Story = {
     const account = canvas.getByRole('button', { name: /Conta de/ });
     const icon = trigger.querySelector('svg');
     await expect(trigger).toHaveStyle({
-      width: '44px',
-      height: '44px',
+      width: '36px',
+      height: '36px',
       borderRadius: '8px',
     });
     await expect(icon).toHaveStyle({ width: '18px', height: '18px' });
@@ -90,6 +90,7 @@ export const MobileDrawer: Story = {
     const drawer = body.getByRole('dialog', { name: 'Menu' });
     const close = within(drawer).getByRole('button', { name: 'Fechar menu' });
     await expect(close).toBeVisible();
+    await expect(close).toHaveStyle({ width: '36px', height: '36px' });
     await userEvent.click(close);
     await waitFor(() => expect(trigger).toHaveFocus());
     await userEvent.click(trigger);

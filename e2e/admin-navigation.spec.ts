@@ -107,6 +107,13 @@ test('centers the signature and returns drawer focus on mobile', async ({
     page.viewportSize()!.width / 2,
     0,
   );
+  const avatar = page
+    .getByRole('button', { name: /Conta de/ })
+    .locator('.avatar');
+  for (const element of [menu, avatar]) {
+    await expect(element).toHaveCSS('width', '36px');
+    await expect(element).toHaveCSS('height', '36px');
+  }
   await menu.click();
   const drawer = page.getByRole('dialog', { name: 'Menu' });
   await expect(drawer.getByRole('link', { name: 'Início' })).toHaveAttribute(
@@ -115,7 +122,8 @@ test('centers the signature and returns drawer focus on mobile', async ({
   );
   await expect(drawer.getByRole('link', { name: 'Usuários' })).toHaveCount(0);
   const close = drawer.getByRole('button', { name: 'Fechar menu' });
-  await expect(close).toHaveCSS('width', '44px');
+  await expect(close).toHaveCSS('width', '36px');
+  await expect(close).toHaveCSS('height', '36px');
   await close.click();
   await expect(menu).toBeFocused();
   await menu.click();

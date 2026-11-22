@@ -17,8 +17,17 @@ describe('ConfirmDialog', () => {
         action={action}
       />,
     );
-    await userEvent.click(screen.getByRole('button', { name: 'Excluir' }));
-    await userEvent.click(screen.getByRole('button', { name: 'Excluir' }));
+    const user = userEvent.setup();
+    const trigger = screen.getByRole('button', { name: 'Excluir' });
+    await user.click(trigger);
+    await user.click(
+      screen.getByRole('button', { name: 'Fechar confirmação' }),
+    );
+    await waitFor(() => expect(trigger).toHaveFocus());
+    expect(action).not.toHaveBeenCalled();
+
+    await user.click(trigger);
+    await user.click(screen.getByRole('button', { name: 'Excluir' }));
     expect(action).toHaveBeenCalled();
   });
 

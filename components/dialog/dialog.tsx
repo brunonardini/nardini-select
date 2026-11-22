@@ -15,6 +15,7 @@ type Props = {
   leadingIcon?: ReactNode;
   triggerClassName?: string;
   trigger?: ReactElement;
+  /** Accessible name of the close button. */
   closeLabel?: string;
   initialFocus?: BaseDialog.Popup.Props['initialFocus'];
   onClose?: () => void;
@@ -33,7 +34,7 @@ export function Dialog({
   leadingIcon,
   triggerClassName,
   trigger,
-  closeLabel,
+  closeLabel = 'Fechar',
   initialFocus,
   onClose,
   viewportOverlay,
@@ -44,26 +45,20 @@ export function Dialog({
     if (!nextOpen) onClose?.();
   }
 
-  const heading = (
-    <BaseDialog.Title className="dialog-title">{title}</BaseDialog.Title>
-  );
   const content = (
     <>
-      {closeLabel ? (
-        <div className="dialog-heading">
-          {heading}
-          <BaseDialog.Close
-            render={
-              <IconButton
-                aria-label={closeLabel}
-                icon={<Icon name="close" />}
-              />
-            }
-          />
-        </div>
-      ) : (
-        heading
-      )}
+      <div className="dialog-heading">
+        <BaseDialog.Title className="dialog-title">{title}</BaseDialog.Title>
+        <BaseDialog.Close
+          render={
+            <IconButton
+              aria-label={closeLabel}
+              size="small"
+              icon={<Icon name="close" />}
+            />
+          }
+        />
+      </div>
       {description ? (
         <BaseDialog.Description className="dialog-description">
           {description}

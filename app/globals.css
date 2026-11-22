@@ -16,6 +16,7 @@
   --font-title: var(--font-display), var(--font), sans-serif;
   --gutter: 56px;
   --header-height: 116px;
+  --control-size-small: 36px;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
 * {
@@ -227,9 +228,11 @@ button.button {
   cursor: pointer;
 }
 .icon-button {
-  width: 44px;
-  height: 44px;
-  flex: 0 0 44px;
+  --icon-button-size: 44px;
+  --icon-button-icon-size: 21px;
+  width: var(--icon-button-size);
+  height: var(--icon-button-size);
+  flex: 0 0 var(--icon-button-size);
   display: inline-grid;
   place-items: center;
   padding: 0;
@@ -242,13 +245,17 @@ button.button {
     background-color 150ms ease,
     transform 150ms var(--ease-out);
 }
+.icon-button-small {
+  --icon-button-size: var(--control-size-small);
+  --icon-button-icon-size: 18px;
+}
 .icon-button-icon {
   display: grid;
   place-items: center;
 }
 .icon-button-icon svg {
-  width: 21px;
-  height: 21px;
+  width: var(--icon-button-icon-size);
+  height: var(--icon-button-icon-size);
 }
 @media (hover: hover) and (pointer: fine) {
   .button:not(:disabled, [data-disabled], [aria-busy='true']):hover {
@@ -1428,15 +1435,27 @@ button.button {
   transform: translateY(8px);
 }
 .dialog-heading {
+  --dialog-title-size: clamp(1.5rem, 3vw, 2rem);
+  --dialog-title-line-height: calc(var(--dialog-title-size) * 1.08);
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: start;
   gap: 12px;
 }
 .dialog-title {
-  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-size: var(--dialog-title-size);
+  line-height: var(--dialog-title-line-height);
+}
+.dialog-heading > .icon-button {
+  /* Karvest's visible letters sit above the center of the first line box. */
+  position: relative;
+  inset-block-start: calc(
+    (var(--dialog-title-line-height) - var(--icon-button-size)) / 2 -
+      var(--dialog-title-size) / 8
+  );
 }
 .dialog-actions {
+  align-self: stretch;
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
@@ -1499,18 +1518,15 @@ button.button {
 }
 .toast-content {
   display: grid;
-  grid-template-columns: 34px minmax(0, 1fr) 44px;
+  grid-template-columns: 34px minmax(0, 1fr) auto;
   align-items: start;
   gap: 10px;
   padding: 12px 8px 12px 13px;
 }
-.toast-icon,
-.toast-close {
+.toast-icon {
   display: grid;
   place-items: center;
   color: var(--feedback-accent);
-}
-.toast-icon {
   width: 34px;
   height: 34px;
   border-radius: 50%;
@@ -1548,28 +1564,17 @@ button.button {
   font-size: 10px;
   font-weight: 800;
 }
-.toast-close {
-  width: 44px;
-  height: 44px;
-  margin-block-start: -5px;
+.icon-button.toast-close {
+  --button-ink: var(--feedback-accent);
+  --button-quiet-hover: var(--feedback-icon-surface);
+  margin-block-start: -1px;
   border: 0;
   border-radius: 6px;
-  background: transparent;
-  cursor: pointer;
-}
-.toast-close svg {
-  width: 17px;
-  height: 17px;
 }
 .toast:focus-visible,
 .toast-close:focus-visible {
   outline: 2px solid var(--feedback-accent);
   outline-offset: -3px;
-}
-@media (hover: hover) and (pointer: fine) {
-  .toast-close:hover {
-    background: var(--feedback-icon-surface);
-  }
 }
 @media (min-width: 650px) {
   .toast-viewport {

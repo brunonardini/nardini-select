@@ -55,7 +55,7 @@ export function ConfirmDialog({
           </Button>
         ) : undefined
       }
-      closeLabel={deleting ? 'Fechar confirmação' : undefined}
+      closeLabel="Fechar confirmação"
       initialFocus={deleting ? cancelRef : undefined}
       onClose={deleting ? () => setTyped('') : undefined}
     >

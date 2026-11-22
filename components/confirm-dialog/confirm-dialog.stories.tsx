@@ -7,10 +7,10 @@ const meta = {
   title: 'Feedback/ConfirmDialog',
   component: ConfirmDialog,
   args: {
-    label: 'Excluir',
-    title: 'Excluir papel',
-    description: 'Esta ação não pode ser desfeita.',
-    confirmLabel: 'Excluir',
+    label: 'Cancelar convite',
+    title: 'Cancelar convite',
+    description: 'O link enviado deixa de funcionar.',
+    confirmLabel: 'Cancelar convite',
     fields: { id: '1' },
     action: fn(),
   },
@@ -24,13 +24,26 @@ export const Closed: Story = {};
 export const Open: Story = {
   play: async ({ canvasElement }) => {
     await userEvent.click(
-      within(canvasElement).getByRole('button', { name: 'Excluir' }),
+      within(canvasElement).getByRole('button', { name: 'Cancelar convite' }),
     );
-    const dialog = within(document.body).getByRole('dialog');
-    await expect(dialog).toHaveAttribute('data-open');
-    await expect(
-      within(dialog).getByRole('heading', { name: 'Excluir papel' }),
-    ).toBeInTheDocument();
+    const modal = within(document.body).getByRole('dialog', {
+      name: 'Cancelar convite',
+    });
+    const dialog = within(modal);
+    const close = dialog.getByRole('button', { name: 'Fechar confirmação' });
+    const cancel = dialog.getByRole('button', {
+      name: 'Cancelar',
+    });
+    const confirm = dialog.getByRole('button', { name: 'Cancelar convite' });
+    await expect(close).toHaveStyle({ width: '36px', height: '36px' });
+    const confirmBounds = confirm.getBoundingClientRect();
+    await expect(confirmBounds.left).toBeGreaterThan(
+      cancel.getBoundingClientRect().right,
+    );
+    await expect(confirmBounds.right).toBeCloseTo(
+      close.getBoundingClientRect().right,
+      0,
+    );
   },
 };
 
@@ -62,6 +75,7 @@ export const DeleteConfirmation: Story = {
   args: {
     intent: 'delete',
     label: 'Excluir papel',
+    title: 'Excluir papel',
     confirmLabel: 'Excluir papel definitivamente',
     description: 'O papel será removido. Esta ação não pode ser desfeita.',
   },

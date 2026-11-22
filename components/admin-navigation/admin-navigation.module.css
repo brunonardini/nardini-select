@@ -5,7 +5,6 @@
   min-height: 100dvh;
 }
 .header {
-  --account-circle-size: 36px;
   display: grid;
   grid-column: 1 / -1;
   grid-template-columns: minmax(44px, 1fr) auto minmax(44px, 1fr);
@@ -52,8 +51,8 @@
   gap: 10px;
 }
 .account :global(.avatar) {
-  width: var(--account-circle-size);
-  height: var(--account-circle-size);
+  width: var(--control-size-small);
+  height: var(--control-size-small);
   border-radius: 50%;
   flex: none;
 }
@@ -61,16 +60,11 @@
 .accountChevron {
   display: none;
 }
-.header svg,
-.sidebar svg,
-.drawer svg {
+.account svg,
+.destination svg {
   width: 21px;
   height: 21px;
   flex: none;
-}
-.header .mobileTrigger svg {
-  width: 18px;
-  height: 18px;
 }
 .content {
   min-width: 0;

@@ -199,7 +199,9 @@ export const WithinDialog: Story = {
         title="Convidar usuário"
         viewportOverlay={<ToastHost />}
       >
-        <Demo notices={[danger]} label="Copiar link" />
+        <div className="dialog-actions">
+          <Demo notices={[danger]} label="Copiar link" />
+        </div>
       </Dialog>
     ),
   },

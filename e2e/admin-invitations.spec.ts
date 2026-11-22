@@ -11,6 +11,7 @@ import {
 
 test('an admin generates an invitation link', async ({ page }, testInfo) => {
   const slot = testInfo.parallelIndex;
+  const inviteName = `Convidado ${testInfo.project.name} ${slot}`;
   const adminId = slotUser(slot, 'approved');
   await setTerms(adminId, 'current');
   await setRole(adminId, ADMIN_ROLE_ID);
@@ -28,9 +29,18 @@ test('an admin generates an invitation link', async ({ page }, testInfo) => {
   try {
     await page.goto('/admin/usuarios');
     await page.getByRole('button', { name: 'Convidar usuário' }).click();
-    await page
-      .getByRole('textbox', { name: 'Nome completo' })
-      .fill(`Convidado ${slot}`);
+    const invite = page.getByRole('dialog', { name: 'Convidar usuário' });
+    const close = invite.getByRole('button', { name: 'Fechar', exact: true });
+    const generate = invite.getByRole('button', { name: 'Gerar link' });
+    await expect(close).toHaveCSS('width', '36px');
+    await expect(close).toHaveCSS('height', '36px');
+    expect(
+      await generate.evaluate((button) => button.getBoundingClientRect().right),
+    ).toBeCloseTo(
+      await close.evaluate((button) => button.getBoundingClientRect().right),
+      0,
+    );
+    await page.getByRole('textbox', { name: 'Nome completo' }).fill(inviteName);
     await page.getByRole('button', { name: 'Gerar link' }).click();
     await expect(
       page.getByText('Esse link expira em 30 minutos.'),
@@ -38,8 +48,14 @@ test('an admin generates an invitation link', async ({ page }, testInfo) => {
     await expect(
       page.getByRole('textbox', { name: 'Link do convite' }),
     ).toHaveValue(/\/admin\/convite\//);
-    const invite = page.getByRole('dialog', { name: 'Convidar usuário' });
     const copy = invite.getByRole('button', { name: 'Copiar link' });
+    await expect(copy).toHaveClass(/button-primary/);
+    expect(
+      await copy.evaluate((button) => button.getBoundingClientRect().right),
+    ).toBeCloseTo(
+      await close.evaluate((button) => button.getBoundingClientRect().right),
+      0,
+    );
     await copy.click();
     await expect(
       invite.getByRole('dialog', { name: 'Link copiado' }),
@@ -59,7 +75,7 @@ test('an admin generates an invitation link', async ({ page }, testInfo) => {
     await expect(copy).toBeFocused();
     await copy.click();
     await expect(failure).toBeVisible();
-    await invite.getByRole('button', { name: 'Fechar', exact: true }).click();
+    await close.click();
     await expect(invite).toHaveCount(0);
     await expect(
       page.getByRole('dialog', { name: 'Não foi possível copiar' }),
@@ -73,7 +89,7 @@ test('an admin generates an invitation link', async ({ page }, testInfo) => {
     const pending = page.getByRole('button', { name: /Convites pendentes/ });
     await expect(pending).not.toHaveAttribute('aria-busy', 'true');
     await pending.click();
-    await expect(page.getByText(`Convidado ${slot}`)).toBeVisible();
+    await expect(page.getByText(inviteName)).toBeVisible();
   } finally {
     await setRole(adminId, ATENDIMENTO_ROLE_ID);
   }

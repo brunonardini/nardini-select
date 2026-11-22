@@ -103,9 +103,3 @@
   flex-direction: column;
   gap: 16px;
 }
-.formActions {
-  display: flex;
-  justify-content: flex-end;
-  flex-wrap: wrap;
-  gap: 8px;
-}

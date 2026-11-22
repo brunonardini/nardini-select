@@ -13,6 +13,7 @@ import {
 } from 'react';
 
 import { Icon } from '../icon/icon';
+import { IconButton } from '../icon-button/icon-button';
 import { createNoticeQueue, type Notice } from './notice-queue';
 
 type NoticeContext = {
@@ -187,12 +188,16 @@ function NoticeProvider({ children }: { children: ReactNode }) {
                       <Toast.Description className="toast-description" />
                     </div>
                     <Toast.Close
-                      className="toast-close"
                       aria-hidden={false}
-                      aria-label={`Fechar: ${toast.title}`}
-                    >
-                      <Icon name="close" />
-                    </Toast.Close>
+                      render={
+                        <IconButton
+                          className="toast-close"
+                          aria-label={`Fechar: ${toast.title}`}
+                          size="small"
+                          icon={<Icon name="close" />}
+                        />
+                      }
+                    />
                   </Toast.Content>
                 </Toast.Root>
               );
